@@ -1,0 +1,16 @@
+{
+	"name": "backend",
+	"version": "1.0.0",
+	"description": "Food receipe app",
+	"type": "module",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon src/index.js"
+	},
+	"keywords": [],
+	"author": "Pankaj Panday",
+	"license": "ISC",
+	"devDependencies": {
+		"nodemon": "^3.0.3"
+	}
+}
