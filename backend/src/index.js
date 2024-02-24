@@ -1,14 +1,21 @@
 import "dotenv/config";
-import express from "express";
-import cors from "cors";
+import { app } from "./app.js";
 import connectDB from "./db/connect.js";
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-
-connectDB();
+connectDB()
+	.then(() => {
+		app.on("error", (error) => {
+			console.log("ERR: ", error); // database is connected but there is some other error
+			throw error;
+		});
+		const port = process.env.PORT || 3000;
+		app.listen(port, () => {
+			console.log(`Server started at port ${port}`);
+		});
+	})
+	.catch((error) => {
+		console.log("Mongo db connection failed!! ", error);
+	});
 
 // Another approach to connect to database
 /*
