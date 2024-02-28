@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema(
 			type: [mongoose.Schema.Types.ObjectId],
 			ref: "Recipe",
 		},
+		refreshToken: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );
@@ -70,6 +73,7 @@ userSchema.methods.generateRefreshToken = function () {
 	);
 };
 
+// hash password before saving
 userSchema.pre("save", async function () {
 	const user = this; // this refers to the document that is going to be saved
 	if (!user.isModified("password")) {
