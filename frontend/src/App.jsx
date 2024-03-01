@@ -15,12 +15,15 @@ const router = createBrowserRouter(
 					<h1 className="mt-20 text-center text-3xl">
 						Front end not ready yet
 					</h1>
-					<a
-						href="https://github.com/Pankaj-Panday/food-recipe-app"
-						className="text-center underline block mt-6 text-blue-600"
-					>
-						Github link to backend code
-					</a>
+					<p className="text-center mt-6">
+						Backend Code:{" "}
+						<a
+							href="https://github.com/Pankaj-Panday/food-recipe-app"
+							className=" underline text-blue-600"
+						>
+							Github link
+						</a>
+					</p>
 				</div>
 			}
 		></Route>
