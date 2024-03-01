@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "node:fs/promises";
+import removeFileFrom from "./removeFile.js";
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -21,14 +22,19 @@ const uploadToCloudinary = async (localFilepath) => {
 			// Automatically determine the resource type (e.g., image, video).
 			resource_type: "auto",
 		});
+
 		// Log success message with the uploaded file URL.
-		console.log("File successfully uploaded on Cloudinary:", result.url);
+		// console.log("File successfully uploaded on Cloudinary:", result.url);	// for debugging
+
+		// file sucessfully upload so remove file from backend server
+		await fs.unlink(localFilepath);
+
 		// Return the upload result object.
 		return result;
 	} catch (error) {
 		console.error("Error uploading file:", error);
 		// If upload fails, attempt to delete the local file to avoid clutter.
-		await fs.unlink(localFilepath);
+		await removeFileFrom(localFilepath);
 		// Return null in case of an error.
 		return null;
 	}

@@ -2,15 +2,17 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
-import { uploadToCloudinary } from "../utils/fileupload.js";
+import { uploadToCloudinary } from "../utils/uploadFile.js";
+import removeFileFrom from "../utils/removeFile.js";
 
 const registerUser = asyncHandler(async (req, res) => {
 	// 1. Get data from the frontend
 	const { name, email, password } = req.body;
+	const avatarLocalPath = req.file?.path;
 
-	// 2. check if any input was empty
+	// 2. check if any above fields are present & input isn't empty
 	const anyFieldEmpty = [name, email, password].some((field) => {
-		return field?.trim() === "";
+		return !field || field?.trim() === "";
 	});
 	if (anyFieldEmpty) {
 		throw new ApiError(400, "All fields are required");
@@ -18,19 +20,20 @@ const registerUser = asyncHandler(async (req, res) => {
 	// you can insert other validations as well
 
 	// 3. Check if user already exist or not
-	const foundUser = User.findOne({
+	const foundUser = await User.findOne({
 		email: email,
 	});
 	if (foundUser) {
+		removeFileFrom(avatarLocalPath);
 		throw new ApiError(409, "Email already registered");
 	}
 
-	// 4. handle user profile photo/avatar
-	const avatarLocalPath = req.file?.path;
-	let avatar = { url: null };
+	// 4. upload user profile photo/avatar from local server to cloudinary
+	let avatar;
 	if (avatarLocalPath) {
 		avatar = await uploadToCloudinary(avatarLocalPath);
 		if (!avatar) {
+			removeFileFrom(avatarLocalPath);
 			throw new ApiError(
 				500,
 				"Error uploading profile photo. Please try again!!"
@@ -42,7 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
 	const createdUser = await User.create({
 		name,
 		password,
-		avatar: avatar.url,
+		avatar: avatar?.url || "",
 		email: email.toLowerCase(),
 	});
 

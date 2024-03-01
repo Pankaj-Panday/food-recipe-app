@@ -8,7 +8,16 @@ import {
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
-		<Route path="/" element={<div>HelloWorld</div>}></Route>
+		<Route
+			path="/"
+			element={
+				<div>
+					<h1 className="mt-20 text-center text-3xl">
+						Front end not ready yet
+					</h1>
+				</div>
+			}
+		></Route>
 	)
 );
 
