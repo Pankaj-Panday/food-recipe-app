@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
 		},
 		avatar: {
 			type: String, // its the url of the photo
+			default: null,
 		},
 		createdRecipes: {
 			type: [mongoose.Schema.Types.ObjectId],
@@ -33,6 +34,7 @@ const userSchema = new mongoose.Schema(
 		},
 		refreshToken: {
 			type: String,
+			default: null,
 		},
 	},
 	{ timestamps: true }

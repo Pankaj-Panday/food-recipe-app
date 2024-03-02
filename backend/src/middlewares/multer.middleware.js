@@ -14,4 +14,6 @@ const storage = multer.diskStorage({
 });
 
 // Create a multer instance with the defined storage configuration
-export const upload = multer({ storage: storage });
+const upload = multer({ storage: storage });
+
+export { upload };

@@ -1,7 +1,7 @@
-function asyncHandler(func) {
+function asyncHandler(asyncFun) {
 	return async function (req, res, next) {
 		try {
-			await func(req, res, next);
+			await asyncFun(req, res, next);
 		} catch (error) {
 			res.status(error.code || 500).json({
 				success: false,
