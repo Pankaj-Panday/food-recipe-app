@@ -13,10 +13,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 		if (!token) {
 			throw new ApiError(401, "Unauthorized request");
 		}
-		const decodedTokenData = jwt.verify(
-			accessToken,
-			process.env.ACCESS_TOKEN_SECRET
-		);
+		const decodedTokenData = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
 		const userId = decodedTokenData._id;
 		const foundUser = await User.findById(userId).select(
@@ -27,6 +24,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 		}
 
 		req.user = foundUser;
+		next();
 	} catch (error) {
 		throw new ApiError(401, error?.message || "Invalid Token");
 	}

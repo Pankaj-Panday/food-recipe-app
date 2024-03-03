@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { hashPassword } from "../utils/hashPassword.js";
 
 const userSchema = new mongoose.Schema(
 	{
@@ -81,9 +82,7 @@ userSchema.pre("save", async function () {
 	if (!user.isModified("password")) {
 		return;
 	}
-	const saltRounds = 10;
-	const hashedPassword = await bcrypt.hash(user.password, saltRounds);
-	user.password = hashedPassword;
+	user.password = await hashPassword(user.password);
 });
 
 export const User = mongoose.model("User", userSchema);
