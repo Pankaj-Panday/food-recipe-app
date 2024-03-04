@@ -3,7 +3,7 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import { uploadToCloudinary } from "../utils/uploadFile.js";
-import removeFileFrom from "../utils/removeFile.js";
+import { removeLocalFile } from "../utils/removeFile.js";
 import jwt from "jsonwebtoken";
 
 async function generateTokens(userId) {
@@ -44,14 +44,14 @@ const registerUser = asyncHandler(async (req, res) => {
 		email: email,
 	});
 	if (foundUser) {
-		removeFileFrom(avatarLocalPath);
+		removeLocalFile(avatarLocalPath);
 		throw new ApiError(409, "Email already registered");
 	}
 	let avatar;
 	if (avatarLocalPath) {
 		avatar = await uploadToCloudinary(avatarLocalPath);
 		if (!avatar) {
-			removeFileFrom(avatarLocalPath);
+			removeLocalFile(avatarLocalPath);
 			throw new ApiError(
 				500,
 				"Error uploading profile photo. Please try again!!"
@@ -181,7 +181,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 		);
 });
 
-const changeUserPassword = asyncHandler(async (req, res) => {
+const updateUserPassword = asyncHandler(async (req, res) => {
 	const { curPassword, newPassword } = req.body;
 	const userId = req.user._id;
 	const foundUser = await User.findById(userId);
@@ -255,7 +255,7 @@ export {
 	loginUser,
 	logoutUser,
 	refreshAccessToken,
-	changeUserPassword,
+	updateUserPassword,
 	getCurrentUser,
 	updateUserDetails,
 	updateUserAvatar,

@@ -1,6 +1,6 @@
 import { unlink } from "node:fs/promises";
 
-const removeFileFrom = async (localFilepath) => {
+const removeLocalFile = async (localFilepath) => {
 	try {
 		await unlink(localFilepath);
 	} catch (err) {
@@ -8,4 +8,12 @@ const removeFileFrom = async (localFilepath) => {
 	}
 };
 
-export default removeFileFrom;
+const removeRemoteFile = async (remoteFilepath) => {
+	try {
+		// delete file from cloudinary
+	} catch (err) {
+		console.log("Error deleting file", err);
+	}
+};
+
+export { removeLocalFile, removeRemoteFile };

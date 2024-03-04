@@ -1,6 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import fs from "node:fs/promises";
-import removeFileFrom from "./removeFile.js";
+import { removeLocalFile } from "./removeFile.js";
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -27,14 +26,14 @@ const uploadToCloudinary = async (localFilepath) => {
 		// console.log("File successfully uploaded on Cloudinary:", result.url);	// for debugging
 
 		// file sucessfully upload so remove file from backend server
-		await removeFileFrom(localFilepath);
+		await removeLocalFile(localFilepath);
 
 		// Return the upload result object.
 		return result;
 	} catch (error) {
 		console.error("Error uploading file:", error);
 		// If upload fails, attempt to delete the local file to avoid clutter.
-		await removeFileFrom(localFilepath);
+		await removeLocalFile(localFilepath);
 		// Return null in case of an error.
 		return null;
 	}
