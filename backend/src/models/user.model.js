@@ -22,8 +22,14 @@ const userSchema = new mongoose.Schema(
 			required: [true, "Password cannot be empty"],
 		},
 		avatar: {
-			type: String, // its the url of the photo
-			default: null,
+			url: {
+				type: String, // its the url of the photo
+				default: null,
+			},
+			publicId: {
+				type: String,
+				default: null,
+			},
 		},
 		createdRecipes: {
 			type: [mongoose.Schema.Types.ObjectId],

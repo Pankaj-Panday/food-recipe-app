@@ -250,6 +250,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 		);
 });
 
+const removeUserAvatar = asyncHandler(async (req, res) => {});
+
 export {
 	registerUser,
 	loginUser,
@@ -259,4 +261,5 @@ export {
 	getCurrentUser,
 	updateUserDetails,
 	updateUserAvatar,
+	removeUserAvatar,
 };
