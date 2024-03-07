@@ -2,8 +2,11 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
-import { uploadToCloudinary } from "../utils/uploadFile.js";
-import { removeLocalFile } from "../utils/removeFile.js";
+import {
+	removeFromCloudinary,
+	uploadToCloudinary,
+} from "../utils/remoteFileManage.js";
+import { removeLocalFile } from "../utils/localFileManage.js";
 import jwt from "jsonwebtoken";
 
 async function generateTokens(userId) {
@@ -51,17 +54,18 @@ const registerUser = asyncHandler(async (req, res) => {
 	if (avatarLocalPath) {
 		avatar = await uploadToCloudinary(avatarLocalPath);
 		if (!avatar) {
-			removeLocalFile(avatarLocalPath);
 			throw new ApiError(
 				500,
 				"Error uploading profile photo. Please try again!!"
 			);
 		}
+		// remove local file
+		removeLocalFile(avatarLocalPath);
 	}
 	const createdUser = await User.create({
 		name,
 		password,
-		avatar: avatar?.url || "",
+		avatar: { url: avatar?.url || null, publicId: avatar?.public_id || null },
 		email: email.toLowerCase(),
 	});
 	// we are checking if user creation was successful by finding the above user in db and
@@ -181,6 +185,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 		);
 });
 
+const getCurrentUser = asyncHandler(async (req, res) => {
+	return res
+		.status(200)
+		.json(new ApiResponse(200, req.user, "user fetched successfully"));
+});
+
 const updateUserPassword = asyncHandler(async (req, res) => {
 	const { curPassword, newPassword } = req.body;
 	const userId = req.user._id;
@@ -194,12 +204,6 @@ const updateUserPassword = asyncHandler(async (req, res) => {
 	return res
 		.status(200)
 		.json(new ApiResponse(200, {}, "password changed successfully"));
-});
-
-const getCurrentUser = asyncHandler(async (req, res) => {
-	return res
-		.status(200)
-		.json(new ApiResponse(200, req.user, "user fetched successfully"));
 });
 
 const updateUserDetails = asyncHandler(async (req, res) => {
@@ -225,23 +229,44 @@ const updateUserDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
+	// get new profile photo
+	// find user to update in database
+	// extract user's current profile picture from found user
+	// if profile picture found, delete it from cloudinary
+	// if no profile picture, then don't request cloudinary
+	// now update user's profile to new photo
+	// delete new profile photo from local server
+
 	const avatarLocalPath = req.file?.path;
 	if (!avatarLocalPath) {
 		throw new ApiError(400, "missing file path");
 	}
-	const avatar = uploadToCloudinary(avatarLocalPath);
-	if (!avatar) {
+	const newAvatar = await uploadToCloudinary(avatarLocalPath);
+	if (!newAvatar) {
+		removeLocalFile(avatarLocalPath);
 		throw new ApiError(
 			500,
 			"Error uploading profile photo. Please try again!!!"
 		);
 	}
+	removeLocalFile(avatarLocalPath);
 	const userId = req.user._id;
-	const updatedUser = await User.findByIdAndUpdate(userId, {
-		$set: {
-			avatar: avatar.url,
-		},
-	}).select("-password -refreshToken");
+	const foundUser = await User.findById(userId);
+	const oldAvatarPublicId = foundUser?.avatar?.publicId;
+	if (oldAvatarPublicId) {
+		const success = await removeFromCloudinary(oldAvatarPublicId);
+		if (!success) {
+			throw new ApiError(
+				500,
+				"Something went wrong while deleting file from cloudinary"
+			);
+		}
+	}
+	foundUser.avatar = { url: newAvatar?.url, publicId: newAvatar?.public_id };
+	await foundUser.save({ validateBeforeSave: false });
+	const updatedUser = foundUser.toObject();
+	delete updatedUser.password;
+	delete updatedUser.refreshToken;
 
 	return res
 		.status(200)
@@ -250,7 +275,26 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 		);
 });
 
-const removeUserAvatar = asyncHandler(async (req, res) => {});
+const removeUserAvatar = asyncHandler(async (req, res) => {
+	const userId = req.user._id;
+	const foundUser = await User.findById(userId);
+	const avatarPublicId = foundUser?.avatar?.publicId;
+	if (!avatarPublicId) {
+		throw new ApiError(404, "Avatar doesn't exist for user");
+	}
+	const success = await removeFromCloudinary(avatarPublicId);
+	if (!success) {
+		throw new ApiError(
+			500,
+			"Something went wrong while deleting file from cloudinary"
+		);
+	}
+	foundUser.avatar = { url: null, publicId: null };
+	await foundUser.save({ validateBeforeSave: false });
+	return res
+		.status(200)
+		.json(new ApiResponse(200, {}, "profile photo removed successfully"));
+});
 
 export {
 	registerUser,

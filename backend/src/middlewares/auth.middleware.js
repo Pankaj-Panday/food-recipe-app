@@ -20,7 +20,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 			"-password -refreshToken"
 		);
 		if (!foundUser) {
-			throw new ApiError(401, "Invalid Token");
+			throw new ApiError(401, "Invalid or expired Token");
 		}
 
 		req.user = foundUser;

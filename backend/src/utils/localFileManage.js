@@ -8,12 +8,4 @@ const removeLocalFile = async (localFilepath) => {
 	}
 };
 
-const removeRemoteFile = async (remoteFilepath) => {
-	try {
-		// delete file from cloudinary
-	} catch (err) {
-		console.log("Error deleting file", err);
-	}
-};
-
-export { removeLocalFile, removeRemoteFile };
+export { removeLocalFile };
