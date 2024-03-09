@@ -9,6 +9,7 @@ import {
 	updateUserAvatar,
 	removeUserAvatar,
 	updateUserDetails,
+	getUserDetails,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
@@ -28,5 +29,8 @@ router
 	.patch(verifyToken, upload.single("avatar"), updateUserAvatar);
 router.route("/remove-avatar").patch(verifyToken, removeUserAvatar);
 router.route("/update-details").patch(verifyToken, updateUserDetails);
+router.route("/:userId").get(verifyToken, getUserDetails);
+
+//  create route for getting user saved and created recipes
 
 export default router;

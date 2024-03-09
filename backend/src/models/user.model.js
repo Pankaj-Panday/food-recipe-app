@@ -31,14 +31,6 @@ const userSchema = new mongoose.Schema(
 				default: null,
 			},
 		},
-		createdRecipes: {
-			type: [mongoose.Schema.Types.ObjectId],
-			ref: "Recipe",
-		},
-		savedRecipes: {
-			type: [mongoose.Schema.Types.ObjectId],
-			ref: "Recipe",
-		},
 		refreshToken: {
 			type: String,
 			default: null,

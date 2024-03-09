@@ -299,6 +299,19 @@ const removeUserAvatar = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, {}, "profile photo removed successfully"));
 });
 
+const getUserDetails = asyncHandler(async (req, res) => {
+	const userId = req.params.userId;
+	const foundUser = await User.findById(userId).select(
+		"-password -refreshToken"
+	);
+	if (!foundUser) {
+		throw new ApiError(404, "user not found");
+	}
+	return res
+		.status(200)
+		.json(200, new ApiResponse(200, foundUser, "user fetched succefully"));
+});
+
 export {
 	registerUser,
 	loginUser,
@@ -309,4 +322,5 @@ export {
 	updateUserDetails,
 	updateUserAvatar,
 	removeUserAvatar,
+	getUserDetails,
 };
