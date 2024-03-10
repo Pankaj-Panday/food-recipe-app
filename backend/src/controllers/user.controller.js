@@ -8,6 +8,8 @@ import {
 } from "../utils/remoteFileManage.js";
 import { removeLocalFile } from "../utils/localFileManage.js";
 import jwt from "jsonwebtoken";
+import { Recipe } from "../models/recipe.model.js";
+import { UserSavedRecipe } from "../models/savedRecipe.model.js";
 
 async function generateTokens(userId) {
 	try {
@@ -312,6 +314,34 @@ const getUserDetails = asyncHandler(async (req, res) => {
 		.json(200, new ApiResponse(200, foundUser, "user fetched succefully"));
 });
 
+const getCreatedRecipes = asyncHandler(async (req, res) => {
+	const userId = req.params.userId;
+	const foundUser = await User.findById(userId);
+	if (!foundUser) {
+		throw new ApiError(404, "User not found");
+	}
+	const createdRecipes = await Recipe.find({ author: userId }); // returns an array of docs
+	return res.status(200).json(
+		new ApiResponse(
+			200,
+			{
+				recipes: createdRecipes,
+			},
+			"created recipes fetched successfully"
+		)
+	);
+});
+
+const getSavedRecipes = asyncHandler(async (req, res) => {
+	const userId = req.user._id;
+	const savedRecipes = await UserSavedRecipe.find({ user: userId }).populate(
+		"recipe"
+	);
+	return res.status(200, savedRecipes, "saved recipes fetched successfully");
+});
+
+// controller to delete user account completely
+
 export {
 	registerUser,
 	loginUser,
@@ -323,4 +353,6 @@ export {
 	updateUserAvatar,
 	removeUserAvatar,
 	getUserDetails,
+	getCreatedRecipes,
+	getSavedRecipes,
 };
