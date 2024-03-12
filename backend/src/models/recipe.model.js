@@ -25,13 +25,21 @@ const recipeSchema = new mongoose.Schema(
 		},
 		introduction: {
 			type: String,
+			default: "",
 		},
 		cookingTime: {
 			type: Number,
 			required: [true, "cookingTime cannot be empty"],
 		},
 		recipePhoto: {
-			type: String, // url of the photo
+			url: {
+				type: String, // url of the photo
+				default: null,
+			},
+			publicId: {
+				type: String,
+				default: null,
+			},
 		},
 		ingredients: {
 			type: [String],
@@ -44,6 +52,7 @@ const recipeSchema = new mongoose.Schema(
 		},
 		rating: {
 			type: Number,
+			default: null,
 		},
 		reviews: {
 			type: [reviewSchema],

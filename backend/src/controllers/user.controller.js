@@ -56,13 +56,14 @@ const registerUser = asyncHandler(async (req, res) => {
 	if (avatarLocalPath) {
 		avatar = await uploadToCloudinary(avatarLocalPath);
 		if (!avatar) {
+			await removeLocalFile(avatarLocalPath);
 			throw new ApiError(
 				500,
 				"Error uploading profile photo. Please try again!!"
 			);
 		}
 		// remove local file
-		removeLocalFile(avatarLocalPath);
+		await removeLocalFile(avatarLocalPath);
 	}
 	const createdUser = await User.create({
 		name,
