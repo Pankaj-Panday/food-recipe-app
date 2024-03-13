@@ -3,7 +3,10 @@ import { Recipe } from "../models/recipe.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
-import { uploadToCloudinary } from "../utils/remoteFileManage.js";
+import {
+	removeFromCloudinary,
+	uploadToCloudinary,
+} from "../utils/remoteFileManage.js";
 import { removeLocalFile } from "../utils/localFileManage.js";
 
 function anyEmptyValue(...fields) {
@@ -118,29 +121,42 @@ const updateRecipe = asyncHandler(async (req, res) => {
 	// input will send values like "changed", "unchanged", "deleted"
 });
 
-const updateRecipePhoto = asyncHandler(async (req, res) => {});
+const updateRecipePhoto = asyncHandler(async (req, res) => {
+	// get new photo and userId from frontend
+	// check if recipe exist or not
+	// check if user is the owner of recipe
+	// retrive old photo of the recipe
+	// update the photo of the recipe
+	// send old photo to the user
+	const userId = req.user._id;
+	const recipeId = req.params.recipeId;
+	const recipe = await Recipe.findById(recipeId);
+});
 
 const deleteRecipePhoto = asyncHandler(async (req, res) => {
-	// get all the data from frontend - (recipe id, and userid)
-	// find the recipe in the database
-	// check if the user is the current owner of the recipe whose photo he is deleting (by matching userid with author)
-	// create an object from
-	// delete the photo
 	const userId = req.user._id;
 	const recipeId = req.params.recipeId;
 	const recipe = await Recipe.findById(recipeId);
 	if (!recipe) {
-		throw new ApiError(404, "Can't delete photo. Recipe doesn't exist");
+		throw new ApiError(404, "Recipe doesn't exist");
 	}
 	if (recipe.author.toString() !== userId.toString()) {
 		throw new ApiError(403, "You are not authorized to perform this action");
 	}
-	let deletedPhoto = {
-		url: recipe.recipePhoto.url,
-		publicId: recipe.recipePhoto.publicId,
-	};
+	const recipePhotoPublicId = recipe?.recipePhoto?.publicId;
+	if (!recipePhotoPublicId) {
+		throw new ApiError(404, "Recipe photo doesn't exist");
+	}
+	const success = await removeFromCloudinary(recipePhotoPublicId);
+	if (!success) {
+		throw new ApiError(500, "Something went wrong while deleting photo");
+	}
 	recipe.recipePhoto = { url: null, publicId: null };
 	await recipe.save({ validateBeforeSave: false });
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, {}, "recipe photo deleted successfully"));
 });
 // delete a recipe
 // save a recipe mapped to a particular user
