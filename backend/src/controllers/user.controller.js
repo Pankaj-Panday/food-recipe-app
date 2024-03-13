@@ -135,7 +135,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 	await User.findByIdAndUpdate(
 		userId,
-		{ $unset: { refreshToken: "" } }, // it will remove the field refreshToken or you can set it to null as well
+		{ $unset: { refreshToken: "" } }, // {$set: {refreshtoken: null}} also works
 		{ new: true }
 	);
 	const cookiesOption = {

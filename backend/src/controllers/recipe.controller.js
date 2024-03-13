@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Recipe } from "../models/recipe.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
@@ -16,7 +17,7 @@ function isValidArray(arr) {
 	if (!Array.isArray(arr)) {
 		return false;
 	}
-	isInvalid = arr.some((value) => {
+	const isInvalid = arr.some((value) => {
 		return !value || value.trim === "";
 	});
 	return !isInvalid;
@@ -36,9 +37,11 @@ const createRecipe = asyncHandler(async (req, res) => {
 		req.body;
 	const recipePhotoLocalPath = req.file?.path;
 	if (anyEmptyValue(title, cookingTime)) {
+		removeLocalFile(recipePhotoLocalPath);
 		throw new ApiError(400, "recipe title and cooking time can not be empty");
 	}
 	if (!isValidArray(ingredients) && !isValidArray(steps)) {
+		removeLocalFile(recipePhotoLocalPath);
 		throw new ApiError(400, "ingredients and steps aren't valid inputs");
 	}
 	let recipePhoto;
@@ -46,10 +49,11 @@ const createRecipe = asyncHandler(async (req, res) => {
 		recipePhoto = await uploadToCloudinary(recipePhotoLocalPath);
 		if (!recipePhoto) {
 			// uploading failed
-			await removeLocalFile(recipePhotoLocalPath);
+			removeLocalFile(recipePhotoLocalPath);
 			throw new ApiError(500, "Error uploading photo. Please try again!!");
 		}
-		await removeLocalFile(recipePhotoLocalPath);
+		// upload succeded
+		removeLocalFile(recipePhotoLocalPath);
 	}
 	// create the recipe and save to database
 	const recipe = await Recipe.create({
@@ -58,7 +62,7 @@ const createRecipe = asyncHandler(async (req, res) => {
 		cookingTime: parseInt(cookingTime),
 		recipePhoto: {
 			url: recipePhoto?.url || null,
-			publicId: recipePhoto?.publicId || null,
+			publicId: recipePhoto?.public_id || null,
 		},
 		ingredients,
 		steps,
@@ -77,49 +81,70 @@ const viewRecipe = asyncHandler(async (req, res) => {
 	// if found, populate the user field with some details from user (aggregation pipeline)
 	// return recipe
 	const recipeId = req.params.recipeId;
-	try {
-		const pipeline = [
-			{
-				$match: { _id: mongoose.Types.ObjectId(recipeId) },
-			},
-			{
-				$lookup: {
-					from: "users",
-					localField: "author",
-					foreignField: "_id",
-					as: "author",
-				},
-			},
-			{
-				$unwind: "$author",
-			},
-			{
-				$set: {
-					author: {
-						_id: "$author._id",
-						name: "$author.name",
+	const recipeObjectId = new mongoose.Types.ObjectId("" + recipeId);
+	const pipeline = [
+		{
+			$match: { _id: recipeObjectId }, // [ {recipeDoc} ]
+		},
+		{
+			$lookup: {
+				from: "users",
+				localField: "author",
+				foreignField: "_id",
+				pipeline: [
+					{
+						$project: { _id: 1, name: 1 },
 					},
-				},
+				],
+				as: "author",
 			},
-		];
-		const recipe = await Recipe.aggregate(pipeline)[0];
-		if (!recipe?.length) {
-			// empty array
-			throw new ApiError(404, "Recipe doesn't exist");
-		}
-		return res.status(
-			200,
-			new ApiResponse(200, recipe, "recipe fetched succesfully")
-		);
-	} catch (error) {
-		// not required but its here to give a good message to user
-		throw new ApiError(500, "Error fetching recipe");
+		},
+	];
+	const recipe = await Recipe.aggregate(pipeline);
+	console.log(recipe);
+	if (!recipe?.length) {
+		// empty array
+		throw new ApiError(404, "Recipe doesn't exist");
 	}
+	return res
+		.status(200)
+		.json(new ApiResponse(200, recipe[0], "recipe fetched succesfully"));
 });
-// get all recipes (not sure but may have to implement pagination)
+
 // update a recipe (by id)
+const updateRecipe = asyncHandler(async (req, res) => {
+	// make a hidden input in frontend and send the status & public_id or url of old photo through it
+	// get that input in backend from req.body as "photoStatus" and decide what to do with photo update
+	// input will send values like "changed", "unchanged", "deleted"
+});
+
+const updateRecipePhoto = asyncHandler(async (req, res) => {});
+
+const deleteRecipePhoto = asyncHandler(async (req, res) => {
+	// get all the data from frontend - (recipe id, and userid)
+	// find the recipe in the database
+	// check if the user is the current owner of the recipe whose photo he is deleting (by matching userid with author)
+	// create an object from
+	// delete the photo
+	const userId = req.user._id;
+	const recipeId = req.params.recipeId;
+	const recipe = await Recipe.findById(recipeId);
+	if (!recipe) {
+		throw new ApiError(404, "Can't delete photo. Recipe doesn't exist");
+	}
+	if (recipe.author.toString() !== userId.toString()) {
+		throw new ApiError(403, "You are not authorized to perform this action");
+	}
+	let deletedPhoto = {
+		url: recipe.recipePhoto.url,
+		publicId: recipe.recipePhoto.publicId,
+	};
+	recipe.recipePhoto = { url: null, publicId: null };
+	await recipe.save({ validateBeforeSave: false });
+});
 // delete a recipe
 // save a recipe mapped to a particular user
+// get all recipes (not sure but may have to implement pagination)
 
 // rate a recipe
 // update rating for a recipe
@@ -129,4 +154,10 @@ const viewRecipe = asyncHandler(async (req, res) => {
 // update comment on a recipe
 // delete comment on recipe
 
-export { createRecipe, viewRecipe };
+export {
+	createRecipe,
+	viewRecipe,
+	updateRecipe,
+	updateRecipePhoto,
+	deleteRecipePhoto,
+};
