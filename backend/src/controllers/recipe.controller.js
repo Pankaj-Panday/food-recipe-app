@@ -115,22 +115,75 @@ const viewRecipe = asyncHandler(async (req, res) => {
 });
 
 // update a recipe (by id)
-const updateRecipe = asyncHandler(async (req, res) => {
-	// make a hidden input in frontend and send the status & public_id or url of old photo through it
-	// get that input in backend from req.body as "photoStatus" and decide what to do with photo update
-	// input will send values like "changed", "unchanged", "deleted"
+const updateRecipeTextDetails = asyncHandler(async (req, res) => {
+	// update text details
+	const { title, introduction, cookingTime, ingredients, steps, isPublished } =
+		req.body;
+	const recipeId = req.params.recipeId;
+	const userId = req.user._id;
+	if (anyEmptyValue(title, cookingTime)) {
+		throw new ApiError(400, "title and cookingTime cannot be empty");
+	}
+	if (!isValidArray(ingredients) || !isValidArray(steps)) {
+		throw new ApiError(400, "ingredients and steps are not valid inputs");
+	}
+	const recipe = await Recipe.findById(recipeId);
+	if (!recipe) {
+		throw new ApiError(404, "Recipe doesn't exist");
+	}
+	if (recipe.author.toString() !== userId.toString()) {
+		throw new ApiError(403, "You are not authorized to perform this action");
+	}
+
+	recipe.title = title;
+	recipe.introduction = introduction || "";
+	recipe.cookingTime = parseInt(cookingTime);
+	recipe.ingredients = ingredients;
+	recipe.steps = steps;
+	recipe.isPublished = Boolean(isPublished) || false;
+
+	await recipe.save();
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, recipe, "Recipe details updated successfully"));
 });
 
 const updateRecipePhoto = asyncHandler(async (req, res) => {
-	// get new photo and userId from frontend
-	// check if recipe exist or not
-	// check if user is the owner of recipe
-	// retrive old photo of the recipe
-	// update the photo of the recipe
-	// send old photo to the user
 	const userId = req.user._id;
 	const recipeId = req.params.recipeId;
+	const newPhotoLocalPath = req?.file?.path;
+	if (!newPhotoLocalPath) {
+		throw new ApiError(400, "missing recipe photo local path");
+	}
 	const recipe = await Recipe.findById(recipeId);
+	if (!recipe) {
+		removeLocalFile(newPhotoLocalPath);
+		throw new ApiError(404, "Recipe doesn't exist");
+	}
+	if (recipe.author.toString() !== userId.toString()) {
+		removeLocalFile(newPhotoLocalPath);
+		throw new ApiError(403, "You are not authorized to perform this action");
+	}
+	const newPhoto = await uploadToCloudinary(newPhotoLocalPath);
+	if (!newPhoto) {
+		removeLocalFile(newPhotoLocalPath);
+		throw new ApiError(500, "Something went wrong while uploading new photo");
+	}
+	removeLocalFile(newPhotoLocalPath);
+	const oldPhotoPublicId = recipe?.recipePhoto?.publicId;
+	if (oldPhotoPublicId) {
+		// remove old photo from cloudinary
+		const success = await removeFromCloudinary(oldPhotoPublicId);
+		if (!success) {
+			throw new ApiError(500, "Something went wrong while deleting old photo");
+		}
+	}
+	recipe.recipePhoto = { url: newPhoto?.url, publicId: newPhoto.public_id };
+	await recipe.save();
+	return res
+		.status(200)
+		.json(new ApiResponse(200, recipe, "Recipe photo updated succesfully"));
 });
 
 const deleteRecipePhoto = asyncHandler(async (req, res) => {
@@ -158,7 +211,31 @@ const deleteRecipePhoto = asyncHandler(async (req, res) => {
 		.status(200)
 		.json(new ApiResponse(200, {}, "recipe photo deleted successfully"));
 });
+
 // delete a recipe
+const deleteRecipe = asyncHandler(async (req, res) => {
+	const recipeId = req.params.recipeId;
+	const userId = req.user._id;
+	const recipe = await Recipe.findById(recipeId);
+	if (!recipe) {
+		throw new ApiError(404, "Recipe doesn't exist");
+	}
+	if (recipe.author.toString() !== userId.toString()) {
+		throw new ApiError(403, "You aren't authorized to perform this action");
+	}
+	const recipePhotoPublicId = recipe.recipePhoto?.publicId;
+	if (recipePhotoPublicId) {
+		const success = await removeFromCloudinary(recipePhotoPublicId);
+		if (!success) {
+			throw new ApiError(500, "Something went wrong while deleting photo");
+		}
+	}
+	await Recipe.findByIdAndDelete(recipeId);
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, {}, "Recipe deleted successfully"));
+});
 // save a recipe mapped to a particular user
 // get all recipes (not sure but may have to implement pagination)
 
@@ -173,7 +250,8 @@ const deleteRecipePhoto = asyncHandler(async (req, res) => {
 export {
 	createRecipe,
 	viewRecipe,
-	updateRecipe,
+	updateRecipeTextDetails,
 	updateRecipePhoto,
 	deleteRecipePhoto,
+	deleteRecipe,
 };
