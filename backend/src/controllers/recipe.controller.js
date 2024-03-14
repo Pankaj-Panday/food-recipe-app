@@ -8,6 +8,7 @@ import {
 	uploadToCloudinary,
 } from "../utils/remoteFileManage.js";
 import { removeLocalFile } from "../utils/localFileManage.js";
+import { UserSavedRecipe } from "../models/savedRecipe.model.js";
 
 function anyEmptyValue(...fields) {
 	const isEmpty = fields.some((field) => {
@@ -25,8 +26,6 @@ function isValidArray(arr) {
 	});
 	return !isInvalid;
 }
-
-// create a recipe
 const createRecipe = asyncHandler(async (req, res) => {
 	// get all data from frontend
 	// check if any required field is empty or not and is of correct format
@@ -77,13 +76,11 @@ const createRecipe = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(201, recipe, "Recipe created successfully"));
 });
 
-// get recipe (view recipe by id)
 const viewRecipe = asyncHandler(async (req, res) => {
-	// get recipe id from url
-	// check in database if this recipe exist or not
-	// if found, populate the user field with some details from user (aggregation pipeline)
-	// return recipe
-	const recipeId = req.params.recipeId;
+	const recipeId = req.params?.recipeId;
+	if (!recipeId) {
+		throw new ApiError(400, "Missing required URL parameter: recipeId");
+	}
 	const recipeObjectId = new mongoose.Types.ObjectId("" + recipeId);
 	const pipeline = [
 		{
@@ -114,12 +111,14 @@ const viewRecipe = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, recipe[0], "recipe fetched succesfully"));
 });
 
-// update a recipe (by id)
 const updateRecipeTextDetails = asyncHandler(async (req, res) => {
 	// update text details
 	const { title, introduction, cookingTime, ingredients, steps, isPublished } =
 		req.body;
-	const recipeId = req.params.recipeId;
+	const recipeId = req.params?.recipeId;
+	if (!recipeId) {
+		throw new ApiError(400, "Missing required URL parameter: recipeId");
+	}
 	const userId = req.user._id;
 	if (anyEmptyValue(title, cookingTime)) {
 		throw new ApiError(400, "title and cookingTime cannot be empty");
@@ -151,7 +150,10 @@ const updateRecipeTextDetails = asyncHandler(async (req, res) => {
 
 const updateRecipePhoto = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
-	const recipeId = req.params.recipeId;
+	const recipeId = req.params?.recipeId;
+	if (!recipeId) {
+		throw new ApiError(400, "Missing required URL parameter: recipeId");
+	}
 	const newPhotoLocalPath = req?.file?.path;
 	if (!newPhotoLocalPath) {
 		throw new ApiError(400, "missing recipe photo local path");
@@ -188,7 +190,10 @@ const updateRecipePhoto = asyncHandler(async (req, res) => {
 
 const deleteRecipePhoto = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
-	const recipeId = req.params.recipeId;
+	const recipeId = req.params?.recipeId;
+	if (!recipeId) {
+		throw new ApiError(400, "Missing required URL parameter: recipeId");
+	}
 	const recipe = await Recipe.findById(recipeId);
 	if (!recipe) {
 		throw new ApiError(404, "Recipe doesn't exist");
@@ -212,9 +217,11 @@ const deleteRecipePhoto = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, {}, "recipe photo deleted successfully"));
 });
 
-// delete a recipe
 const deleteRecipe = asyncHandler(async (req, res) => {
-	const recipeId = req.params.recipeId;
+	const recipeId = req.params?.recipeId;
+	if (!recipeId) {
+		throw new ApiError(400, "Missing required URL parameter: recipeId");
+	}
 	const userId = req.user._id;
 	const recipe = await Recipe.findById(recipeId);
 	if (!recipe) {
@@ -236,7 +243,35 @@ const deleteRecipe = asyncHandler(async (req, res) => {
 		.status(200)
 		.json(new ApiResponse(200, {}, "Recipe deleted successfully"));
 });
-// save a recipe mapped to a particular user
+
+const saveRecipe = asyncHandler(async (req, res) => {
+	const userId = req.user._id;
+	const recipeId = req.params?.recipeId;
+	if (!recipeId) {
+		throw new ApiError(400, "Missing required URL parameter: recipeId");
+	}
+	const recipe = await Recipe.findById(recipeId);
+	if (!recipe) {
+		throw new ApiError(404, "Recipe not found");
+	}
+	const existingRecipe = await UserSavedRecipe.findOne({
+		recipe: recipeId,
+		user: userId,
+	});
+	if (existingRecipe) {
+		throw new ApiError(409, "Recipe is already saved");
+	}
+	const savedRecipe = await UserSavedRecipe.create({
+		recipe: recipeId,
+		user: userId,
+	});
+	return res
+		.status(200)
+		.json(new ApiResponse(200, savedRecipe, "recipe saved successfully"));
+});
+
+const unsaveRecipe = asyncHandler(async (req, res) => {});
+
 // get all recipes (not sure but may have to implement pagination)
 
 // rate a recipe
@@ -254,4 +289,6 @@ export {
 	updateRecipePhoto,
 	deleteRecipePhoto,
 	deleteRecipe,
+	saveRecipe,
+	unsaveRecipe,
 };
