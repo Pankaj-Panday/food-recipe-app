@@ -101,14 +101,33 @@ const viewRecipe = asyncHandler(async (req, res) => {
 		},
 	];
 	const recipe = await Recipe.aggregate(pipeline);
-	console.log(recipe);
 	if (!recipe?.length) {
 		// empty array
 		throw new ApiError(404, "Recipe doesn't exist");
 	}
+
+	const recipeData = recipe[0];
+	// check recipe is published
+	if (!recipeData?.isPublished) {
+		// check if user is logged in
+		const userId = req?.user._id;
+		if (!userId) {
+			throw new ApiError(
+				403,
+				"The author of recipe has unpublished the recipe. You will be able to access it once owner makes it public"
+			);
+		}
+		// check if user is logged in and owner of recipe
+		if (userId.toString() !== recipe.author._id.toString()) {
+			throw new ApiError(
+				403,
+				"The author of recipe has unpublished the recipe. You will be able to access it once owner makes it public"
+			);
+		}
+	}
 	return res
 		.status(200)
-		.json(new ApiResponse(200, recipe[0], "recipe fetched succesfully"));
+		.json(new ApiResponse(200, recipeData, "recipe fetched succesfully"));
 });
 
 const updateRecipeTextDetails = asyncHandler(async (req, res) => {
@@ -270,7 +289,23 @@ const saveRecipe = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, savedRecipe, "recipe saved successfully"));
 });
 
-const unsaveRecipe = asyncHandler(async (req, res) => {});
+const unsaveRecipe = asyncHandler(async (req, res) => {
+	const recipeId = req.params?.recipeId;
+	const userId = req.user._id;
+	if (!recipeId) {
+		throw new ApiError(400, "Missing required parameter: recipeId");
+	}
+	const unsavedRecipe = await UserSavedRecipe.findOneAndDelete({
+		recipe: recipeId,
+		user: userId,
+	});
+	if (!unsavedRecipe) {
+		throw new ApiError(404, "Recipe not saved by user");
+	}
+	return res
+		.status(200)
+		.json(new ApiResponse(200, {}, "Recipe unsaved successfully"));
+});
 
 // get all recipes (not sure but may have to implement pagination)
 

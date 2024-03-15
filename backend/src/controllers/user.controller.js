@@ -333,11 +333,13 @@ const getCreatedRecipes = asyncHandler(async (req, res) => {
 	);
 });
 
+// unsure of below method
 const getSavedRecipes = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 	const savedRecipes = await UserSavedRecipe.find({ user: userId }).populate(
 		"recipe"
 	);
+
 	return res.status(200, savedRecipes, "saved recipes fetched successfully");
 });
 

@@ -14,7 +14,6 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 			throw new ApiError(401, "Unauthorized request");
 		}
 		const decodedTokenData = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
 		const userId = decodedTokenData._id;
 		const foundUser = await User.findById(userId).select(
 			"-password -refreshToken"
@@ -22,7 +21,6 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 		if (!foundUser) {
 			throw new ApiError(401, "Invalid or expired Token");
 		}
-
 		req.user = foundUser;
 		next();
 	} catch (error) {
@@ -30,4 +28,31 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 	}
 });
 
-export { verifyToken };
+const optionalAuth = asyncHandler(async (req, res, next) => {
+	try {
+		const accessToken =
+			req.cookies.accessToken || req.header("Authorization").split(" ")[1];
+		if (accessToken) {
+			const decodedTokenData = jwt.verify(
+				accessToken,
+				process.env.ACCESS_TOKEN_SECRET
+			);
+			const userId = decodedTokenData._id;
+			const foundUser = await User.findById(userId).select(
+				"-password -refreshToken"
+			);
+			if (!foundUser) {
+				throw new ApiError(
+					403,
+					'Optional authentication Failed: "Invalid access token". Proceeding without authentication'
+				);
+			}
+			req.user = foundUser;
+		}
+	} catch (error) {
+		console.log(error.message);
+	}
+	next();
+});
+
+export { verifyToken, optionalAuth };

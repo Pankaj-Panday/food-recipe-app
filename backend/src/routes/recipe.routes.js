@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken } from "../middlewares/auth.middleware.js";
+import { verifyToken, optionalAuth } from "../middlewares/auth.middleware.js";
 import {
 	createRecipe,
 	viewRecipe,
@@ -14,7 +14,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
-router.route("/:recipeId/view-recipe").get(viewRecipe);
+router.route("/:recipeId/view-recipe").get(optionalAuth, viewRecipe);
 
 // secured routes
 router
