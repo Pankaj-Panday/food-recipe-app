@@ -69,6 +69,8 @@ const recipeSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
+recipeSchema.post("remove", async function (recipe) {});
+
 recipeSchema.plugin(aggregatePaginate);
 
 export const Recipe = mongoose.model("Recipe", recipeSchema);

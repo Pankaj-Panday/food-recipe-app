@@ -238,10 +238,10 @@ const deleteRecipePhoto = asyncHandler(async (req, res) => {
 
 const deleteRecipe = asyncHandler(async (req, res) => {
 	const recipeId = req.params?.recipeId;
+	const userId = req.user._id;
 	if (!recipeId) {
 		throw new ApiError(400, "Missing required URL parameter: recipeId");
 	}
-	const userId = req.user._id;
 	const recipe = await Recipe.findById(recipeId);
 	if (!recipe) {
 		throw new ApiError(404, "Recipe doesn't exist");

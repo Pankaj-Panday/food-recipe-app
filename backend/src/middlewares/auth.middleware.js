@@ -28,7 +28,8 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 	}
 });
 
-const optionalAuth = asyncHandler(async (req, res, next) => {
+// we don't need asyncHandler for below function
+const optionalAuth = async (req, res, next) => {
 	try {
 		const accessToken =
 			req.cookies.accessToken || req.header("Authorization").split(" ")[1];
@@ -53,6 +54,6 @@ const optionalAuth = asyncHandler(async (req, res, next) => {
 		console.log(error.message);
 	}
 	next();
-});
+};
 
 export { verifyToken, optionalAuth };
