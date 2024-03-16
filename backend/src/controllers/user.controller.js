@@ -335,12 +335,65 @@ const getCreatedRecipes = asyncHandler(async (req, res) => {
 
 // unsure of below method
 const getSavedRecipes = asyncHandler(async (req, res) => {
-	const userId = req.user._id;
-	const savedRecipes = await UserSavedRecipe.find({ user: userId }).populate(
-		"recipe"
-	);
+	const userId = new mongoose.Types.ObjectId(req.user._id);
 
-	return res.status(200, savedRecipes, "saved recipes fetched successfully");
+	// only show recipes which are published by owner
+	// only show title, recipePhoto, cookingtime, rating, author's name of recipe
+	const pipeline = [
+		{
+			$match: { user: userId },
+		},
+		{
+			$project: { user: 0, _id: 0 }, // [{recipe: recipeId1}, {recipe: recipeId2}]
+		},
+		{
+			$lookup: {
+				from: "recipes",
+				localField: "recipe",
+				foreignField: "_id",
+				pipeline: [
+					{
+						$lookup: {
+							from: "users",
+							localField: "author",
+							foreignField: "_id",
+							pipeline: [
+								{
+									$project: { name: 1 }, // _id is included by default in project stage
+								},
+							],
+							as: "author",
+						},
+					},
+					{
+						$set: { author: { $arrayElemAt: ["$author", 0] } },
+					},
+				],
+				as: "recipe",
+			},
+		},
+		{
+			$unwind: "$recipe",
+		},
+		{
+			$match: { $expr: { $eq: ["$isPublished", true] } },
+		},
+		{
+			$project: {
+				title: 1,
+				cookingTime: 1,
+				recipePhoto: 1,
+				rating: 1,
+				author: 1,
+			},
+		},
+	];
+
+	const recipes = await UserSavedRecipe.aggregate(pipeline);
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, recipes, "saved recipes fetched successfully"));
 });
 
 // controller to delete user account completely

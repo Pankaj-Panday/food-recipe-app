@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import aggregatePaginate from "mongoose-aggregate-paginate-v2";
+import { UserSavedRecipe } from "../models/savedRecipe.model.js";
 
 const reviewSchema = new mongoose.Schema(
 	{
@@ -69,7 +70,10 @@ const recipeSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-recipeSchema.post("remove", async function (recipe) {});
+recipeSchema.post("remove", async function (recipeDoc) {
+	const recipeId = recipeDoc._id;
+	await UserSavedRecipe.deleteMany({ recipe: recipeId });
+});
 
 recipeSchema.plugin(aggregatePaginate);
 
