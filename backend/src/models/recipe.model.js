@@ -70,7 +70,8 @@ const recipeSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-recipeSchema.post("remove", async function (recipeDoc) {
+// below hook will be triggered when someone calls findByIdAndDelete or findOneAndDelete
+recipeSchema.post("findOneAndDelete", async function (recipeDoc) {
 	const recipeId = recipeDoc._id;
 	await UserSavedRecipe.deleteMany({ recipe: recipeId });
 });

@@ -333,7 +333,6 @@ const getCreatedRecipes = asyncHandler(async (req, res) => {
 	);
 });
 
-// unsure of below method
 const getSavedRecipes = asyncHandler(async (req, res) => {
 	const userId = new mongoose.Types.ObjectId(req.user._id);
 
@@ -396,7 +395,26 @@ const getSavedRecipes = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, recipes, "saved recipes fetched successfully"));
 });
 
-// controller to delete user account completely
+const deleteUser = asyncHandler(async (req, res) => {
+	const userId = req?.user._id;
+	const user = await User.findById(userId);
+	const avatarPublicId = user.avatar?.publicId;
+	if (avatarPublicId) {
+		const success = await removeFromCloudinary(avatarPublicId);
+		if (!success) {
+			throw new ApiError(
+				500,
+				"Something went wrong while deleting user profile photo"
+			);
+		}
+	}
+
+	// delete user from mongodb
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, {}, "User deleted successfully"));
+});
 
 export {
 	registerUser,
@@ -411,4 +429,5 @@ export {
 	getUserDetails,
 	getCreatedRecipes,
 	getSavedRecipes,
+	deleteUser,
 };

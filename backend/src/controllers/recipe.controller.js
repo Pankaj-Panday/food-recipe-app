@@ -256,7 +256,7 @@ const deleteRecipe = asyncHandler(async (req, res) => {
 			throw new ApiError(500, "Something went wrong while deleting photo");
 		}
 	}
-	await recipe.remove();
+	await Recipe.findByIdAndDelete(recipeId);
 	return res
 		.status(200)
 		.json(new ApiResponse(200, {}, "Recipe deleted successfully"));

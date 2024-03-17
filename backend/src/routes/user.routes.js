@@ -12,6 +12,7 @@ import {
 	getUserDetails,
 	getSavedRecipes,
 	getCreatedRecipes,
+	deleteUser,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
@@ -34,6 +35,6 @@ router.route("/update-details").patch(verifyToken, updateUserDetails);
 router.route("/:userId").get(verifyToken, getUserDetails);
 router.route("/saved-recipes").get(verifyToken, getSavedRecipes);
 router.route("/:userId/created-recipes").get(verifyToken, getCreatedRecipes);
-// add a route to delete user account
+router.route("/delete").delete(verifyToken, deleteUser);
 
 export default router;
