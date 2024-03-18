@@ -76,6 +76,17 @@ recipeSchema.post("findOneAndDelete", async function (recipeDoc) {
 	await UserSavedRecipe.deleteMany({ recipe: recipeId });
 });
 
+recipeSchema.pre("deleteMany", async function () {
+	// 1. get ids of all the recipes being deleted
+	// 2. remove saved recipe refrences to all the above recipes ids
+	// Note: the value of "this" here is actually a query object
+	const queryFilter = this.getFilter();
+	const recipeIds = await Recipe.find(queryFilter).select({ _id: 1 }).lean();
+	recipeIds.forEach(async (recipeId) => {
+		await UserSavedRecipe.deleteMany({ recipe: recipeId });
+	});
+});
+
 recipeSchema.plugin(aggregatePaginate);
 
 export const Recipe = mongoose.model("Recipe", recipeSchema);

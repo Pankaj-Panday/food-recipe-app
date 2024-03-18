@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { hashPassword } from "../utils/hashPassword.js";
+import { Recipe } from "./recipe.model.js";
+import { UserSavedRecipe } from "./savedRecipe.model.js";
 
 const userSchema = new mongoose.Schema(
 	{
@@ -81,6 +83,16 @@ userSchema.pre("save", async function () {
 		return;
 	}
 	user.password = await hashPassword(user.password);
+});
+
+userSchema.post("findOneAndDelete", async function (userDoc) {
+	// 1. delete all recipes created by that user
+	// 2. delete all recipes (refrences) saved by that user
+	// 3. delete all saved Recipe refrecnes to deleted recipes of user
+	// 4. The 3rd step will be taken care of by post "deleteMany" hook of recipe schema
+	const userId = userDoc._id;
+	await Recipe.deleteMany({ author: userId });
+	await UserSavedRecipe.deleteMany({ user: userId });
 });
 
 export const User = mongoose.model("User", userSchema);

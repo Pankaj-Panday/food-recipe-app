@@ -408,9 +408,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 			);
 		}
 	}
-
-	// delete user from mongodb
-
+	await User.findByIdAndDelete(userId);
 	return res
 		.status(200)
 		.json(new ApiResponse(200, {}, "User deleted successfully"));
