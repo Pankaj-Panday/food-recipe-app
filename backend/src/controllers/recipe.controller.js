@@ -306,7 +306,76 @@ const unsaveRecipe = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, {}, "Recipe unsaved successfully"));
 });
 
-// get all recipes (not sure but may have to implement pagination)
+const getAllRecipes = asyncHandler(async (req, res) => {
+	const pipeline = [
+		{
+			$match: { $expr: { $eq: ["$isPublished", true] } },
+		},
+		{
+			$lookup: {
+				from: "users",
+				localField: "author",
+				foreignField: "_id",
+				pipeline: [
+					{
+						$project: { name: 1 },
+					},
+				],
+				as: "author",
+			},
+		},
+		{
+			$set: { author: { $arrayElemAt: ["$author", 0] } },
+		},
+		{
+			$project: {
+				title: 1,
+				cookingTime: 1,
+				recipePhoto: 1,
+				rating: 1,
+				author: 1,
+			},
+		},
+	];
+	const recipeAggregate = Recipe.aggregate(pipeline);
+	const options = {
+		page: parseInt(req.query.page) || 1,
+		limit: 10,
+	};
+	const result = await Recipe.aggregatePaginate(recipeAggregate, options);
+
+	const response = {
+		recipes: result.docs,
+		totalRecipeCount: result.totalDocs,
+		recipesPerPage: result.limit,
+		curPageNum: result.page,
+		totalPages: result.totalPages,
+		hasPrevPage: result.hasPrevPage, // boolean
+		hasNextPage: result.hasNextPage, // boolean
+		prevPageNum: result.prevPage, // page number or null
+		nextPageNum: result.nextPage, // page number or null
+	};
+
+	res
+		.status(200)
+		.json(new ApiResponse(200, response, "recipes fetched successfully"));
+});
+
+const getFourRandomRecipes = asyncHandler(async (req, res) => {
+	const latestRecipes = await Recipe.find({ isPublished: true })
+		.limit(4)
+		.select("title author cookingTime rating recipePhoto")
+		.populate({
+			path: "author",
+			select: { name: 1 }, // select only name field from author (_id is by default)
+		});
+
+	return res
+		.status(200)
+		.json(
+			new ApiResponse(200, latestRecipes, "Latest Recipes fetched successfully")
+		);
+});
 
 // rate a recipe
 // update rating for a recipe
@@ -325,4 +394,6 @@ export {
 	deleteRecipe,
 	saveRecipe,
 	unsaveRecipe,
+	getAllRecipes,
+	getFourRandomRecipes,
 };

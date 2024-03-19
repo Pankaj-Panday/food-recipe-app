@@ -322,15 +322,15 @@ const getCreatedRecipes = asyncHandler(async (req, res) => {
 		throw new ApiError(404, "User not found");
 	}
 	const createdRecipes = await Recipe.find({ author: userId }); // returns an array of docs
-	return res.status(200).json(
-		new ApiResponse(
-			200,
-			{
-				recipes: createdRecipes,
-			},
-			"created recipes fetched successfully"
-		)
-	);
+	return res
+		.status(200)
+		.json(
+			new ApiResponse(
+				200,
+				createdRecipes,
+				"created recipes fetched successfully"
+			)
+		);
 });
 
 const getSavedRecipes = asyncHandler(async (req, res) => {
