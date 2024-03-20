@@ -382,7 +382,6 @@ const getSavedRecipes = asyncHandler(async (req, res) => {
 				title: 1,
 				cookingTime: 1,
 				recipePhoto: 1,
-				rating: 1,
 				author: 1,
 			},
 		},

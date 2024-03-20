@@ -2,20 +2,6 @@ import mongoose from "mongoose";
 import aggregatePaginate from "mongoose-aggregate-paginate-v2";
 import { UserSavedRecipe } from "../models/savedRecipe.model.js";
 
-const reviewSchema = new mongoose.Schema(
-	{
-		author: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
-		},
-		content: {
-			type: String,
-			required: true,
-		},
-	},
-	{ timestamps: true }
-);
-
 const recipeSchema = new mongoose.Schema(
 	{
 		title: {
@@ -50,13 +36,6 @@ const recipeSchema = new mongoose.Schema(
 			// should be an array of strings
 			type: [String],
 			required: [true, "Steps cannot be empty"],
-		},
-		rating: {
-			type: Number,
-			default: null,
-		},
-		reviews: {
-			type: [reviewSchema],
 		},
 		author: {
 			type: mongoose.Schema.Types.ObjectId,

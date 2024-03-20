@@ -332,7 +332,6 @@ const getAllRecipes = asyncHandler(async (req, res) => {
 				title: 1,
 				cookingTime: 1,
 				recipePhoto: 1,
-				rating: 1,
 				author: 1,
 			},
 		},
@@ -364,7 +363,7 @@ const getAllRecipes = asyncHandler(async (req, res) => {
 const getFourRandomRecipes = asyncHandler(async (req, res) => {
 	const latestRecipes = await Recipe.find({ isPublished: true })
 		.limit(4)
-		.select("title author cookingTime rating recipePhoto")
+		.select("title author cookingTime recipePhoto")
 		.populate({
 			path: "author",
 			select: { name: 1 }, // select only name field from author (_id is by default)
@@ -376,14 +375,6 @@ const getFourRandomRecipes = asyncHandler(async (req, res) => {
 			new ApiResponse(200, latestRecipes, "Latest Recipes fetched successfully")
 		);
 });
-
-// rate a recipe
-// update rating for a recipe
-// delete rating (maybe a separate route)
-
-// add comment on a recipe
-// update comment on a recipe
-// delete comment on recipe
 
 export {
 	createRecipe,
