@@ -103,7 +103,7 @@ const getAllReviewsOfRecipe = asyncHandler(async(req, res) => {
       $match: {recipe: recipeObjectId}
     },
     {
-      
+
     }
   ];
   const reviewAggregate = Review.aggregate(pipeline);
@@ -129,5 +129,3 @@ const getAllReviewsOfRecipe = asyncHandler(async(req, res) => {
 })
 
 export { createReview, deleteReview, getSingleReview, updateReview };
-
-let rating = "5";
