@@ -8,7 +8,6 @@ import {
 	uploadToCloudinary,
 } from "../utils/remoteFileManage.js";
 import { removeLocalFile } from "../utils/localFileManage.js";
-import { UserSavedRecipe } from "../models/savedRecipe.model.js";
 
 function anyEmptyValue(...fields) {
 	const isEmpty = fields.some((field) => {
@@ -262,50 +261,6 @@ const deleteRecipe = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, {}, "Recipe deleted successfully"));
 });
 
-const saveRecipe = asyncHandler(async (req, res) => {
-	const userId = req.user._id;
-	const recipeId = req.params?.recipeId;
-	if (!recipeId) {
-		throw new ApiError(400, "Missing required URL parameter: recipeId");
-	}
-	const recipe = await Recipe.findById(recipeId);
-	if (!recipe) {
-		throw new ApiError(404, "Recipe not found");
-	}
-	const existingRecipe = await UserSavedRecipe.findOne({
-		recipe: recipeId,
-		user: userId,
-	});
-	if (existingRecipe) {
-		throw new ApiError(409, "Recipe is already saved");
-	}
-	const savedRecipe = await UserSavedRecipe.create({
-		recipe: recipeId,
-		user: userId,
-	});
-	return res
-		.status(200)
-		.json(new ApiResponse(200, savedRecipe, "recipe saved successfully"));
-});
-
-const unsaveRecipe = asyncHandler(async (req, res) => {
-	const recipeId = req.params?.recipeId;
-	const userId = req.user._id;
-	if (!recipeId) {
-		throw new ApiError(400, "Missing required parameter: recipeId");
-	}
-	const unsavedRecipe = await UserSavedRecipe.findOneAndDelete({
-		recipe: recipeId,
-		user: userId,
-	});
-	if (!unsavedRecipe) {
-		throw new ApiError(404, "Recipe not saved by user");
-	}
-	return res
-		.status(200)
-		.json(new ApiResponse(200, {}, "Recipe unsaved successfully"));
-});
-
 const getAllRecipes = asyncHandler(async (req, res) => {
 	const pipeline = [
 		{
@@ -376,6 +331,24 @@ const getFourRandomRecipes = asyncHandler(async (req, res) => {
 		);
 });
 
+const getCreatedRecipesOfUser = asyncHandler(async (req, res) => {
+	const userId = req.params.userId;
+	const foundUser = await User.findById(userId);
+	if (!foundUser) {
+		throw new ApiError(404, "User not found");
+	}
+	const createdRecipes = await Recipe.find({ author: userId }); // returns an array of docs
+	return res
+		.status(200)
+		.json(
+			new ApiResponse(
+				200,
+				createdRecipes,
+				"created recipes fetched successfully"
+			)
+		);
+});
+
 export {
 	createRecipe,
 	viewRecipe,
@@ -383,8 +356,7 @@ export {
 	updateRecipePhoto,
 	deleteRecipePhoto,
 	deleteRecipe,
-	saveRecipe,
-	unsaveRecipe,
 	getAllRecipes,
 	getFourRandomRecipes,
+	getCreatedRecipesOfUser,
 };

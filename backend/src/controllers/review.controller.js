@@ -103,7 +103,23 @@ const getAllReviewsOfRecipe = asyncHandler(async(req, res) => {
       $match: {recipe: recipeObjectId}
     },
     {
-
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {name: 1}
+          },
+        ]
+      }
+    },
+    {
+      $unwind: "$owner"
+    },
+    {
+      $project: {owner: 1, comment: 1}
     }
   ];
   const reviewAggregate = Review.aggregate(pipeline);
@@ -126,6 +142,6 @@ const getAllReviewsOfRecipe = asyncHandler(async(req, res) => {
   }
   
   return res.status(200).json(new ApiResponse(200, response, "reviews fetched successfully"));
-})
+});
 
-export { createReview, deleteReview, getSingleReview, updateReview };
+export { createReview, deleteReview, getSingleReview, updateReview, getAllReviewsOfRecipe };

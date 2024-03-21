@@ -7,11 +7,13 @@ import {
 	updateRecipePhoto,
 	deleteRecipePhoto,
 	deleteRecipe,
-	saveRecipe,
-	unsaveRecipe,
 	getAllRecipes,
 	getFourRandomRecipes,
 } from "../controllers/recipe.controller.js";
+import {
+	saveRecipe,
+	unsaveRecipe,
+} from "../controllers/savedRecipe.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
