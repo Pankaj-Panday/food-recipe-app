@@ -14,7 +14,7 @@ import {
 } from "../controllers/user.controller.js";
 import { getCreatedRecipesOfUser } from "../controllers/recipe.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
-import { verifyToken } from "../middlewares/auth.middleware.js";
+import { optionalAuth, verifyToken } from "../middlewares/auth.middleware.js";
 import { getSavedRecipesOfUser } from "../controllers/savedRecipe.controller.js";
 
 const router = Router();
@@ -36,7 +36,7 @@ router.route("/:userId").get(verifyToken, getUserDetails);
 router.route("/saved-recipes").get(verifyToken, getSavedRecipesOfUser);
 router
 	.route("/:userId/created-recipes")
-	.get(verifyToken, getCreatedRecipesOfUser);
+	.get(optionalAuth, getCreatedRecipesOfUser);
 router.route("/delete").delete(verifyToken, deleteUser);
 
 export default router;

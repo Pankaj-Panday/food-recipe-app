@@ -337,15 +337,17 @@ const getCreatedRecipesOfUser = asyncHandler(async (req, res) => {
 	if (!foundUser) {
 		throw new ApiError(404, "User not found");
 	}
-	const createdRecipes = await Recipe.find({ author: userId }); // returns an array of docs
+	const loggedInUser = req.user?._id;
+	let recipes = [];
+	if (loggedInUser && loggedInUser.toString === userId.toString()) {
+		recipes = await Recipe.find({ author: userId });
+	} else {
+		recipes = await Recipe.find({ author: userId, isPublished: true });
+	}
 	return res
 		.status(200)
 		.json(
-			new ApiResponse(
-				200,
-				createdRecipes,
-				"created recipes fetched successfully"
-			)
+			new ApiResponse(200, recipes, "created recipes fetched successfully")
 		);
 });
 

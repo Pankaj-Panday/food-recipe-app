@@ -24,10 +24,14 @@ const createReview = asyncHandler(async (req, res) => {
 	const recipeId = req.params.recipeId;
 	const {rating, comment} = validateReviewData(req.body?.rating, req.body?.comment);
 
-  const recipe = await Recipe.findById(recipeId);
+  const recipe = await Recipe.findOne(recipeId);
 	if (!recipe) {
 		throw new ApiError(404, "Recice not found");
 	}
+
+  if(!recipe.isPublished) {
+    throw new ApiError(403, "You cannot create review on a private recipe.")
+  }
 
 	const review = await Review.create({
 		owner: userId,
@@ -39,25 +43,6 @@ const createReview = asyncHandler(async (req, res) => {
 	return res
 		.status(201)
 		.json(new ApiResponse(201, review, "Review created successfully"));
-});
-
-const deleteReview = asyncHandler(async (req, res) => {
-	const reviewId = req.params?.reviewId;
-	const userId = req.user._id;
-	if (!reviewId) {
-		throw new ApiError(400, "Missing required parameter: reviewId");
-	}
-	const review = await Review.findById(reviewId);
-	if (!review) {
-		throw new ApiError(404, "Review not found");
-	}
-	if (review.owner.toString() !== userId.toString()) {
-		throw new ApiError(403, "You are not authorized to perform this action");
-	}
-	await Review.findByIdAndDelete(reviewId);
-	return res
-		.status(200)
-		.json(new ApiResponse(200, {}, "Review deleted successfully"));
 });
 
 const getSingleReview = asyncHandler(async (req, res) => {
@@ -72,6 +57,10 @@ const getSingleReview = asyncHandler(async (req, res) => {
 	if (!review) {
 		throw new ApiError(404, "Review not found");
 	}
+  const recipe = await Recipe.findById(review?.recipe);
+  if(!recipe.isPublished) {
+    throw new ApiError(403, "You cannot access review of a private recipe");
+  }
 	return res.status(200).json(200, review, "review fetched successfully");
 });
 
@@ -83,6 +72,12 @@ const updateReview = asyncHandler(async (req, res) => {
 	if (!review) {
 		throw new ApiError(404, "Review not found");
 	}
+
+  const recipe = await Recipe.findById(review?.recipe);
+  if(!recipe.isPublished) {
+    throw new ApiError(403, "You cannot update review of a private recipe");
+  }
+
   if(review.owner.toString() = userId.toString()) {
     throw new ApiError(403, "You are not authorized to perform this action");
   }
@@ -92,11 +87,42 @@ const updateReview = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, updatedReview, "Review updated successfully"));
 });
 
+const deleteReview = asyncHandler(async (req, res) => {
+	const reviewId = req.params?.reviewId;
+	const userId = req.user._id;
+	if (!reviewId) {
+		throw new ApiError(400, "Missing required parameter: reviewId");
+	}
+	const review = await Review.findById(reviewId);
+	if (!review) {
+		throw new ApiError(404, "Review not found");
+	}
+
+  const recipe = await Recipe.findById(review?.recipe);
+  if(!recipe.isPublished) {
+    throw new ApiError(403, "You cannot delete review of a private recipe");
+  }
+
+	if (review.owner.toString() !== userId.toString()) {
+		throw new ApiError(403, "You are not authorized to perform this action");
+	}
+	await Review.findByIdAndDelete(reviewId);
+	return res
+		.status(200)
+		.json(new ApiResponse(200, {}, "Review deleted successfully"));
+});
+
 const getAllReviewsOfRecipe = asyncHandler(async(req, res) => {
   const recipeId = req.params.recipeId;
   if(!recipeId) {
     throw new ApiError(400, "Missing required parameter: recipeId");
   }
+  
+  const recipe = await Recipe.findById(recipeId);
+  if(!recipe.isPublished) {
+    throw new ApiError(403, "You cannot access reviews of a private recipe");
+  }
+
   const recipeObjectId = new mongoose.Types.ObjectId(recipeId);
   const pipeline = [ 
     {

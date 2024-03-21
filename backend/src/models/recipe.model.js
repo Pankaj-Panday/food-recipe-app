@@ -45,9 +45,38 @@ const recipeSchema = new mongoose.Schema(
 			type: Boolean, // to allow user to save draft of a recipe
 			default: false,
 		},
+		avgRating: {
+			type: Number,
+			min: [1, "rating should be in range 1 to 5"],
+			max: [5, "rating should be in range 1 to 5"],
+			default: 0,
+		},
+		numReviews: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{ timestamps: true }
 );
+
+recipeSchema.statics.calculateAvgRating = function (recipeId) {
+	const recipeObjectId = new mongoose.Types.ObjectId("" + recipeId);
+	const pipeline = [
+		{
+			$match: { _id: recipeObjectId },
+		},
+		{
+			$lookup: {
+				from: "reviews",
+				localField: "_id",
+				foreignField: "recipe",
+				as: "reviews",
+			},
+		},
+	];
+	const result = this.aggregate(pipeline); // this refers to the Model inside the static method
+	console.log(result);
+};
 
 // below hook will be triggered when someone calls findByIdAndDelete or findOneAndDelete
 recipeSchema.post("findOneAndDelete", async function (recipeDoc) {
