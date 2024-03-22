@@ -17,7 +17,7 @@ const reviewSchema = new mongoose.Schema({
 		min: [1, "rating should be in range 1 to 5"],
 		max: [5, "rating should be in range 1 to 5"],
 		required: true,
-		default: 0,
+		default: null,
 	},
 	comment: {
 		type: String,
