@@ -67,6 +67,7 @@ const getSavedRecipesOfUser = asyncHandler(async (req, res) => {
 				from: "recipes",
 				localField: "recipe",
 				foreignField: "_id",
+				as: "recipe",
 				pipeline: [
 					{
 						$lookup: {
@@ -85,7 +86,6 @@ const getSavedRecipesOfUser = asyncHandler(async (req, res) => {
 						$set: { author: { $arrayElemAt: ["$author", 0] } },
 					},
 				],
-				as: "recipe",
 			},
 		},
 		{
@@ -100,6 +100,8 @@ const getSavedRecipesOfUser = asyncHandler(async (req, res) => {
 				cookingTime: 1,
 				recipePhoto: 1,
 				author: 1,
+				avgRating: 1,
+				totalReviews: 1,
 			},
 		},
 	];

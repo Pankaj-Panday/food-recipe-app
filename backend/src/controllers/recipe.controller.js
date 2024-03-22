@@ -98,6 +98,9 @@ const viewRecipe = asyncHandler(async (req, res) => {
 				as: "author",
 			},
 		},
+		{
+			$set: { author: { $arrayElemAt: ["$author", 0] } },
+		},
 	];
 	const recipe = await Recipe.aggregate(pipeline);
 	if (!recipe?.length) {
@@ -288,6 +291,8 @@ const getAllRecipes = asyncHandler(async (req, res) => {
 				cookingTime: 1,
 				recipePhoto: 1,
 				author: 1,
+				avgRating: 1,
+				totalReviews: 1,
 			},
 		},
 	];
@@ -318,7 +323,7 @@ const getAllRecipes = asyncHandler(async (req, res) => {
 const getFourRandomRecipes = asyncHandler(async (req, res) => {
 	const latestRecipes = await Recipe.find({ isPublished: true })
 		.limit(4)
-		.select("title author cookingTime recipePhoto")
+		.select("title author cookingTime recipePhoto avgRating totalReviews")
 		.populate({
 			path: "author",
 			select: { name: 1 }, // select only name field from author (_id is by default)
@@ -340,9 +345,13 @@ const getCreatedRecipesOfUser = asyncHandler(async (req, res) => {
 	const loggedInUser = req.user?._id;
 	let recipes = [];
 	if (loggedInUser && loggedInUser.toString === userId.toString()) {
-		recipes = await Recipe.find({ author: userId });
+		recipes = await Recipe.find({ author: userId }).select(
+			"title author cookingTime recipePhoto avgRating totalReviews"
+		);
 	} else {
-		recipes = await Recipe.find({ author: userId, isPublished: true });
+		recipes = await Recipe.find({ author: userId, isPublished: true }).select(
+			"title author cookingTime recipePhoto avgRating totalReviews"
+		);
 	}
 	return res
 		.status(200)
