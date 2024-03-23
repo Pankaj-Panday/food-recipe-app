@@ -12,10 +12,8 @@ import {
 	getUserDetails,
 	deleteUser,
 } from "../controllers/user.controller.js";
-import { getCreatedRecipesOfUser } from "../controllers/recipe.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
-import { optionalAuth, verifyToken } from "../middlewares/auth.middleware.js";
-import { getSavedRecipesOfUser } from "../controllers/savedRecipe.controller.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -33,10 +31,6 @@ router
 router.route("/remove-avatar").patch(verifyToken, removeUserAvatar);
 router.route("/update-details").patch(verifyToken, updateUserDetails);
 router.route("/:userId").get(verifyToken, getUserDetails);
-router.route("/saved-recipes").get(verifyToken, getSavedRecipesOfUser);
-router
-	.route("/:userId/created-recipes")
-	.get(optionalAuth, getCreatedRecipesOfUser);
 router.route("/delete").delete(verifyToken, deleteUser);
 
 export default router;

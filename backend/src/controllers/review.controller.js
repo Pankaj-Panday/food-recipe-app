@@ -21,37 +21,70 @@ function validateReviewData(rating, comment) {
 }
 
 const createReview = asyncHandler(async (req, res) => {
-	const userId = req.user._id;
-	const recipeId = req.params.recipeId;
-	const { rating, comment } = validateReviewData(
-		req.body?.rating,
-		req.body?.comment
-	);
+	try {
+		const userId = req.user._id;
+		const recipeId = req.params.recipeId;
+		const { rating, comment } = validateReviewData(
+			req.body?.rating,
+			req.body?.comment
+		);
 
-	const recipe = await Recipe.findById(recipeId);
-	if (!recipe) {
-		throw new ApiError(404, "Recice not found");
+		const recipe = await Recipe.findById(recipeId);
+		if (!recipe) {
+			throw new ApiError(404, "Recice not found");
+		}
+
+		if (recipe.author.toString() === userId.toString()) {
+			throw new ApiError(403, "You cannot create a review your own recipe");
+		}
+
+		if (!recipe.isPublished) {
+			throw new ApiError(403, "You cannot create review on a private recipe.");
+		}
+
+		const review = await Review.create({
+			owner: userId,
+			recipe: recipeId,
+			rating: rating,
+			comment: comment?.trimEnd() || "",
+		});
+
+		return res
+			.status(201)
+			.json(new ApiResponse(201, review, "Review created successfully"));
+	} catch (error) {
+		if (error.code === 11000) {
+			// mongodb sends this error when unique contraint is violated
+			throw new ApiError(409, "User has already reviewed this recipe");
+		}
+		throw new ApiError(error.code, error.message);
 	}
-
-	if (!recipe.isPublished) {
-		throw new ApiError(403, "You cannot create review on a private recipe.");
-	}
-
-	const review = await Review.create({
-		owner: userId,
-		recipe: recipeId,
-		rating: rating,
-		comment: comment?.trimEnd() || "",
-	});
-
-	await Recipe.calculateAvgRating(recipeId);
-
-	return res
-		.status(201)
-		.json(new ApiResponse(201, review, "Review created successfully"));
 });
 
-const getSingleReview = asyncHandler(async (req, res) => {
+const checkReviewExistence = asyncHandler(async (req, res) => {
+	try {
+		const userId = req.user._id;
+		const recipeId = req.params.recipeId;
+		if (!recipeId) {
+			throw new ApiError(400, "Missing required parameter: recipeId");
+		}
+		const review = await Review.findOne({ owner: userId, recipe: recipeId });
+		const isFound = review ? true : false;
+		return res
+			.status(200)
+			.json(
+				new ApiResponse(
+					200,
+					{ reviewExist: isFound },
+					"Review existence checked successfully"
+				)
+			);
+	} catch (error) {
+		throw new ApiError(error.code, error.message);
+	}
+});
+
+const getReviewById = asyncHandler(async (req, res) => {
 	const reviewId = req.params.reviewId;
 	if (!reviewId) {
 		throw new ApiError(400, "Missing required paramter: reviewId");
@@ -96,8 +129,6 @@ const updateReview = asyncHandler(async (req, res) => {
 	review.comment = comment || "";
 	const updatedReview = await review.save();
 
-	await Recipe.calculateAvgRating(recipe._id);
-
 	return res
 		.status(200)
 		.json(new ApiResponse(200, updatedReview, "Review updated successfully"));
@@ -123,7 +154,6 @@ const deleteReview = asyncHandler(async (req, res) => {
 		throw new ApiError(403, "You are not authorized to perform this action");
 	}
 	await Review.findByIdAndDelete(reviewId);
-	await Recipe.calculateAvgRating(recipe._id);
 	return res
 		.status(200)
 		.json(new ApiResponse(200, {}, "Review deleted successfully"));
@@ -200,8 +230,9 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 
 export {
 	createReview,
+	checkReviewExistence,
 	deleteReview,
-	getSingleReview,
+	getReviewById,
 	updateReview,
 	getAllReviewsOfRecipe,
 };

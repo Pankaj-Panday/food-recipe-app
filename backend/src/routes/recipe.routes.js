@@ -9,10 +9,12 @@ import {
 	deleteRecipe,
 	getAllRecipes,
 	getFourRandomRecipes,
+	getCreatedRecipesOfUser,
 } from "../controllers/recipe.controller.js";
 import {
 	saveRecipe,
 	unsaveRecipe,
+	getSavedRecipesOfUser,
 } from "../controllers/savedRecipe.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -43,5 +45,9 @@ router.route("/:recipeId/save-recipe").post(verifyToken, saveRecipe);
 router.route("/:recipeId/unsave-recipe").delete(verifyToken, unsaveRecipe);
 router.route("/all").get(getAllRecipes);
 router.route("/random-recipes").get(getFourRandomRecipes);
+router.route("/saved-recipes").get(verifyToken, getSavedRecipesOfUser);
+router
+	.route("/created-recipes/:userId")
+	.get(optionalAuth, getCreatedRecipesOfUser);
 
 export default router;

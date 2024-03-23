@@ -50,6 +50,7 @@ const unsaveRecipe = asyncHandler(async (req, res) => {
 
 const getSavedRecipesOfUser = asyncHandler(async (req, res) => {
 	const userId = req.user?._id;
+
 	// below had to convert to string becasue it was throwing warning
 	const userObjectId = new mongoose.Types.ObjectId("" + userId);
 
@@ -60,7 +61,7 @@ const getSavedRecipesOfUser = asyncHandler(async (req, res) => {
 			$match: { user: userObjectId },
 		},
 		{
-			$project: { user: 0, _id: 0 }, // [{recipe: recipeId1}, {recipe: recipeId2}]
+			$project: { recipe: 1, _id: 0 }, // [{recipe: recipeId1}, {recipe: recipeId2}]
 		},
 		{
 			$lookup: {
@@ -92,16 +93,16 @@ const getSavedRecipesOfUser = asyncHandler(async (req, res) => {
 			$unwind: "$recipe",
 		},
 		{
-			$match: { $expr: { $eq: ["$isPublished", true] } },
+			$match: { $expr: { $eq: ["$recipe.isPublished", true] } },
 		},
 		{
 			$project: {
-				title: 1,
-				cookingTime: 1,
-				recipePhoto: 1,
-				author: 1,
-				avgRating: 1,
-				totalReviews: 1,
+				title: "$recipe.title",
+				cookingTime: "$recipe.cookingTime",
+				recipePhoto: "$recipe.recipePhoto",
+				author: "$recipe.author",
+				avgRating: "$recipe.avgRating",
+				totalReviews: "$recipe.totalReviews",
 			},
 		},
 	];

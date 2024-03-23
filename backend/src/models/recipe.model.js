@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import aggregatePaginate from "mongoose-aggregate-paginate-v2";
-import { UserSavedRecipe } from "../models/savedRecipe.model.js";
+import { UserSavedRecipe } from "./savedRecipe.model.js";
 import ApiError from "../utils/ApiError.js";
+import { Review } from "./review.model.js";
 
 const recipeSchema = new mongoose.Schema(
 	{
@@ -107,9 +108,17 @@ recipeSchema.statics.calculateAvgRating = async function (recipeId) {
 };
 
 // below hook will be triggered when someone calls findByIdAndDelete or findOneAndDelete
-recipeSchema.post("findOneAndDelete", async function (recipeDoc) {
+recipeSchema.post("findOneAndDelete", async function (recipeDoc, next) {
 	const recipeId = recipeDoc._id;
 	await UserSavedRecipe.deleteMany({ recipe: recipeId });
+	next();
+});
+
+recipeSchema.post("findOneAndDelete", async function (recipeDoc, next) {
+	const recipeId = recipeDoc._id;
+	// delete all reviews of that recipe
+	await Review.deleteMany({ recipe: recipeId });
+	next();
 });
 
 recipeSchema.pre("deleteMany", async function () {
@@ -120,6 +129,7 @@ recipeSchema.pre("deleteMany", async function () {
 	const recipeIds = await Recipe.find(queryFilter).select({ _id: 1 }).lean();
 	recipeIds.forEach(async (recipeId) => {
 		await UserSavedRecipe.deleteMany({ recipe: recipeId });
+		await Review.deleteMany({ recipe: recipeId });
 	});
 });
 
