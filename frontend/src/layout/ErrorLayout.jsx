@@ -1,21 +1,20 @@
 import React from "react";
 import { useRouteError } from "react-router-dom";
-import Header from "../components/Header.jsx";
-import Footer from "../components/Footer.jsx";
+import { Header, Footer } from "../components";
 
 const ErrorLayout = () => {
 	const error = useRouteError();
-	console.log(error);
+	console.error(error.error);
 	return (
 		<>
 			<Header />
-			<div id="error-page">
-				<h1>Oops!</h1>
+			<main className="my-8 text-center">
+				<h1 className="font-bold text-3xl mb-4">Oops!</h1>
 				<p>Sorry, an unexpected error has occurred.</p>
-				<p>
+				<p className="mt-2 text-gray-500">
 					{error.status} {error.statusText}
 				</p>
-			</div>
+			</main>
 			<Footer />
 		</>
 	);
