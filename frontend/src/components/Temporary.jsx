@@ -1,4 +1,5 @@
 import React from "react";
+import userService from "../services/user.service";
 
 const Temporary = () => {
 	return (
@@ -14,7 +15,31 @@ const Temporary = () => {
 					Github link for backend
 				</a>
 			</p>
+			<Button />
 		</div>
+	);
+};
+
+const Button = () => {
+	const name = "User 1";
+	const email = "user1@example.com";
+	const password = "12345678";
+
+	const handleBtnClick = async () => {
+		// const response = await userService.registerUser({ name, email, password });
+		// const response = await userService.loginUser({ email, password });
+		// const response = await userService.currentUser();
+		// const response = await userService.logoutUser();
+		console.log(response);
+	};
+	return (
+		<button
+			type="button"
+			className="p-2 bg-red-400 block mx-auto mt-5 text-white w-[150px] rounded-lg"
+			onClick={handleBtnClick}
+		>
+			Click here
+		</button>
 	);
 };
 
