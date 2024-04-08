@@ -30,6 +30,7 @@ const Button = () => {
 		// const response = await userService.loginUser({ email, password });
 		// const response = await userService.currentUser();
 		// const response = await userService.logoutUser();
+		const response = await userService.refreshAccessToken();
 		console.log(response);
 	};
 	return (
