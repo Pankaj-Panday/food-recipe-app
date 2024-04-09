@@ -1,45 +1,7 @@
-import config from "../config/config.js";
-import axios from "axios";
-import ErrorResponse from "../utils/ErrorResponse.js";
-
-const axiosInstance = axios.create({
-	baseURL: config.backendUrl,
-	withCredentials: true,
-});
-
-axiosInstance.interceptors.response.use(
-	function (response) {
-		return response.data;
-	},
-	function (error) {
-		let customError = {
-			isAxiosError: error.name ? error.name === "AxiosError" : false,
-			message: error.message || "Something went wrong",
-			config: error.config,
-			status: error.response?.status || 500,
-			reason: error.response?.data.message || "Unknown",
-		};
-
-		if (error.response) {
-			// The request was made and the server responded with a non-2xx status code
-			console.error("AxiosError :: Message :: ", customError.message);
-		} else if (error.request) {
-			// The request was made but no response was received
-			customError.reason = "No response received from server";
-			console.error("Request: ", error.request);
-			console.error("AxiosError :: Message :: ", customError.message);
-		} else {
-			// Something happened in setting up the request that triggered an Error
-			customError.reason = "Error during request setup";
-			console.error("AxiosError :: Message :: ", customError.message);
-		}
-
-		return Promise.reject(customError);
-	}
-);
+import { axiosInstance, ErrorResponse } from "../utils/index.js";
 
 class UserService {
-	registerUser = async ({ name, email, password, avatar }) => {
+	async register({ name, email, password, avatar }) {
 		try {
 			return await axiosInstance.post(
 				"/users/register",
@@ -56,49 +18,74 @@ class UserService {
 			console.error("Reason :: ", error.reason);
 			return new ErrorResponse(error.status, error.reason);
 		}
-	};
+	}
 
-	loginUser = async ({ email, password }) => {
+	async login({ email, password }) {
 		try {
 			const userData = { email, password };
-			return await axiosInstance.post("/users/login", userData, {
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
+			return await axiosInstance.post("/users/login", userData);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			return new ErrorResponse(error.status, error.reason);
 		}
-	};
+	}
 
-	currentUser = async () => {
+	async current() {
 		try {
 			return await axiosInstance.get("/users/current");
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			return new ErrorResponse(error.status, error.reason);
 		}
-	};
+	}
 
-	logoutUser = async () => {
+	async logout() {
 		try {
 			return await axiosInstance.post("/users/logout");
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			return new ErrorResponse(error.status, error.reason);
 		}
-	};
+	}
 
-	// refresh access token for user
-	refreshAccessToken = async () => {
+	async refreshAccessToken() {
 		try {
-			return await axiosInstance.post(
-				"/users/refresh-token",
-				{},
+			return await axiosInstance.post("/users/refresh-token");
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			return new ErrorResponse(error.status, error.reason);
+		}
+	}
+
+	async updatePassword({ curPassword, newPassword }) {
+		try {
+			return await axiosInstance.patch("/users/update-password", {
+				curPassword,
+				newPassword,
+			});
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			return new ErrorResponse(error.status, error.reason);
+		}
+	}
+
+	async updateDetails({ name }) {
+		try {
+			return await axiosInstance.patch("/users/update-details", { name });
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			return new ErrorResponse(error.status, error.reason);
+		}
+	}
+
+	async updateAvatar(avatar) {
+		try {
+			return await axiosInstance.patch(
+				"/users/update-avatar",
+				{ avatar },
 				{
 					headers: {
-						"Content-Type": "application/json",
+						"Content-Type": "multipart/form-data",
 					},
 				}
 			);
@@ -106,13 +93,52 @@ class UserService {
 			console.error("Reason :: ", error.reason);
 			return new ErrorResponse(error.status, error.reason);
 		}
-	};
-	// change user password
-	// update text details of user
-	// update avatar
-	// remove avatar
-	// get user details
-	// delete user account
+	}
+
+	async removeAvatar() {
+		try {
+			return await axiosInstance.patch("/users/remove-avatar");
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			return new ErrorResponse(error.status, error.reason);
+		}
+	}
+
+	async getDetailsOfUser(userId) {
+		try {
+			return await axiosInstance.get(`/users/${userId}`);
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			return new ErrorResponse(error.status, error.reason);
+		}
+	}
+
+	async delete() {
+		try {
+			return await axiosInstance.delete("/users/delete");
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			return new ErrorResponse(error.status, error.reason);
+		}
+	}
+
+	async savedRecipes() {
+		try {
+			return await axiosInstance.get("/recipes/saved-recipes");
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			return new ErrorResponse(error.status, error.reason);
+		}
+	}
+
+	async createdRecipesOfUser(userId) {
+		try {
+			return await axiosInstance.get(`recipes/created-recipes/${userId}`);
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			return new ErrorResponse(error.status, error.reason);
+		}
+	}
 }
 
 const userService = new UserService();

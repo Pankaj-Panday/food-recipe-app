@@ -211,8 +211,9 @@ const updateUserPassword = asyncHandler(async (req, res) => {
 });
 
 const updateUserDetails = asyncHandler(async (req, res) => {
-	const { name, email } = req.body;
-	if (!name || !email) {
+	// this function was earlier allowing the email to updated but not now
+	const { name } = req.body;
+	if (!name) {
 		throw new ApiError(400, "All fields are required");
 	}
 	const userId = req.user._id;
@@ -221,7 +222,6 @@ const updateUserDetails = asyncHandler(async (req, res) => {
 		{
 			$set: {
 				name,
-				email,
 			},
 		},
 		{ new: true }
