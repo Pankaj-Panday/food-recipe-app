@@ -61,7 +61,7 @@ const createReview = asyncHandler(async (req, res) => {
 	}
 });
 
-const checkReviewExistence = asyncHandler(async (req, res) => {
+const reviewExistOnRecipeByUser = asyncHandler(async (req, res) => {
 	try {
 		const userId = req.user._id;
 		const recipeId = req.params.recipeId;
@@ -73,11 +73,7 @@ const checkReviewExistence = asyncHandler(async (req, res) => {
 		return res
 			.status(200)
 			.json(
-				new ApiResponse(
-					200,
-					{ reviewExist: isFound },
-					"Review existence checked successfully"
-				)
+				new ApiResponse(200, isFound, "Review existence checked successfully")
 			);
 	} catch (error) {
 		throw new ApiError(error.code, error.message);
@@ -230,7 +226,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 
 export {
 	createReview,
-	checkReviewExistence,
+	reviewExistOnRecipeByUser,
 	deleteReview,
 	getReviewById,
 	updateReview,

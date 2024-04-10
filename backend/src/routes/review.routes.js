@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { verifyToken } from "../middlewares/auth.middleware.js";
 import {
-	checkReviewExistence,
+	reviewExistOnRecipeByUser,
 	createReview,
 	deleteReview,
 	getAllReviewsOfRecipe,
@@ -16,6 +16,6 @@ router.route("/:reviewId/view").get(getReviewById);
 router.route("/:reviewId/update").patch(verifyToken, updateReview);
 router.route("/:reviewId/delete").delete(verifyToken, deleteReview);
 router.route("/view-all/:recipeId").get(getAllReviewsOfRecipe);
-router.route("/exist/:recipeId").get(verifyToken, checkReviewExistence);
+router.route("/exist/:recipeId").get(verifyToken, reviewExistOnRecipeByUser);
 
 export default router;

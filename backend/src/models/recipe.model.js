@@ -95,13 +95,12 @@ recipeSchema.statics.calculateAvgRating = async function (recipeId) {
 		];
 		const result = await this.aggregate(pipeline); // inside a static method, this refers to the Model
 		// result looks something like this (an array containing single object)
-		// [ { _id: null, totalReviews: 3, average: 3.3 } ]
-		if (result?.length > 0) {
-			await this.findByIdAndUpdate(recipeId, {
-				avgRating: result[0].average,
-				totalReviews: result[0].totalReviews,
-			});
-		}
+		// [ { _id: null, totalReviews: 3, average: 3.3 } ] or []
+
+		await this.findByIdAndUpdate(recipeId, {
+			avgRating: result[0]?.average || null,
+			totalReviews: result[0]?.totalReviews || 0,
+		});
 	} catch (error) {
 		throw new ApiError(error.code, error.message);
 	}
