@@ -1,7 +1,7 @@
-import { axiosInstance, ErrorResponse } from "../utils/index.js";
+import { axiosInstance } from "../utils/index.js";
 
 class UserService {
-	async register({ name, email, password, avatar }) {
+	async registerUser({ name, email, password, avatar }) {
 		try {
 			return await axiosInstance.post(
 				"/users/register",
@@ -16,48 +16,48 @@ class UserService {
 			// return this.loginUser({ email, password });
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async login({ email, password }) {
+	async loginUser({ email, password }) {
 		try {
 			const userData = { email, password };
 			return await axiosInstance.post("/users/login", userData);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async current() {
+	async currentUser() {
 		try {
 			return await axiosInstance.get("/users/current");
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async logout() {
+	async logoutUser() {
 		try {
 			return await axiosInstance.post("/users/logout");
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async refreshAccessToken() {
+	async refreshAccessTokenOfUser() {
 		try {
 			return await axiosInstance.post("/users/refresh-token");
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async updatePassword({ curPassword, newPassword }) {
+	async updateUserPassword({ curPassword, newPassword }) {
 		try {
 			return await axiosInstance.patch("/users/update-password", {
 				curPassword,
@@ -65,20 +65,20 @@ class UserService {
 			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async updateDetails({ name }) {
+	async updateUserDetails({ name }) {
 		try {
 			return await axiosInstance.patch("/users/update-details", { name });
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async updateAvatar(avatar) {
+	async updateUserAvatar(avatar) {
 		try {
 			return await axiosInstance.patch(
 				"/users/update-avatar",
@@ -91,52 +91,34 @@ class UserService {
 			);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async removeAvatar() {
+	async removeUserAvatar() {
 		try {
 			return await axiosInstance.patch("/users/remove-avatar");
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async getDetailsOfUser(userId) {
+	async getUserDetailsById(userId) {
 		try {
 			return await axiosInstance.get(`/users/${userId}`);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
-	async delete() {
+	async deleteUser() {
 		try {
 			return await axiosInstance.delete("/users/delete");
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
-		}
-	}
-
-	async savedRecipes() {
-		try {
-			return await axiosInstance.get("/recipes/saved-recipes");
-		} catch (error) {
-			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
-		}
-	}
-
-	async createdRecipesOfUser(userId) {
-		try {
-			return await axiosInstance.get(`recipes/created-recipes/${userId}`);
-		} catch (error) {
-			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 }

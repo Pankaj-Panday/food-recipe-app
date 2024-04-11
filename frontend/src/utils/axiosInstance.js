@@ -1,5 +1,6 @@
 import config from "../config/config.js";
 import axios from "axios";
+import { ErrorResponse } from "./index.js";
 
 const axiosInstance = axios.create({
 	baseURL: config.backendUrl,
@@ -14,27 +15,14 @@ axiosInstance.interceptors.response.use(
 		return response.data;
 	},
 	function (error) {
-		let customError = {
-			isAxiosError: error.name ? error.name === "AxiosError" : false,
-			message: error.message || "Something went wrong",
-			config: error.config,
-			status: error.response?.status || 500,
-			reason: error.response?.data.message || "Unknown",
-		};
-
-		if (error.response) {
-			// The request was made and the server responded with a non-2xx status code
-			console.error("AxiosError :: Message :: ", customError.message);
-		} else if (error.request) {
-			// The request was made but no response was received
-			customError.reason = "No response received from server";
+		// it recieves actual api error
+		let customError = new ErrorResponse(error);
+		// no response but request was sent
+		if (!error.response && error.request) {
 			console.error("Request: ", error.request);
-			console.error("AxiosError :: Message :: ", customError.message);
-		} else {
-			// Something happened in setting up the request that triggered an Error
-			customError.reason = "Error during request setup";
-			console.error("AxiosError :: Message :: ", customError.message);
 		}
+
+		console.error("AxiosError :: Message :: ", customError.message);
 
 		return Promise.reject(customError);
 	}

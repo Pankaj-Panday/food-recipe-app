@@ -1,4 +1,4 @@
-import { axiosInstance, ErrorResponse } from "../utils/index.js";
+import { axiosInstance } from "../utils/index.js";
 
 class RecipeService {
 	async create({
@@ -27,7 +27,7 @@ class RecipeService {
 			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
@@ -36,7 +36,7 @@ class RecipeService {
 			return await axiosInstance.get(`/recipes/${recipeId}/view-recipe`);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
@@ -59,7 +59,7 @@ class RecipeService {
 			);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
@@ -76,7 +76,7 @@ class RecipeService {
 			);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
@@ -87,7 +87,7 @@ class RecipeService {
 			);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
@@ -96,7 +96,7 @@ class RecipeService {
 			return await axiosInstance.delete(`/recipes/${recipeId}/delete-recipe`);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
@@ -105,7 +105,7 @@ class RecipeService {
 			return await axiosInstance.post(`/recipes/${recipeId}/save-recipe`);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
@@ -114,7 +114,7 @@ class RecipeService {
 			return await axiosInstance.delete(`/recipes/${recipeId}/unsave-recipe`);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 
@@ -128,7 +128,25 @@ class RecipeService {
 			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
+		}
+	}
+
+	async savedRecipesByCurrentUser() {
+		try {
+			return await axiosInstance.get("/recipes/saved-recipes");
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			throw error;
+		}
+	}
+
+	async createdRecipesByUser(userId) {
+		try {
+			return await axiosInstance.get(`recipes/created-recipes/${userId}`);
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			throw error;
 		}
 	}
 
@@ -137,7 +155,7 @@ class RecipeService {
 			return await axiosInstance.get("/recipes/random-recipes");
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
-			return new ErrorResponse(error.status, error.reason);
+			throw error;
 		}
 	}
 }
