@@ -1,30 +1,55 @@
 import React from "react";
-import { Navbar, Container, Logo, Searchbar } from "../index";
+import { Container, Logo, Searchbar, Button, LogoutBtn } from "../index";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import userService from "../../services/user.service";
+import { userLogin } from "../../app/authSlice";
 
 const Header = () => {
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const dispatch = useDispatch();
+
+	const handleLogin = () => {
+		const user = {
+			email: "user1@example.com",
+			password: "12345678",
+		};
+
+		userService.loginUser(user).then(({ data }) => {
+			dispatch(userLogin(data.user));
+		});
+	};
+
 	return (
 		<header className="text-center py-5 ">
 			<Container>
 				<section className="flex justify-between items-center">
-					<Logo />
+					<Link to="/">
+						<Logo />
+					</Link>
 					<Searchbar />
-					<div className="flex gap-2">
-						<Link
-							to="/signup"
-							className="text-sm w-24 capitalize px-4  py-1.5 border-2 rounded-full text-brand-primary border-brand-primary transition ease hover:bg-brand-primary hover:text-white "
-						>
-							Sign up
-						</Link>
-						<Link
-							to="/login"
-							className="text-sm w-24 capitalize px-4  py-1.5 border-2 rounded-full text-brand-primary border-transparent transition ease bg-brand-primary-light hover:bg-brand-primary hover:text-white "
-						>
-							Log in
-						</Link>
-					</div>
+					{!isLoggedIn ? (
+						<div className="flex gap-2">
+							<Button
+								bgColor="bg-transparent"
+								textColor="text-brand-primary"
+								className="text-sm w-24 capitalize px-4 py-1.5 rounded-full border-2 border-brand-primary transition ease hover:bg-brand-primary hover:text-white"
+							>
+								Sign up
+							</Button>
+							<Button
+								bgColor="bg-brand-primary-light"
+								textColor="text-brand-primary"
+								className="text-sm w-24 capitalize px-4  py-1.5 border-2 rounded-full border-transparent transition ease hover:bg-brand-primary hover:text-white"
+								onClick={handleLogin}
+							>
+								Log in
+							</Button>
+						</div>
+					) : (
+						<LogoutBtn />
+					)}
 				</section>
-				{/* <Navbar /> */}
 			</Container>
 		</header>
 	);

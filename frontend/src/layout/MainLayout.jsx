@@ -24,7 +24,7 @@ const MainLayout = () => {
 	}, []);
 
 	return loading ? (
-		<div>...Loading</div>
+		<AppLoading />
 	) : (
 		<>
 			<Header />
@@ -33,6 +33,14 @@ const MainLayout = () => {
 			</main>
 			<Footer />
 		</>
+	);
+};
+
+const AppLoading = () => {
+	return (
+		<div className="min-h-scree flex justify-center">
+			<h3 className="text-gray-500 text-4xl text-center mt-10">...Loading</h3>
+		</div>
 	);
 };
 

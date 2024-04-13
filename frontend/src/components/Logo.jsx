@@ -1,11 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-const Logo = ({ height, width, className, ...props }) => {
+const Logo = ({ height, width, size = "normal", className, ...props }) => {
+	const sizes = {
+		normal: "w-[12rem]",
+		small: "w-[9rem]",
+	};
+
+	const sizeClass = sizes[size];
+	const imgStyle = {
+		height: `${height}`,
+		width: `${width}`,
+	};
+
 	return (
-		<Link to="/">
-			<img src="/brand_logo.svg" className={`w-48`} />
-		</Link>
+		<img
+			src="/brand_logo.svg"
+			style={imgStyle}
+			className={`${sizeClass} ${className}`}
+			{...props}
+		/>
 	);
 };
 

@@ -1,4 +1,5 @@
 import React from "react";
+import userService from "../services/user.service";
 
 const Temporary = () => {
 	return (
