@@ -7,6 +7,7 @@ import Searchbar from "./Searchbar.jsx";
 import Button from "./Button.jsx";
 import LogoutBtn from "./Header/LogoutBtn.jsx";
 import Input from "./Input.jsx";
+import LoginForm from "./LoginForm.jsx";
 
 export {
 	Header,
@@ -18,4 +19,5 @@ export {
 	Button,
 	LogoutBtn,
 	Input,
+	LoginForm,
 };

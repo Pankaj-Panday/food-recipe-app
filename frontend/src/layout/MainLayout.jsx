@@ -26,13 +26,13 @@ const MainLayout = () => {
 	return loading ? (
 		<AppLoading />
 	) : (
-		<>
+		<div className="flex flex-col justify-between min-h-screen relative overflow-hidden">
 			<Header />
-			<main className="my-8">
+			<main>
 				<Outlet />
 			</main>
 			<Footer />
-		</>
+		</div>
 	);
 };
 

@@ -6,9 +6,9 @@ const ErrorLayout = () => {
 	const error = useRouteError();
 	console.error(error.error);
 	return (
-		<>
+		<div className="flex flex-col justify-between min-h-screen relative">
 			<Header />
-			<main className="my-8 text-center">
+			<main className="text-center">
 				<h1 className="font-bold text-3xl mb-4">Oops!</h1>
 				<p>Sorry, an unexpected error has occurred.</p>
 				<p className="mt-2 text-gray-500">
@@ -16,7 +16,7 @@ const ErrorLayout = () => {
 				</p>
 			</main>
 			<Footer />
-		</>
+		</div>
 	);
 };
 
