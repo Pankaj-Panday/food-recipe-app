@@ -6,6 +6,7 @@ import {
 	Button,
 	LogoutBtn,
 	LoginForm,
+	SignUpForm,
 } from "../index";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -22,7 +23,13 @@ const Header = () => {
 		setShowLoginForm(false);
 	}
 
-	function openSignUpForm() {}
+	function openSignUpForm() {
+		setShowSignUpForm(true);
+	}
+
+	function closeSignUpForm() {
+		setShowSignUpForm(false);
+	}
 
 	return (
 		<>
@@ -59,6 +66,7 @@ const Header = () => {
 				</Container>
 			</header>
 			{showLoginForm && <LoginForm onClose={closeLoginForm} />}
+			{showSignUpForm && <SignUpForm onClose={closeSignUpForm} />}
 		</>
 	);
 };

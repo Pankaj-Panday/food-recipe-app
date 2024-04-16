@@ -8,6 +8,7 @@ import Button from "./Button.jsx";
 import LogoutBtn from "./Header/LogoutBtn.jsx";
 import Input from "./Input.jsx";
 import LoginForm from "./LoginForm.jsx";
+import SignUpForm from "./SignUpForm.jsx";
 
 export {
 	Header,
@@ -20,4 +21,5 @@ export {
 	LogoutBtn,
 	Input,
 	LoginForm,
+	SignUpForm,
 };

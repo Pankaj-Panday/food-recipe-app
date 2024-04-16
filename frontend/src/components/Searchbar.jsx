@@ -8,7 +8,8 @@ const Searchbar = () => {
 			<Input
 				type="text"
 				placeholder="Find a recipe"
-				className="border-brand-primary rounded-l-lg"
+				className="border-brand-primary rounded-l-lg w-full"
+				newLine={false}
 			/>
 			<button
 				type="button"

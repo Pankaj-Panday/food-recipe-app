@@ -1,5 +1,4 @@
 import React from "react";
-import userService from "../services/user.service";
 
 const Temporary = () => {
 	return (
@@ -15,21 +14,7 @@ const Temporary = () => {
 					Github link for backend
 				</a>
 			</p>
-			<Button />
 		</div>
-	);
-};
-
-const Button = () => {
-	const handleBtnClick = async () => {};
-	return (
-		<button
-			type="button"
-			className="p-2 bg-red-400 block mx-auto mt-5 text-white w-[150px] rounded-lg"
-			onClick={handleBtnClick}
-		>
-			Click here
-		</button>
 	);
 };
 
