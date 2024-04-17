@@ -7,6 +7,7 @@ import userService from "../services/user.service.js";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../app/authSlice.js";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 // configure dev tools
 import { DevTool } from "@hookform/devtools";
@@ -31,7 +32,7 @@ const SignUpForm = ({ onClose }) => {
 	const {
 		register,
 		control,
-		formState: { errors: frontendError },
+		formState: { errors: frontendError, isSubmitting },
 		handleSubmit,
 	} = useForm({
 		defaultValues: {
@@ -138,9 +139,14 @@ const SignUpForm = ({ onClose }) => {
 							/>
 							<Button
 								type="submit"
-								className="py-2 mt-3 w-4/5 mx-auto rounded-full capitalize"
+								className="py-2 mt-3 h-10 w-4/5 mx-auto rounded-full capitalize flex justify-center items-center disabled:opacity-50"
+								disabled={isSubmitting}
 							>
-								Sign Up
+								{isSubmitting ? (
+									<AiOutlineLoading3Quarters className="animate-spin text-sm align-middle" />
+								) : (
+									<span>Sign up</span>
+								)}
 							</Button>
 						</form>
 					</div>

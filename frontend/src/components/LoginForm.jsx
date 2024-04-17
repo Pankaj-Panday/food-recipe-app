@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import userService from "../services/user.service.js";
 import { userLogin } from "../app/authSlice.js";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 // configure dev tools
 import { DevTool } from "@hookform/devtools";
@@ -30,9 +31,9 @@ const LoginForm = ({ onClose }) => {
 
 	const {
 		register,
-		control,
-		formState: { errors: frontendError },
+		formState: { errors: frontendError, isSubmitting },
 		handleSubmit,
+		control,
 	} = useForm({
 		defaultValues: {
 			email: "",
@@ -44,7 +45,7 @@ const LoginForm = ({ onClose }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	async function login(formData) {
+	async function onLogin(formData) {
 		try {
 			const { email, password } = formData;
 			const { data } = await userService.loginUser({ email, password });
@@ -92,7 +93,7 @@ const LoginForm = ({ onClose }) => {
 
 						<form
 							className="mt-2 flex flex-col gap-3"
-							onSubmit={handleSubmit(login)}
+							onSubmit={handleSubmit(onLogin)}
 							noValidate
 						>
 							<Input
@@ -119,9 +120,14 @@ const LoginForm = ({ onClose }) => {
 							/>
 							<Button
 								type="submit"
-								className="py-2 mt-3 w-4/5 mx-auto rounded-full"
+								className="py-2 mt-3 w-4/5 h-10 mx-auto rounded-full flex justify-center items-center disabled:opacity-50 capitalize"
+								disabled={isSubmitting}
 							>
-								Login
+								{isSubmitting ? (
+									<AiOutlineLoading3Quarters className="animate-spin text-sm align-middle" />
+								) : (
+									<span>Log in</span>
+								)}
 							</Button>
 						</form>
 					</div>
