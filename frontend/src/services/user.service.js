@@ -3,7 +3,7 @@ import { axiosInstance } from "../utils/index.js";
 class UserService {
 	async registerUser({ name, email, password, avatar }) {
 		try {
-			return await axiosInstance.post(
+			await axiosInstance.post(
 				"/users/register",
 				{ name, email, password, avatar },
 				{
@@ -13,7 +13,7 @@ class UserService {
 				}
 			);
 			// login user if successfully registered
-			// return this.loginUser({ email, password });
+			return await this.loginUser({ email, password });
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;

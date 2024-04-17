@@ -1,8 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
 import { Input, Button } from "./index.js";
 import foodImg from "../assets/imgs/loginForm.jpg";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import userService from "../services/user.service.js";
+import { userLogin } from "../app/authSlice.js";
+
+// configure dev tools
 import { DevTool } from "@hookform/devtools";
 
 const LoginForm = ({ onClose }) => {
@@ -22,11 +28,37 @@ const LoginForm = ({ onClose }) => {
 		};
 	}, []);
 
-	const { register, control, handleSubmit } = useForm();
+	const {
+		register,
+		control,
+		formState: { errors: frontendError },
+		handleSubmit,
+	} = useForm({
+		defaultValues: {
+			email: "",
+			password: "",
+		},
+	});
 
-	function onSubmit(data, event) {
-		console.log(data);
+	const [backendError, setBackendError] = useState("");
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	async function login(formData) {
+		try {
+			const { email, password } = formData;
+			const { data } = await userService.loginUser({ email, password });
+			if (data.user) {
+				dispatch(userLogin(data.user));
+				navigate("/");
+				onClose();
+			}
+		} catch (error) {
+			setBackendError(error.reason);
+		}
 	}
+
+	const error = frontendError.email || frontendError.password || backendError;
 
 	return (
 		<>
@@ -36,7 +68,7 @@ const LoginForm = ({ onClose }) => {
 			>
 				<div
 					id="formContainer"
-					className="flex flex-col md:h-[400px] md:flex-row gap-2 md:gap-1 w-[min(300px,95%)] md:min-w-[600px] md:w-1/2 md:max-w-2xl min-w-[250px] border border-gray-100 mt-12 md:mt-0 mb-16 bg-white rounded-xl drop-shadow-xl"
+					className="flex flex-col md:h-[400px]  md:flex-row gap-2 md:gap-1 w-[min(300px,95%)] md:min-w-[600px] md:w-1/2 md:max-w-2xl min-w-[250px] mt-12 md:mt-0 mb-16 bg-white rounded-xl drop-shadow-xl"
 				>
 					<div className="h-[240px] md:h-full md:flex-1 overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-bl-xl">
 						<img
@@ -50,9 +82,18 @@ const LoginForm = ({ onClose }) => {
 						<p className="text-gray-600">
 							Log in to save and review your favorite recipes.
 						</p>
+						{error && (
+							<small className="my-2 py-1.5 text-center text-red-700 bg-red-200 block rounded-lg">
+								{frontendError.email?.message ||
+									frontendError.password?.message ||
+									backendError}
+							</small>
+						)}
+
 						<form
-							className="mt-4 flex flex-col gap-4"
-							onSubmit={handleSubmit(onSubmit)}
+							className="mt-2 flex flex-col gap-3"
+							onSubmit={handleSubmit(login)}
+							noValidate
 						>
 							<Input
 								label="Email"
@@ -74,10 +115,6 @@ const LoginForm = ({ onClose }) => {
 								className="py-2 rounded-lg"
 								{...register("password", {
 									required: "Password is required",
-									minLength: {
-										value: 8,
-										message: "Password can't be less than 8 characters",
-									},
 								})}
 							/>
 							<Button
