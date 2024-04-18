@@ -9,6 +9,8 @@ import LogoutBtn from "./Header/LogoutBtn.jsx";
 import Input from "./Input.jsx";
 import LoginForm from "./LoginForm.jsx";
 import SignUpForm from "./SignUpForm.jsx";
+import RecipeForm from "./RecipeForm.jsx";
+import Textarea from "./Textarea.jsx";
 
 export {
 	Header,
@@ -22,4 +24,6 @@ export {
 	Input,
 	LoginForm,
 	SignUpForm,
+	RecipeForm,
+	Textarea,
 };

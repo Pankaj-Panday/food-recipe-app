@@ -63,13 +63,10 @@ const LoginForm = ({ onClose }) => {
 
 	return (
 		<>
-			<div
-				id="overlay"
-				className="min-h-screen min-w-full absolute inset-0 flex justify-center items-start md:items-center backdrop-blur-lg bg-black/10 overflow-hidden"
-			>
+			<div id="overlay" className="overlay">
 				<div
 					id="formContainer"
-					className="flex flex-col md:h-[400px]  md:flex-row gap-2 md:gap-1 w-[min(300px,95%)] md:min-w-[600px] md:w-1/2 md:max-w-2xl min-w-[250px] mt-12 md:mt-0 mb-16 bg-white rounded-xl drop-shadow-xl"
+					className="md:h-[400px] mt-12 md:mt-0 sign-log-container"
 				>
 					<div className="h-[240px] md:h-full md:flex-1 overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-bl-xl">
 						<img
@@ -99,8 +96,10 @@ const LoginForm = ({ onClose }) => {
 							<Input
 								label="Email"
 								type="email"
+								required
 								placeholder="Your email"
-								className="py-2 rounded-lg"
+								className="py-2 rounded-lg disabled:opacity-40"
+								disabled={isSubmitting}
 								{...register("email", {
 									required: "Email is required",
 									pattern: {
@@ -113,7 +112,9 @@ const LoginForm = ({ onClose }) => {
 								label="Password"
 								type="password"
 								placeholder="Your password"
-								className="py-2 rounded-lg"
+								className="py-2 rounded-lg disabled:opacity-40"
+								required
+								disabled={isSubmitting}
 								{...register("password", {
 									required: "Password is required",
 								})}

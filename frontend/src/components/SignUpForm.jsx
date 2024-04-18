@@ -53,11 +53,12 @@ const SignUpForm = ({ onClose }) => {
 
 	async function signup(formData) {
 		try {
-			const { name, email, password } = formData;
+			const { name, email, password, avatar } = formData;
 			const { data } = await userService.registerUser({
 				name,
 				email,
 				password,
+				avatar: avatar[0],
 			});
 			if (data.user) {
 				onClose();
@@ -71,13 +72,10 @@ const SignUpForm = ({ onClose }) => {
 
 	return (
 		<>
-			<div
-				id="overlay"
-				className="min-h-screen min-w-full absolute inset-0 flex justify-center items-start md:items-center backdrop-blur-lg bg-black/10 overflow-hidden"
-			>
+			<div id="overlay" className="overlay">
 				<div
 					id="formContainer"
-					className="flex flex-col md:h-[490px] md:flex-row gap-2 md:gap-1 w-[min(360px,95%)] md:min-w-[600px] md:w-1/2 md:max-w-2xl min-w-[250px] mt-7 md:mt-0 mb-16 bg-white rounded-xl drop-shadow-xl"
+					className="md:h-[580px] mt-7 md:mt-0 sign-log-container"
 				>
 					<div className="h-[240px] md:h-full md:flex-1 overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-bl-xl">
 						<img
@@ -102,20 +100,23 @@ const SignUpForm = ({ onClose }) => {
 						<form
 							onSubmit={handleSubmit(signup)}
 							className="mt-2 flex flex-col gap-3"
-							noValidate
 						>
 							<Input
 								label="Name"
 								type="text"
 								placeholder="Your name"
-								className="py-2 rounded-lg"
+								required
 								{...register("name", { required: "Name is required" })}
+								className="py-2 rounded-lg disabled:opacity-40"
+								disabled={isSubmitting}
 							/>
 							<Input
 								label="Email"
 								type="email"
 								placeholder="Your email"
-								className="py-2 rounded-lg"
+								required
+								className="py-2 rounded-lg disabled:opacity-40"
+								disabled={isSubmitting}
 								{...register("email", {
 									required: "Email is required",
 									pattern: {
@@ -128,7 +129,9 @@ const SignUpForm = ({ onClose }) => {
 								label="Password"
 								type="password"
 								placeholder="Your password"
-								className="py-2 rounded-lg"
+								required
+								className="py-2 rounded-lg disabled:opacity-40"
+								disabled={isSubmitting}
 								{...register("password", {
 									required: "Password is required",
 									minLength: {
@@ -136,6 +139,14 @@ const SignUpForm = ({ onClose }) => {
 										message: "Password should be at least 8 characters",
 									},
 								})}
+							/>
+							<Input
+								label="Avatar"
+								type="file"
+								accept="image/png, image/jpeg"
+								className="py-2 rounded-lg disabled:opacity-40"
+								disabled={isSubmitting}
+								{...register("avatar")}
 							/>
 							<Button
 								type="submit"

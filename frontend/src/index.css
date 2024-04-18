@@ -3,3 +3,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	.overlay {
+		@apply z-[9999] min-h-screen min-w-full absolute inset-0 flex justify-center items-start md:items-center backdrop-blur-lg bg-black/10 overflow-hidden;
+	}
+	.sign-log-container {
+		@apply flex flex-col gap-2 md:gap-1 w-[min(360px,95%)] md:min-w-[650px] md:flex-row md:w-1/2 md:max-w-2xl min-w-[250px] bg-white rounded-xl drop-shadow-xl;
+	}
+}

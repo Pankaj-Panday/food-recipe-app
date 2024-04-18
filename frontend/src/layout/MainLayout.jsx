@@ -28,7 +28,7 @@ const MainLayout = () => {
 	) : (
 		<div className="flex flex-col justify-between min-h-screen relative overflow-hidden">
 			<Header />
-			<main>
+			<main className="pt-20">
 				<Outlet />
 			</main>
 			<Footer />

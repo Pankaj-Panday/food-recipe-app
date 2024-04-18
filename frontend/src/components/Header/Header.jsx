@@ -8,13 +8,14 @@ import {
 	LoginForm,
 	SignUpForm,
 } from "../index";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Header = () => {
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 	const [showLoginForm, setShowLoginForm] = useState(false);
 	const [showSignUpForm, setShowSignUpForm] = useState(false);
+	const navigate = useNavigate();
 
 	function openLoginForm() {
 		setShowLoginForm(true);
@@ -33,9 +34,9 @@ const Header = () => {
 
 	return (
 		<>
-			<header className="text-center py-5 ">
+			<header className="text-center h-auto shadow-md fixed top-0 w-full z-[99] bg-white">
 				<Container>
-					<section className="flex justify-between items-center">
+					<section className="flex h-20 justify-between items-center">
 						<Link to="/">
 							<Logo />
 						</Link>
@@ -60,7 +61,17 @@ const Header = () => {
 								</Button>
 							</div>
 						) : (
-							<LogoutBtn />
+							<div className="flex gap-2">
+								<Button
+									onClick={() => navigate("/add-recipe")}
+									className="px-2 rounded-lg"
+									bgColor="bg-brand-primary-light"
+									textColor="text-brand-primary"
+								>
+									Add Recipe
+								</Button>
+								<LogoutBtn />
+							</div>
 						)}
 					</section>
 				</Container>
