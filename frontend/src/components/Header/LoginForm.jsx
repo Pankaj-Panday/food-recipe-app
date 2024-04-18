@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
-import { Input, Button } from "./index.js";
-import foodImg from "../assets/imgs/signupForm.jpg";
+import { Input, Button } from "../index.js";
+import foodImg from "../../assets/imgs/loginForm.jpg";
 import { useForm } from "react-hook-form";
-import userService from "../services/user.service.js";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userLogin } from "../app/authSlice.js";
+import userService from "../../services/user.service.js";
+import { userLogin } from "../../app/authSlice.js";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 // configure dev tools
 import { DevTool } from "@hookform/devtools";
 
-const SignUpForm = ({ onClose }) => {
+const LoginForm = ({ onClose }) => {
 	useEffect(() => {
 		function handleOutsideClick(event) {
 			if (event.target === overlay && event.target !== formContainer) {
@@ -31,12 +31,11 @@ const SignUpForm = ({ onClose }) => {
 
 	const {
 		register,
-		control,
 		formState: { errors: frontendError, isSubmitting },
 		handleSubmit,
+		control,
 	} = useForm({
 		defaultValues: {
-			name: "",
 			email: "",
 			password: "",
 		},
@@ -45,37 +44,29 @@ const SignUpForm = ({ onClose }) => {
 	const [backendError, setBackendError] = useState("");
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const error =
-		frontendError.name ||
-		frontendError.email ||
-		frontendError.password ||
-		backendError;
 
-	async function signup(formData) {
+	async function onLogin(formData) {
 		try {
-			const { name, email, password, avatar } = formData;
-			const { data } = await userService.registerUser({
-				name,
-				email,
-				password,
-				avatar: avatar[0],
-			});
+			const { email, password } = formData;
+			const { data } = await userService.loginUser({ email, password });
 			if (data.user) {
-				onClose();
 				dispatch(userLogin(data.user));
 				navigate("/");
+				onClose();
 			}
 		} catch (error) {
 			setBackendError(error.reason);
 		}
 	}
 
+	const error = frontendError.email || frontendError.password || backendError;
+
 	return (
 		<>
 			<div id="overlay" className="overlay">
 				<div
 					id="formContainer"
-					className="md:h-[580px] mt-7 md:mt-0 sign-log-container"
+					className="md:h-[400px] mt-12 md:mt-0 sign-log-container"
 				>
 					<div className="h-[240px] md:h-full md:flex-1 overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-bl-xl">
 						<img
@@ -85,36 +76,28 @@ const SignUpForm = ({ onClose }) => {
 						/>
 					</div>
 					<div className="md:flex-1 md:self-center mx-3 mb-4 md:mb-0">
-						<h2 className="text-2xl font-medium mb-3">Sign Up</h2>
+						<h2 className="text-2xl font-medium mb-3">Log In</h2>
 						<p className="text-gray-600">
-							Sign up to save and review your favorite recipes.
+							Log in to save and review your favorite recipes.
 						</p>
 						{error && (
 							<small className="my-2 py-1.5 text-center text-red-700 bg-red-200 block rounded-lg">
-								{frontendError.name?.message ||
-									frontendError.email?.message ||
+								{frontendError.email?.message ||
 									frontendError.password?.message ||
 									backendError}
 							</small>
 						)}
+
 						<form
-							onSubmit={handleSubmit(signup)}
 							className="mt-2 flex flex-col gap-3"
+							onSubmit={handleSubmit(onLogin)}
+							noValidate
 						>
-							<Input
-								label="Name"
-								type="text"
-								placeholder="Your name"
-								required
-								{...register("name", { required: "Name is required" })}
-								className="py-2 rounded-lg disabled:opacity-40"
-								disabled={isSubmitting}
-							/>
 							<Input
 								label="Email"
 								type="email"
-								placeholder="Your email"
 								required
+								placeholder="Your email"
 								className="py-2 rounded-lg disabled:opacity-40"
 								disabled={isSubmitting}
 								{...register("email", {
@@ -129,34 +112,22 @@ const SignUpForm = ({ onClose }) => {
 								label="Password"
 								type="password"
 								placeholder="Your password"
-								required
 								className="py-2 rounded-lg disabled:opacity-40"
+								required
 								disabled={isSubmitting}
 								{...register("password", {
 									required: "Password is required",
-									minLength: {
-										value: 8,
-										message: "Password should be at least 8 characters",
-									},
 								})}
-							/>
-							<Input
-								label="Avatar"
-								type="file"
-								accept="image/png, image/jpeg"
-								className="py-2 rounded-lg disabled:opacity-40"
-								disabled={isSubmitting}
-								{...register("avatar")}
 							/>
 							<Button
 								type="submit"
-								className="py-2 mt-3 h-10 w-4/5 mx-auto rounded-full capitalize flex justify-center items-center disabled:opacity-50"
+								className="py-2 mt-3 w-4/5 h-10 mx-auto rounded-full flex justify-center items-center disabled:opacity-50 capitalize"
 								disabled={isSubmitting}
 							>
 								{isSubmitting ? (
 									<AiOutlineLoading3Quarters className="animate-spin text-sm align-middle" />
 								) : (
-									<span>Sign up</span>
+									<span>Log in</span>
 								)}
 							</Button>
 						</form>
@@ -174,4 +145,4 @@ const SignUpForm = ({ onClose }) => {
 	);
 };
 
-export default SignUpForm;
+export default LoginForm;
