@@ -1,7 +1,7 @@
 import { axiosInstance } from "../utils/index.js";
 
 class RecipeService {
-	async create({
+	async createRecipe({
 		title,
 		introduction,
 		recipePhoto,
@@ -31,7 +31,7 @@ class RecipeService {
 		}
 	}
 
-	async view(recipeId) {
+	async viewRecipe(recipeId) {
 		try {
 			return await axiosInstance.get(`/recipes/${recipeId}/view-recipe`);
 		} catch (error) {
@@ -40,7 +40,7 @@ class RecipeService {
 		}
 	}
 
-	async updateTextDetails(
+	async updateTextDetailsOfRecipe(
 		recipeId,
 		{ title, introduction, cookingTime, ingredients, steps, isPublished }
 	) {
@@ -63,7 +63,7 @@ class RecipeService {
 		}
 	}
 
-	async updatePhoto(recipeId, newPhoto) {
+	async updatePhotoOfRecipe(recipeId, newPhoto) {
 		try {
 			return await axiosInstance.patch(
 				`/recipes/${recipeId}/update-recipe-photo`,
@@ -80,7 +80,7 @@ class RecipeService {
 		}
 	}
 
-	async deletePhoto(recipeId) {
+	async deletePhotoOfRecipe(recipeId) {
 		try {
 			return await axiosInstance.patch(
 				`/recipes/${recipeId}/delete-recipe-photo`
@@ -91,7 +91,7 @@ class RecipeService {
 		}
 	}
 
-	async delete(recipeId) {
+	async deleteRecipe(recipeId) {
 		try {
 			return await axiosInstance.delete(`/recipes/${recipeId}/delete-recipe`);
 		} catch (error) {
@@ -100,7 +100,7 @@ class RecipeService {
 		}
 	}
 
-	async save(recipeId) {
+	async saveRecipe(recipeId) {
 		try {
 			return await axiosInstance.post(`/recipes/${recipeId}/save-recipe`);
 		} catch (error) {
@@ -109,7 +109,7 @@ class RecipeService {
 		}
 	}
 
-	async unsave(recipeId) {
+	async unsaveRecipe(recipeId) {
 		try {
 			return await axiosInstance.delete(`/recipes/${recipeId}/unsave-recipe`);
 		} catch (error) {
@@ -118,7 +118,7 @@ class RecipeService {
 		}
 	}
 
-	async allRecipes(pageNum) {
+	async viewAllRecipes(pageNum) {
 		// recives a query
 		try {
 			return await axiosInstance.get("/recipes/all", {
@@ -150,7 +150,7 @@ class RecipeService {
 		}
 	}
 
-	async randomRecipes() {
+	async getRandomRecipes() {
 		try {
 			return await axiosInstance.get("/recipes/random-recipes");
 		} catch (error) {
