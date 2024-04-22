@@ -1,3 +1,7 @@
 import HomePage from "./HomePage.jsx";
+import LoginPage from "./LoginPage.jsx";
+import SignUpPage from "./SignUpPage.jsx";
+import AddRecipePage from "./AddRecipePage.jsx";
+import RecipePage from "./RecipePage.jsx";
 
-export { HomePage };
+export { HomePage, LoginPage, SignUpPage, AddRecipePage, RecipePage };

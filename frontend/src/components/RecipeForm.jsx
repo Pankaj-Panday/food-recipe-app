@@ -66,7 +66,7 @@ const RecipeForm = () => {
 				isPublished: publish,
 			});
 			setBackendError("");
-			// navigate(`/recipes/${data._id}/view-recipe`);
+			navigate(`/recipes/${data._id}/view-recipe`);
 		} catch (error) {
 			setBackendError(
 				error.reason.charAt(0).toUpperCase() + error.reason.slice(1)
@@ -74,11 +74,10 @@ const RecipeForm = () => {
 		}
 	};
 
-	let count = 1;
 	return (
 		<article className="py-6 w-[min(400px,95%)] min-w-[300px] sm:w-4/5 max-w-[660px] mx-auto">
-			<div className="bg-gray-50 rounded-lg p-5">
-				<h2 className="text-3xl font-bold mb-4">Add a recipe {count++}</h2>
+			<div className="p-5 rounded-lg bg-gray-50">
+				<h2 className="mb-4 text-3xl font-bold">Add a recipe</h2>
 				<form onSubmit={handleSubmit(onSubmit)} noValidate>
 					<fieldset
 						disabled={isSubmitting}
@@ -99,13 +98,13 @@ const RecipeForm = () => {
 							})}
 						/>
 						{frontendError?.title && (
-							<small className="text-red-500 font-semibold">
+							<small className="font-semibold text-red-500">
 								{frontendError.title.message}
 							</small>
 						)}
 						<Textarea
 							label="Description"
-							className="min-h-24 rounded-md"
+							className="rounded-md min-h-24"
 							placeholder="Share something special about your recipe"
 							{...register("introduction")}
 						/>
@@ -120,7 +119,7 @@ const RecipeForm = () => {
 							{ingredientFields.map((field, index) => {
 								const label = index === 0 ? "Ingredients" : null;
 								return (
-									<li key={field.id} className="flex gap-2 items-center">
+									<li key={field.id} className="flex items-center gap-2">
 										<Input
 											label={label}
 											placeholder="e.g. 250g paneer"
@@ -145,7 +144,7 @@ const RecipeForm = () => {
 							})}
 						</ul>
 						{frontendError?.ingredients && (
-							<small className="text-red-500 font-semibold">
+							<small className="font-semibold text-red-500">
 								{
 									frontendError.ingredients.find(
 										(err) => err?.ingredient.message
@@ -163,10 +162,10 @@ const RecipeForm = () => {
 							{stepFields.map((field, index) => {
 								const label = index === 0 ? "Steps" : null;
 								return (
-									<li key={field.id} className="flex gap-2 items-start">
+									<li key={field.id} className="flex items-start gap-2">
 										<Textarea
 											label={label}
-											className="min-h-12 h-12 rounded-md"
+											className="h-12 rounded-md min-h-12"
 											placeholder="e.g. Boil mixture for 10 minutes"
 											required
 											{...register(`steps.${index}.step`, {
@@ -188,7 +187,7 @@ const RecipeForm = () => {
 							})}
 						</ul>
 						{frontendError?.steps && (
-							<small className="text-red-500 font-semibold">
+							<small className="font-semibold text-red-500">
 								{
 									frontendError.steps.find((err) => err?.step.message).step
 										.message
@@ -222,12 +221,12 @@ const RecipeForm = () => {
 							})}
 						/>
 						{frontendError?.cookingTime && (
-							<small className="text-red-500 font-semibold">
+							<small className="font-semibold text-red-500">
 								{frontendError.cookingTime.message}
 							</small>
 						)}
 						{backendError && !Object.keys(frontendError).length && (
-							<small className="text-red-500 font-semibold p-2 bg-red-100 rounded-md">
+							<small className="p-2 font-semibold text-red-500 bg-red-100 rounded-md">
 								<span className="font-bold">Server error: </span>{" "}
 								<span>{backendError}</span>
 							</small>
@@ -242,7 +241,7 @@ const RecipeForm = () => {
 							onClick={() => setPublish(true)}
 						>
 							{isSubmitting && publish ? (
-								<AiOutlineLoading3Quarters className="animate-spin align-middle" />
+								<AiOutlineLoading3Quarters className="align-middle animate-spin" />
 							) : (
 								<span>Publish</span>
 							)}
@@ -255,7 +254,7 @@ const RecipeForm = () => {
 							onClick={() => setPublish(false)}
 						>
 							{isSubmitting && !publish ? (
-								<AiOutlineLoading3Quarters className="animate-spin align-middle" />
+								<AiOutlineLoading3Quarters className="align-middle animate-spin" />
 							) : (
 								<span>Save Draft</span>
 							)}

@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
-import { Input, Button } from "../index.js";
-import foodImg from "../../assets/imgs/loginForm.jpg";
+import { Input, Button } from "./index.js";
+import foodImg from "../assets/imgs/loginForm.jpg";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import userService from "../../services/user.service.js";
-import { userLogin } from "../../app/authSlice.js";
+import userService from "../services/user.service.js";
+import { userLogin } from "../app/authSlice.js";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-// configure dev tools
-import { DevTool } from "@hookform/devtools";
-
-const LoginForm = ({ onClose }) => {
+const LoginForm = () => {
 	useEffect(() => {
 		function handleOutsideClick(event) {
 			if (event.target === overlay && event.target !== formContainer) {
-				onClose();
+				navigate(-1);
 			}
 		}
 
@@ -33,7 +30,6 @@ const LoginForm = ({ onClose }) => {
 		register,
 		formState: { errors: frontendError, isSubmitting },
 		handleSubmit,
-		control,
 	} = useForm({
 		defaultValues: {
 			email: "",
@@ -52,7 +48,6 @@ const LoginForm = ({ onClose }) => {
 			if (data.user) {
 				dispatch(userLogin(data.user));
 				navigate("/");
-				onClose();
 			}
 		} catch (error) {
 			setBackendError(error.reason);
@@ -134,13 +129,12 @@ const LoginForm = ({ onClose }) => {
 					</div>
 					<button
 						className="grid place-content-center h-7 w-7 rounded-full text-black  bg-white text-xl absolute right-2 top-2"
-						onClick={onClose}
+						onClick={() => navigate(-1)}
 					>
 						<FaXmark size="0.9rem" />
 					</button>
 				</div>
 			</div>
-			<DevTool control={control} />
 		</>
 	);
 };

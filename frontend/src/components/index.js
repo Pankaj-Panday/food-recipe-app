@@ -7,10 +7,11 @@ import Searchbar from "./Searchbar.jsx";
 import Button from "./Button.jsx";
 import LogoutBtn from "./Header/LogoutBtn.jsx";
 import Input from "./Input.jsx";
-import LoginForm from "./Header/LoginForm.jsx";
-import SignUpForm from "./Header/SignUpForm.jsx";
+import LoginForm from "./LoginForm.jsx";
+import SignUpForm from "./SignUpForm.jsx";
 import RecipeForm from "./RecipeForm.jsx";
 import Textarea from "./Textarea.jsx";
+import AvgRating from "./AvgRating.jsx";
 
 export {
 	Header,
@@ -26,4 +27,5 @@ export {
 	SignUpForm,
 	RecipeForm,
 	Textarea,
+	AvgRating,
 };

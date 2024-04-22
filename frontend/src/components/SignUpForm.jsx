@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
-import { Input, Button } from "../index.js";
-import foodImg from "../../assets/imgs/signupForm.jpg";
+import { Input, Button } from "./index.js";
+import foodImg from "../assets/imgs/signupForm.jpg";
 import { useForm } from "react-hook-form";
-import userService from "../../services/user.service.js";
+import userService from "../services/user.service.js";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userLogin } from "../../app/authSlice.js";
+import { userLogin } from "../app/authSlice.js";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-// configure dev tools
-import { DevTool } from "@hookform/devtools";
-
-const SignUpForm = ({ onClose }) => {
+const SignUpForm = () => {
 	useEffect(() => {
 		function handleOutsideClick(event) {
 			if (event.target === overlay && event.target !== formContainer) {
-				onClose();
+				navigate(-1);
 			}
 		}
 
@@ -31,7 +28,6 @@ const SignUpForm = ({ onClose }) => {
 
 	const {
 		register,
-		control,
 		formState: { errors: frontendError, isSubmitting },
 		handleSubmit,
 	} = useForm({
@@ -61,7 +57,6 @@ const SignUpForm = ({ onClose }) => {
 				avatar: avatar[0],
 			});
 			if (data.user) {
-				onClose();
 				dispatch(userLogin(data.user));
 				navigate("/");
 			}
@@ -75,7 +70,7 @@ const SignUpForm = ({ onClose }) => {
 			<div id="overlay" className="overlay">
 				<div
 					id="formContainer"
-					className="md:h-[580px] mt-7 md:mt-0 sign-log-container"
+					className="md:h-[580px] my-7 md:mt-0 sign-log-container"
 				>
 					<div className="h-[240px] md:h-full md:flex-1 overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-bl-xl">
 						<img
@@ -163,13 +158,12 @@ const SignUpForm = ({ onClose }) => {
 					</div>
 					<button
 						className="grid place-content-center h-7 w-7 rounded-full text-black  bg-white text-xl absolute right-2 top-2"
-						onClick={onClose}
+						onClick={() => navigate(-1)}
 					>
 						<FaXmark size="0.9rem" />
 					</button>
 				</div>
 			</div>
-			<DevTool control={control} />
 		</>
 	);
 };

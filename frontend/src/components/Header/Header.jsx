@@ -13,24 +13,7 @@ import { useSelector } from "react-redux";
 
 const Header = () => {
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-	const [showLoginForm, setShowLoginForm] = useState(false);
-	const [showSignUpForm, setShowSignUpForm] = useState(false);
 	const navigate = useNavigate();
-
-	function openLoginForm() {
-		setShowLoginForm(true);
-	}
-	function closeLoginForm() {
-		setShowLoginForm(false);
-	}
-
-	function openSignUpForm() {
-		setShowSignUpForm(true);
-	}
-
-	function closeSignUpForm() {
-		setShowSignUpForm(false);
-	}
 
 	return (
 		<>
@@ -47,7 +30,7 @@ const Header = () => {
 									bgColor="bg-transparent"
 									textColor="text-brand-primary"
 									className="text-sm w-24 capitalize px-4 py-1.5 rounded-full border-2 border-brand-primary transition ease hover:bg-brand-primary hover:text-white"
-									onClick={openSignUpForm}
+									onClick={() => navigate("/signup")}
 								>
 									Sign up
 								</Button>
@@ -55,7 +38,7 @@ const Header = () => {
 									bgColor="bg-brand-primary-light"
 									textColor="text-brand-primary"
 									className="text-sm w-24 capitalize px-4  py-1.5 border-2 rounded-full border-transparent transition ease hover:bg-brand-primary hover:text-white"
-									onClick={openLoginForm}
+									onClick={() => navigate("/login")}
 								>
 									Log in
 								</Button>
@@ -63,7 +46,7 @@ const Header = () => {
 						) : (
 							<div className="flex gap-2">
 								<Button
-									onClick={() => navigate("/add-recipe")}
+									onClick={() => navigate("/recipes/add-recipe")}
 									className="px-2 rounded-lg"
 									bgColor="bg-brand-primary-light"
 									textColor="text-brand-primary"
@@ -76,8 +59,6 @@ const Header = () => {
 					</section>
 				</Container>
 			</header>
-			{showLoginForm && <LoginForm onClose={closeLoginForm} />}
-			{showSignUpForm && <SignUpForm onClose={closeSignUpForm} />}
 		</>
 	);
 };
