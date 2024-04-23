@@ -52,8 +52,9 @@ const optionalAuth = async (req, res, next) => {
 		}
 	} catch (error) {
 		console.log(error.message);
+	} finally {
+		next();
 	}
-	next();
 };
 
 export { verifyToken, optionalAuth };

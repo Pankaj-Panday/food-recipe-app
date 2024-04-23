@@ -12,6 +12,8 @@ import SignUpForm from "./SignUpForm.jsx";
 import RecipeForm from "./RecipeForm.jsx";
 import Textarea from "./Textarea.jsx";
 import AvgRating from "./AvgRating.jsx";
+import TimeAgo from "./TimeAgo.jsx";
+import FormatDate from "./FormatDate.jsx";
 
 export {
 	Header,
@@ -28,4 +30,6 @@ export {
 	RecipeForm,
 	Textarea,
 	AvgRating,
+	TimeAgo,
+	FormatDate,
 };

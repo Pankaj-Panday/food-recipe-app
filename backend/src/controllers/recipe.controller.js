@@ -106,7 +106,7 @@ const viewRecipe = asyncHandler(async (req, res) => {
 	const recipe = await Recipe.aggregate(pipeline);
 	if (!recipe?.length) {
 		// empty array
-		throw new ApiError(404, "Recipe doesn't exist");
+		throw new ApiError(404, "Recipe does not exist");
 	}
 
 	const recipeData = recipe[0];
