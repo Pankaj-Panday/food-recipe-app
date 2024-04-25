@@ -14,6 +14,7 @@ import Textarea from "./Textarea.jsx";
 import AvgRating from "./AvgRating.jsx";
 import TimeAgo from "./TimeAgo.jsx";
 import FormatDate from "./FormatDate.jsx";
+import Reviews from "./Reviews.jsx";
 
 export {
 	Header,
@@ -32,4 +33,5 @@ export {
 	AvgRating,
 	TimeAgo,
 	FormatDate,
+	Reviews,
 };

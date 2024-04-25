@@ -163,7 +163,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 	}
 
 	const recipe = await Recipe.findById(recipeId);
-	if (!recipe.isPublished) {
+	if (!recipe?.isPublished) {
 		throw new ApiError(403, "You cannot access reviews of a private recipe");
 	}
 
@@ -180,16 +180,13 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 				as: "owner",
 				pipeline: [
 					{
-						$project: { name: 1 },
+						$project: { name: 1, avatar: "$avatar.url" },
 					},
 				],
 			},
 		},
 		{
 			$unwind: "$owner",
-		},
-		{
-			$project: { owner: 1, comment: 1 },
 		},
 	];
 	const reviewAggregate = Review.aggregate(pipeline);

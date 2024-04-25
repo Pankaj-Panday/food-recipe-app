@@ -4,13 +4,13 @@ import {
 	Container,
 	Button,
 	AvgRating,
-	TimeAgo,
 	FormatDate,
+	Reviews,
 } from "../components";
 import { SlArrowRight } from "react-icons/sl";
 import { FaRegHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSingleRecipe } from "../app/recipeSlice";
+import { fetchSingleRecipe } from "../app/recipesSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const RecipePage = () => {
@@ -98,9 +98,9 @@ const RecipePage = () => {
 					</p>
 
 					<div className="my-7">
-						<h2 className="mb-3 text-3xl font-bold tracking-tighter">
+						<h3 className="mb-3 text-3xl font-bold tracking-tighter">
 							Ingredients
-						</h2>
+						</h3>
 						<ul className="list-disc list-inside">
 							{recipe.ingredients.map((ingredient, index) => (
 								<li key={index} className="mb-0.5">
@@ -110,9 +110,9 @@ const RecipePage = () => {
 						</ul>
 					</div>
 					<div className="my-7">
-						<h2 className="mb-3 text-3xl font-bold tracking-tighter">
+						<h3 className="mb-3 text-3xl font-bold tracking-tighter">
 							Instructions
-						</h2>
+						</h3>
 						<ol>
 							{recipe.steps.map((step, index) => (
 								<li key={index} className="mb-4">
@@ -136,13 +136,20 @@ const RecipePage = () => {
 						</p>
 						{/* TODO: Make the last update to months ago or user friendly date */}
 						<p className="text-sm">
-							<span>Last updated on </span>{" "}
-							<FormatDate timestamp={recipe.updatedAt} />
+							<span>Created on </span>{" "}
+							<FormatDate timestamp={recipe.createdAt} />
 						</p>
 					</div>
 				</section>
-				{/* TODO: Build Comment section */}
-				<section id="comments"></section>
+
+				<section id="comments" className="my-7">
+					<h3 className="mb-3 text-3xl font-bold tracking-tighter">Reviews</h3>
+					{recipe.totalReviews > 0 ? (
+						<Reviews recipeId={recipeId} />
+					) : (
+						<p className="text-sm">No reviews yet</p>
+					)}
+				</section>
 			</Container>
 		);
 	}
