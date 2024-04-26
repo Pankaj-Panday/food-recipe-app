@@ -23,16 +23,51 @@ const reviewsSlice = createSlice({
 		selectedReview: null,
 		loading: false,
 		error: null, // made it to be string (not object)
+		pagination: {
+			totalReviews: 0,
+			reviewsShown: 0,
+			offset: 0,
+			hasPrevPage: false,
+			hasNextPage: false,
+			prevPage: null,
+			nextPage: null,
+			curPage: null,
+		},
 	},
-	reducers: {},
+	reducers: {
+		resetReviews: (state, action) => {
+			state.reviews = [];
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchReviews.pending, (state, action) => {
 				state.loading = true;
 			})
 			.addCase(fetchReviews.fulfilled, (state, action) => {
+				const {
+					reviews,
+					totalReviews,
+					reviewsShown,
+					offset,
+					hasPrevPage,
+					hasNextPage,
+					prevPage,
+					nextPage,
+					curPage,
+				} = action.payload;
 				state.loading = false;
-				state.reviews = action.payload.reviews;
+				state.reviews = [...state.reviews, ...reviews];
+				state.pagination = {
+					totalReviews,
+					reviewsShown,
+					offset,
+					hasPrevPage,
+					hasNextPage,
+					prevPage,
+					nextPage,
+					curPage,
+				};
 			})
 			.addCase(fetchReviews.rejected, (state, action) => {
 				state.loading = false;
@@ -41,5 +76,5 @@ const reviewsSlice = createSlice({
 	},
 });
 
-export const {} = reviewsSlice.actions;
+export const { resetReviews } = reviewsSlice.actions;
 export default reviewsSlice.reducer;

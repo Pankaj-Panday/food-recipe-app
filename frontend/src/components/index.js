@@ -11,7 +11,7 @@ import LoginForm from "./LoginForm.jsx";
 import SignUpForm from "./SignUpForm.jsx";
 import RecipeForm from "./RecipeForm.jsx";
 import Textarea from "./Textarea.jsx";
-import AvgRating from "./AvgRating.jsx";
+import Rating from "./Rating.jsx";
 import TimeAgo from "./TimeAgo.jsx";
 import FormatDate from "./FormatDate.jsx";
 import Reviews from "./Reviews.jsx";
@@ -30,7 +30,7 @@ export {
 	SignUpForm,
 	RecipeForm,
 	Textarea,
-	AvgRating,
+	Rating,
 	TimeAgo,
 	FormatDate,
 	Reviews,

@@ -1,12 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-	Container,
-	Button,
-	AvgRating,
-	FormatDate,
-	Reviews,
-} from "../components";
+import { Container, Button, Rating, FormatDate, Reviews } from "../components";
 import { SlArrowRight } from "react-icons/sl";
 import { FaRegHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,10 +58,14 @@ const RecipePage = () => {
 					<h2 className="text-4xl font-bold tracking-tighter">
 						{recipe.title}
 					</h2>
-					<div className="my-4 text-sm">
+					<div className="flex items-center my-4 text-sm">
 						{recipe.avgRating && (
-							<span className="pr-2 mr-2 border-r-2 border-r-gray-200 ">
-								<AvgRating rating={recipe.avgRating} />
+							<span className="flex items-center pr-2 mr-2 border-r-2 border-r-gray-200">
+								<Rating rating={recipe.avgRating} />
+								&nbsp;
+								<span className="text-xs font-semibold">
+									({recipe.avgRating})
+								</span>
 							</span>
 						)}
 						<a

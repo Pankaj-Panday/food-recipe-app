@@ -157,7 +157,7 @@ const deleteReview = asyncHandler(async (req, res) => {
 
 const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 	const recipeId = req.params.recipeId;
-	const page = req.query?.page || 1;
+	const page = parseInt(req.query?.page || 1);
 	if (!recipeId) {
 		throw new ApiError(400, "Missing required parameter: recipeId");
 	}
@@ -167,7 +167,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 		throw new ApiError(403, "You cannot access reviews of a private recipe");
 	}
 
-	const recipeObjectId = new mongoose.Types.ObjectId(recipeId);
+	const recipeObjectId = new mongoose.Types.ObjectId(recipeId + "");
 	const pipeline = [
 		{
 			$match: { recipe: recipeObjectId },
@@ -191,8 +191,8 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 	];
 	const reviewAggregate = Review.aggregate(pipeline);
 	const options = {
-		offset: 0,
-		limit: 5 * page,
+		page,
+		limit: 1,
 	};
 	const result = await Review.aggregatePaginate(reviewAggregate, options);
 	const {
@@ -203,6 +203,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 		hasNextPage,
 		prevPage,
 		nextPage,
+		page: curPage,
 	} = result;
 
 	const response = {
@@ -214,6 +215,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 		hasNextPage,
 		prevPage,
 		nextPage,
+		curPage,
 	};
 
 	return res
