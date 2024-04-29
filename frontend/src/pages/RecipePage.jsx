@@ -143,7 +143,7 @@ const RecipePage = () => {
 				<section id="comments" className="my-7">
 					<h3 className="mb-3 text-3xl font-bold tracking-tighter">Reviews</h3>
 					{recipe.totalReviews > 0 ? (
-						<Reviews recipeId={recipeId} />
+						<Reviews />
 					) : (
 						<p className="text-sm">No reviews yet</p>
 					)}

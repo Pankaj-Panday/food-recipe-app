@@ -1,6 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import reviewService from "../services/review.service";
 
+const initialState = {
+	reviews: [],
+	selectedReview: null,
+	loading: false,
+	error: null, // made it to be string (not object)
+	pagination: {
+		totalReviews: 0,
+		reviewsShown: 0,
+		offset: 0,
+		hasPrevPage: false,
+		hasNextPage: false,
+		prevPage: null,
+		nextPage: null,
+		curPage: null,
+	},
+};
+
 export const fetchReviews = createAsyncThunk(
 	"reviews/fetchReviews",
 	async ({ recipeId, pageNum }, { rejectWithValue }) => {
@@ -18,25 +35,22 @@ export const fetchReviews = createAsyncThunk(
 
 const reviewsSlice = createSlice({
 	name: "reviews",
-	initialState: {
-		reviews: [],
-		selectedReview: null,
-		loading: false,
-		error: null, // made it to be string (not object)
-		pagination: {
-			totalReviews: 0,
-			reviewsShown: 0,
-			offset: 0,
-			hasPrevPage: false,
-			hasNextPage: false,
-			prevPage: null,
-			nextPage: null,
-			curPage: null,
-		},
-	},
+	initialState,
 	reducers: {
 		resetReviews: (state, action) => {
 			state.reviews = [];
+			state.loading = false;
+			state.error = null;
+			state.pagination = {
+				totalReviews: 0,
+				reviewsShown: 0,
+				offset: 0,
+				hasPrevPage: false,
+				hasNextPage: false,
+				prevPage: null,
+				nextPage: null,
+				curPage: null,
+			};
 		},
 	},
 	extraReducers: (builder) => {

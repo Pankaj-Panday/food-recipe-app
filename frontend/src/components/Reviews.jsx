@@ -4,10 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchReviews, resetReviews } from "../app/reviewsSlice.js";
 import { Link } from "react-router-dom";
 
-const Reviews = React.memo(({ recipeId }) => {
+const Reviews = () => {
 	const dispatch = useDispatch();
 	const { reviews, loading, error } = useSelector((state) => state.reviews);
 	const { nextPage } = useSelector((state) => state.reviews.pagination);
+	const { _id: recipeId } = useSelector(
+		(state) => state.recipes.selectedRecipe
+	);
 
 	useEffect(() => {
 		dispatch(fetchReviews({ recipeId: recipeId }));
@@ -48,7 +51,7 @@ const Reviews = React.memo(({ recipeId }) => {
 	}
 
 	return <>{content}</>;
-});
+};
 
 const Review = ({ review }) => {
 	return (

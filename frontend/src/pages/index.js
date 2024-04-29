@@ -3,5 +3,13 @@ import LoginPage from "./LoginPage.jsx";
 import SignUpPage from "./SignUpPage.jsx";
 import AddRecipePage from "./AddRecipePage.jsx";
 import RecipePage from "./RecipePage.jsx";
+import AllRecipes from "./AllRecipes.jsx";
 
-export { HomePage, LoginPage, SignUpPage, AddRecipePage, RecipePage };
+export {
+	HomePage,
+	LoginPage,
+	SignUpPage,
+	AddRecipePage,
+	RecipePage,
+	AllRecipes,
+};

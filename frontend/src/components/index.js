@@ -15,6 +15,8 @@ import Rating from "./Rating.jsx";
 import TimeAgo from "./TimeAgo.jsx";
 import FormatDate from "./FormatDate.jsx";
 import Reviews from "./Reviews.jsx";
+import RecipeCard from "./RecipeCard.jsx";
+import RecipeGrid from "./RecipeGrid.jsx";
 
 export {
 	Header,
@@ -34,4 +36,6 @@ export {
 	TimeAgo,
 	FormatDate,
 	Reviews,
+	RecipeCard,
+	RecipeGrid,
 };

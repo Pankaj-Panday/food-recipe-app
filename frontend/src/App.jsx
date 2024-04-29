@@ -12,6 +12,7 @@ import {
 	LoginPage,
 	SignUpPage,
 	RecipePage,
+	AllRecipes,
 } from "./pages/index.js";
 import ErrorLayout from "./layout/ErrorLayout.jsx";
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
 			<Route path="home" element={<HomePage />} />
 			<Route path="login" element={<LoginPage />} />
 			<Route path="signup" element={<SignUpPage />} />
+			<Route path="recipes" element={<AllRecipes />} />
 			<Route path="recipes/add-recipe" element={<AddRecipePage />} />
 			<Route path="recipes/view-recipe/:recipeId" element={<RecipePage />} />
 		</Route>
