@@ -66,7 +66,7 @@ const RecipeForm = () => {
 				isPublished: publish,
 			});
 			setBackendError("");
-			navigate(`/recipes/${data._id}/view-recipe`);
+			navigate(`/recipes/view-recipe/${data._id}`);
 		} catch (error) {
 			setBackendError(
 				error.reason.charAt(0).toUpperCase() + error.reason.slice(1)

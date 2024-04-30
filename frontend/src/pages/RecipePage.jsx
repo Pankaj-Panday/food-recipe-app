@@ -44,7 +44,7 @@ const RecipePage = () => {
 			<Container>
 				<section className="flex items-center gap-2 mb-10 font-semibold uppercase ">
 					<Link
-						to="/"
+						to="/recipes"
 						className="relative after:absolute after:top-full after:left-0 after:w-full after:bg-brand-primary  after:h-[1px]"
 					>
 						Recipes

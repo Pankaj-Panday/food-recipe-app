@@ -118,12 +118,13 @@ class RecipeService {
 		}
 	}
 
-	async viewAllRecipes(pageNum) {
+	async viewAllRecipes(pageNum, limit) {
 		// recives a query
 		try {
 			return await axiosInstance.get("/recipes/all", {
 				params: {
 					page: pageNum,
+					limit: limit,
 				},
 			});
 		} catch (error) {

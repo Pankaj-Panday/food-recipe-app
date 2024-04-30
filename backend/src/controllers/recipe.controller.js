@@ -300,7 +300,7 @@ const getAllRecipes = asyncHandler(async (req, res) => {
 	const recipeAggregate = Recipe.aggregate(pipeline);
 	const options = {
 		page: parseInt(req.query.page) || 1,
-		limit: 10,
+		limit: parseInt(req.query.limit) || 10,
 	};
 	const result = await Recipe.aggregatePaginate(recipeAggregate, options);
 

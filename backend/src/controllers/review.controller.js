@@ -192,7 +192,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 	const reviewAggregate = Review.aggregate(pipeline);
 	const options = {
 		page,
-		limit: 1,
+		limit: 5,
 	};
 	const result = await Review.aggregatePaginate(reviewAggregate, options);
 	const {
