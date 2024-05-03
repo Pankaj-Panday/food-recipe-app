@@ -118,7 +118,7 @@ class RecipeService {
 		}
 	}
 
-	async viewAllRecipes(pageNum, limit) {
+	async viewAllRecipes(pageNum, limit, abortSignal) {
 		// recives a query
 		try {
 			return await axiosInstance.get("/recipes/all", {
@@ -126,6 +126,7 @@ class RecipeService {
 					page: pageNum,
 					limit: limit,
 				},
+				signal: abortSignal,
 			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);

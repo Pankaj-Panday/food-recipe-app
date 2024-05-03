@@ -6,14 +6,20 @@ import recipeService from "../services/recipe.service";
 // state update of these in extraReducers
 
 const initialState = {
-	fetchedRecipes: [],
-	paginatedRecipes: [],
+	fetchedItems: [], // from backend
+	fetchedItemsCount: 9, // tell how many items to fetch from backend
+	fetchedPage: 0, // from backend
+	totalPagesAvailable: null, // from backend
+	totalItemsAvailable: 0, // from backend
+	displayedItems: [], // from frontend
+	totalDisplayedPages: 0, // from frontend
+	displayedPage: 1, // from frontend
 	selectedRecipe: null,
 	loading: false,
 	error: null,
-	totalPages: null,
-	currentPage: 1,
-	itemsPerPage: 4,
+	startIndex: 0,
+	itemsDisplayedPerPage: 3, // from frontend
+	endIndex: 3,
 };
 
 export const fetchSingleRecipe = createAsyncThunk(
@@ -28,11 +34,15 @@ export const fetchSingleRecipe = createAsyncThunk(
 	}
 );
 
-export const fetchRecipes = createAsyncThunk(
+export const fetchItems = createAsyncThunk(
 	"recipes/fetchRecipes",
-	async ({ pageNum, limit }, { rejectWithValue }) => {
+	async ({ pageNum, limit }, { rejectWithValue, signal }) => {
 		try {
-			const { data } = await recipeService.viewAllRecipes(pageNum, limit);
+			const { data } = await recipeService.viewAllRecipes(
+				pageNum,
+				limit,
+				signal
+			);
 			return data;
 		} catch (error) {
 			return rejectWithValue(error.reason);
@@ -43,7 +53,37 @@ export const fetchRecipes = createAsyncThunk(
 const recipesSlice = createSlice({
 	name: "recipes",
 	initialState,
-	reducers: {},
+	reducers: {
+		setStartIndex: (state, action) => {
+			state.startIndex = action.payload;
+		},
+		setEndIndex: (state, action) => {
+			state.endIndex = action.payload;
+		},
+		setFetchedPage: (state, action) => {
+			state.fetchedPage = action.payload;
+		},
+		setdisplayedItems: (state, action) => {
+			state.displayedItems = state.fetchedItems.slice(
+				state.startIndex,
+				state.endIndex
+			);
+		},
+		setFetchedItemsCount: (state, action) => {
+			state.fetchedItemsCount = action.payload;
+		},
+		incrementDisplayedPage: (state, action) => {
+			state.displayedPage = state.displayedPage + 1;
+		},
+		decrementDisplayedPage: (state, action) => {
+			state.displayedPage = state.displayedPage - 1;
+		},
+		setTotalDisplayedPages: (state) => {
+			state.totalDisplayedPages = Math.ceil(
+				state.totalItemsAvailable / state.itemsDisplayedPerPage
+			);
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchSingleRecipe.pending, (state, action) => {
@@ -60,20 +100,34 @@ const recipesSlice = createSlice({
 			});
 
 		builder
-			.addCase(fetchRecipes.pending, (state, action) => {
+			.addCase(fetchItems.pending, (state, action) => {
 				state.loading = true;
 			})
-			.addCase(fetchRecipes.fulfilled, (state, action) => {
-				state.fetchedRecipes = [...action.payload.recipes];
+			.addCase(fetchItems.fulfilled, (state, action) => {
+				state.fetchedItems = [...action.payload.recipes];
+				state.totalItemsAvailable = action.payload.totalRecipeCount;
+				state.totalPagesAvailable = action.payload.totalPages;
+				state.fetchedPage = action.payload.curPageNum;
 				state.loading = false;
 				state.error = null;
 			})
-			.addCase(fetchRecipes.rejected, (state, action) => {
+			.addCase(fetchItems.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload;
+				if (!action.meta.aborted) {
+					state.error = action.payload;
+				}
 			});
 	},
 });
 
-export const {} = recipesSlice.actions;
+export const {
+	setStartIndex,
+	setEndIndex,
+	setdisplayedItems,
+	incrementDisplayedPage,
+	decrementDisplayedPage,
+	setTotalDisplayedPages,
+	setFetchedItemsCount,
+	setFetchedPage,
+} = recipesSlice.actions;
 export default recipesSlice.reducer;

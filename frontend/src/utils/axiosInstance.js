@@ -18,7 +18,7 @@ axiosInstance.interceptors.response.use(
 		// it recieves actual api error
 		let customError = new ErrorResponse(error);
 		// no response but request was sent
-		if (!error.response && error.request) {
+		if (!error.response && error.request && !customError.isReqAborted) {
 			console.error("Request: ", error.request);
 		}
 

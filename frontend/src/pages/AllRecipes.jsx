@@ -4,7 +4,7 @@ import { Container, RecipeGrid } from "../components";
 const AllRecipes = () => {
 	return (
 		<Container>
-			<article className="py-8 md:py-16 sm:px-5 md:px-10 min-h-[200px]">
+			<article className="py-8 md:py-16 sm:px-5 md:px-10">
 				<h2 className="text-4xl font-bold">All Recipes</h2>
 				<p className="py-5">
 					&quot; Create a delicious recipe every day &quot; is our guiding
