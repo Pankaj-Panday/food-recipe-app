@@ -17,6 +17,7 @@ import FormatDate from "./FormatDate.jsx";
 import Reviews from "./Reviews.jsx";
 import RecipeCard from "./RecipeCard.jsx";
 import RecipeGrid from "./RecipeGrid.jsx";
+import PaginationButtons from "./PaginationButtons.jsx";
 
 export {
 	Header,
@@ -38,4 +39,5 @@ export {
 	Reviews,
 	RecipeCard,
 	RecipeGrid,
+	PaginationButtons,
 };

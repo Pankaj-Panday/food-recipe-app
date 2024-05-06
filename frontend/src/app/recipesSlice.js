@@ -5,23 +5,6 @@ import recipeService from "../services/recipe.service";
 // required data or recipes/fetchSingleRecipe/rejected action with error when error occurs so just handle
 // state update of these in extraReducers
 
-const initialState = {
-	fetchedItems: [], // from backend
-	fetchedItemsCount: 9, // tell how many items to fetch from backend
-	fetchedPage: 0, // from backend
-	totalPagesAvailable: null, // from backend
-	totalItemsAvailable: 0, // from backend
-	displayedItems: [], // from frontend
-	totalDisplayedPages: 0, // from frontend
-	displayedPage: 1, // from frontend
-	selectedRecipe: null,
-	loading: false,
-	error: null,
-	startIndex: 0,
-	itemsDisplayedPerPage: 3, // from frontend
-	endIndex: 3,
-};
-
 export const fetchSingleRecipe = createAsyncThunk(
 	"recipes/fetchSingleRecipe",
 	async (recipeId, { rejectWithValue }) => {
@@ -36,12 +19,35 @@ export const fetchSingleRecipe = createAsyncThunk(
 
 export const fetchItems = createAsyncThunk(
 	"recipes/fetchRecipes",
-	async ({ pageNum, limit }, { rejectWithValue, signal }) => {
+	async (
+		{ pageNum, limit },
+		{ rejectWithValue, dispatch, signal, getState }
+	) => {
 		try {
+			const state = getState().recipes;
 			const { data } = await recipeService.viewAllRecipes(
 				pageNum,
 				limit,
 				signal
+			);
+
+			if (state.fetchedPage === 1) {
+				dispatch(
+					setCurrentPageData(data.recipes.slice(0, state.itemsDisplayedPerPage))
+				);
+				dispatch(
+					setNextPageData(data.recipes.slice(state.itemsDisplayedPerPage))
+				);
+				dispatch(setPrevPageData([]));
+			}
+			dispatch(setFetchedPage(data.curPageNum));
+
+			dispatch(setTotalItemsAvailable(data.totalRecipeCount));
+			dispatch(setTotalPagesAvailable(data.totalPages));
+			dispatch(
+				setTotalPagesToDisplay(
+					Math.ceil(data.totalRecipeCount / state.itemsDisplayedPerPage)
+				)
 			);
 			return data;
 		} catch (error) {
@@ -50,38 +56,61 @@ export const fetchItems = createAsyncThunk(
 	}
 );
 
+const initialState = {
+	selectedRecipe: null,
+	curPageData: [],
+	nextPageData: [],
+	prevPageData: [],
+	fetchedData: [],
+	fetchedPage: 1,
+	loading: false,
+	error: null,
+	totalItemsAvailable: 0,
+	totalPagesAvailable: 0,
+	itemsDisplayedPerPage: 12,
+	totalPagesToDisplay: 0,
+	curDisplayedPage: 1,
+};
+
 const recipesSlice = createSlice({
 	name: "recipes",
 	initialState,
 	reducers: {
-		setStartIndex: (state, action) => {
-			state.startIndex = action.payload;
+		resetState: () => {
+			return initialState;
 		},
-		setEndIndex: (state, action) => {
-			state.endIndex = action.payload;
+		setLoading: (state, action) => {
+			state.loading = action.payload;
+		},
+		setError: (state, action) => {
+			state.error = action.payload;
+		},
+		setTotalItemsAvailable: (state, action) => {
+			state.totalItemsAvailable = action.payload;
+		},
+		setItemsDisplayedPerPage: (state, action) => {
+			state.itemsDisplayedPerPage = action.payload;
+		},
+		setCurrentPageData: (state, action) => {
+			state.curPageData = action.payload;
+		},
+		setNextPageData: (state, action) => {
+			state.nextPageData = action.payload;
+		},
+		setPrevPageData: (state, action) => {
+			state.prevPageData = action.payload;
 		},
 		setFetchedPage: (state, action) => {
 			state.fetchedPage = action.payload;
 		},
-		setdisplayedItems: (state, action) => {
-			state.displayedItems = state.fetchedItems.slice(
-				state.startIndex,
-				state.endIndex
-			);
+		setTotalPagesAvailable: (state, action) => {
+			state.totalPagesAvailable = action.payload;
 		},
-		setFetchedItemsCount: (state, action) => {
-			state.fetchedItemsCount = action.payload;
+		setTotalPagesToDisplay: (state, action) => {
+			state.totalPagesToDisplay = action.payload;
 		},
-		incrementDisplayedPage: (state, action) => {
-			state.displayedPage = state.displayedPage + 1;
-		},
-		decrementDisplayedPage: (state, action) => {
-			state.displayedPage = state.displayedPage - 1;
-		},
-		setTotalDisplayedPages: (state) => {
-			state.totalDisplayedPages = Math.ceil(
-				state.totalItemsAvailable / state.itemsDisplayedPerPage
-			);
+		setCurDisplayedPage: (state, action) => {
+			state.curDisplayedPage = action.payload;
 		},
 	},
 	extraReducers: (builder) => {
@@ -104,12 +133,9 @@ const recipesSlice = createSlice({
 				state.loading = true;
 			})
 			.addCase(fetchItems.fulfilled, (state, action) => {
-				state.fetchedItems = [...action.payload.recipes];
-				state.totalItemsAvailable = action.payload.totalRecipeCount;
-				state.totalPagesAvailable = action.payload.totalPages;
-				state.fetchedPage = action.payload.curPageNum;
 				state.loading = false;
 				state.error = null;
+				state.fetchedData = [...action.payload.recipes];
 			})
 			.addCase(fetchItems.rejected, (state, action) => {
 				state.loading = false;
@@ -121,13 +147,17 @@ const recipesSlice = createSlice({
 });
 
 export const {
-	setStartIndex,
-	setEndIndex,
-	setdisplayedItems,
-	incrementDisplayedPage,
-	decrementDisplayedPage,
-	setTotalDisplayedPages,
-	setFetchedItemsCount,
+	setLoading,
+	setError,
+	setTotalItemsAvailable,
+	setItemsDisplayedPerPage,
+	setCurrentPageData,
+	setNextPageData,
+	setPrevPageData,
 	setFetchedPage,
+	setTotalPagesAvailable,
+	setTotalPagesToDisplay,
+	setCurDisplayedPage,
 } = recipesSlice.actions;
+
 export default recipesSlice.reducer;
