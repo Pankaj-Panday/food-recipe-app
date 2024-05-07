@@ -117,6 +117,7 @@ const recipesSlice = createSlice({
 		builder
 			.addCase(fetchSingleRecipe.pending, (state, action) => {
 				state.loading = true;
+				state.error = null;
 			})
 			.addCase(fetchSingleRecipe.fulfilled, (state, action) => {
 				state.loading = false;
@@ -138,8 +139,10 @@ const recipesSlice = createSlice({
 				state.fetchedData = [...action.payload.recipes];
 			})
 			.addCase(fetchItems.rejected, (state, action) => {
-				state.loading = false;
-				if (!action.meta.aborted) {
+				if (action.meta.aborted) {
+					state.loading = true;
+				} else {
+					state.loading = false;
 					state.error = action.payload;
 				}
 			});
@@ -147,6 +150,7 @@ const recipesSlice = createSlice({
 });
 
 export const {
+	resetState,
 	setLoading,
 	setError,
 	setTotalItemsAvailable,

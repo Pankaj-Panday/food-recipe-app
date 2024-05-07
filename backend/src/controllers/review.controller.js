@@ -198,6 +198,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 	const {
 		totalDocs,
 		docs,
+		totalPages,
 		offset,
 		hasPrevPage,
 		hasNextPage,
@@ -210,6 +211,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 		reviews: docs,
 		totalReviews: totalDocs,
 		reviewsShown: docs.length,
+		totalPages,
 		offset,
 		hasPrevPage,
 		hasNextPage,

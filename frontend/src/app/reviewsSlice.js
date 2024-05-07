@@ -1,31 +1,26 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import reviewService from "../services/review.service";
 
 const initialState = {
-	reviews: [],
-	selectedReview: null,
+	fetchedReviews: [],
+	displayedReviews: [],
+	currentPage: 1,
+	totalPages: 0,
 	loading: false,
-	error: null, // made it to be string (not object)
-	pagination: {
-		totalReviews: 0,
-		reviewsShown: 0,
-		offset: 0,
-		hasPrevPage: false,
-		hasNextPage: false,
-		prevPage: null,
-		nextPage: null,
-		curPage: null,
-	},
+	error: null,
 };
 
 export const fetchReviews = createAsyncThunk(
 	"reviews/fetchReviews",
-	async ({ recipeId, pageNum }, { rejectWithValue }) => {
+	async ({ recipeId, pageNum }, { dispatch, rejectWithValue, signal }) => {
 		try {
 			const { data } = await reviewService.allReviewsOnRecipe(
 				recipeId,
-				pageNum
+				pageNum,
+				signal
 			);
+			dispatch(setCurrentPage(data.curPage));
+			dispatch(setTotalPages(data.totalPages));
 			return data;
 		} catch (error) {
 			return rejectWithValue(error.reason);
@@ -37,58 +32,53 @@ const reviewsSlice = createSlice({
 	name: "reviews",
 	initialState,
 	reducers: {
-		resetReviews: (state, action) => {
-			state.reviews = [];
-			state.loading = false;
-			state.error = null;
-			state.pagination = {
-				totalReviews: 0,
-				reviewsShown: 0,
-				offset: 0,
-				hasPrevPage: false,
-				hasNextPage: false,
-				prevPage: null,
-				nextPage: null,
-				curPage: null,
-			};
+		resetState: () => {
+			return initialState;
+		},
+		setLoading: (state, action) => {
+			state.loading = action.payload;
+		},
+		setError: (state, action) => {
+			state.error = action.payload;
+		},
+		setDisplayedReviews: (state, action) => {
+			state.displayedReviews = [...state.displayedReviews, ...action.payload];
+		},
+		setCurrentPage: (state, action) => {
+			state.currentPage = action.payload;
+		},
+		setTotalPages: (state, action) => {
+			state.totalPages = action.payload;
 		},
 	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchReviews.pending, (state, action) => {
 				state.loading = true;
+				state.error = null;
 			})
 			.addCase(fetchReviews.fulfilled, (state, action) => {
-				const {
-					reviews,
-					totalReviews,
-					reviewsShown,
-					offset,
-					hasPrevPage,
-					hasNextPage,
-					prevPage,
-					nextPage,
-					curPage,
-				} = action.payload;
 				state.loading = false;
-				state.reviews = [...state.reviews, ...reviews];
-				state.pagination = {
-					totalReviews,
-					reviewsShown,
-					offset,
-					hasPrevPage,
-					hasNextPage,
-					prevPage,
-					nextPage,
-					curPage,
-				};
+				state.error = null;
+				state.fetchedReviews = [...action.payload.reviews];
 			})
 			.addCase(fetchReviews.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload;
+				if (action.meta.aborted) {
+					state.loading = true;
+				} else {
+					state.loading = false;
+					state.error = action.payload;
+				}
 			});
 	},
 });
 
-export const { resetReviews } = reviewsSlice.actions;
+export const {
+	resetState,
+	setLoading,
+	setError,
+	setDisplayedReviews,
+	setCurrentPage,
+	setTotalPages,
+} = reviewsSlice.actions;
 export default reviewsSlice.reducer;

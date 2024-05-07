@@ -1,11 +1,26 @@
 import { axiosInstance } from "../utils/index.js";
 
 class ReviewService {
-	async create(recipeId, { rating, comment }) {
+	async create(recipeId, { rating, comment }, abortSignal) {
 		try {
-			return await axiosInstance.post(`/reviews/create/${recipeId}`, {
-				rating,
-				comment,
+			return await axiosInstance.post(
+				`/reviews/create/${recipeId}`,
+				{
+					rating,
+					comment,
+				},
+				{ signal: abortSignal }
+			);
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			throw error;
+		}
+	}
+
+	async view(reviewId, abortSignal) {
+		try {
+			return await axiosInstance.get(`/reviews/${reviewId}/view`, {
+				signal: abortSignal,
 			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
@@ -13,20 +28,28 @@ class ReviewService {
 		}
 	}
 
-	async view(reviewId) {
+	async update(reviewId, { rating, comment }, abortSignal) {
 		try {
-			return await axiosInstance.get(`/reviews/${reviewId}/view`);
+			return await axiosInstance.patch(
+				`/reviews/${reviewId}/update`,
+				{
+					rating,
+					comment,
+				},
+				{
+					signal: abortSignal,
+				}
+			);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;
 		}
 	}
 
-	async update(reviewId, { rating, comment }) {
+	async delete(reviewId, abortSignal) {
 		try {
-			return await axiosInstance.patch(`/reviews/${reviewId}/update`, {
-				rating,
-				comment,
+			return await axiosInstance.delete(`/reviews/${reviewId}/delete`, {
+				signal: abortSignal,
 			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
@@ -34,21 +57,13 @@ class ReviewService {
 		}
 	}
 
-	async delete(reviewId) {
-		try {
-			return await axiosInstance.delete(`/reviews/${reviewId}/delete`);
-		} catch (error) {
-			console.error("Reason :: ", error.reason);
-			throw error;
-		}
-	}
-
-	async allReviewsOnRecipe(recipeId, pageNum) {
+	async allReviewsOnRecipe(recipeId, pageNum, abortSignal) {
 		try {
 			return await axiosInstance.get(`/reviews/view-all/${recipeId}`, {
 				params: {
 					page: pageNum || 1,
 				},
+				signal: abortSignal,
 			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
@@ -56,9 +71,11 @@ class ReviewService {
 		}
 	}
 
-	async reviewExistOnRecipeByCurrentUser(recipeId) {
+	async reviewExistOnRecipeByCurrentUser(recipeId, abortSignal) {
 		try {
-			return await axiosInstance.get(`/reviews/exist/${recipeId}`);
+			return await axiosInstance.get(`/reviews/exist/${recipeId}`, {
+				signal: abortSignal,
+			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;

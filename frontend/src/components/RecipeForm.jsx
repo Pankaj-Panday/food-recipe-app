@@ -126,7 +126,7 @@ const RecipeForm = () => {
 											required
 											className="rounded-md"
 											{...register(`ingredients.${index}.ingredient`, {
-												required: "Ingredient cannot be empty",
+												required: "Ingredients cannot be empty",
 											})}
 										/>
 										{index > 0 && (
@@ -169,7 +169,7 @@ const RecipeForm = () => {
 											placeholder="e.g. Boil mixture for 10 minutes"
 											required
 											{...register(`steps.${index}.step`, {
-												required: "Step cannot be empty",
+												required: "Steps cannot be empty",
 											})}
 										/>
 										{index > 0 && (
@@ -265,6 +265,9 @@ const RecipeForm = () => {
 							textColor="text-[#333333]"
 							className="w-[7rem] min-w-[6.5rem] p-2 rounded-xl disabled:opacity-50"
 							disabled={isSubmitting}
+							onClick={() => {
+								navigate(-1);
+							}}
 						>
 							Cancel
 						</Button>

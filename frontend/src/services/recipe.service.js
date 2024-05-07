@@ -1,15 +1,18 @@
 import { axiosInstance } from "../utils/index.js";
 
 class RecipeService {
-	async createRecipe({
-		title,
-		introduction,
-		recipePhoto,
-		cookingTime,
-		ingredients,
-		steps,
-		isPublished,
-	}) {
+	async createRecipe(
+		{
+			title,
+			introduction,
+			recipePhoto,
+			cookingTime,
+			ingredients,
+			steps,
+			isPublished,
+		},
+		abortSignal
+	) {
 		try {
 			const recipeData = {
 				title,
@@ -24,6 +27,7 @@ class RecipeService {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
+				signal: abortSignal,
 			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
@@ -31,9 +35,11 @@ class RecipeService {
 		}
 	}
 
-	async viewRecipe(recipeId) {
+	async viewRecipe(recipeId, abortSignal) {
 		try {
-			return await axiosInstance.get(`/recipes/${recipeId}/view-recipe`);
+			return await axiosInstance.get(`/recipes/${recipeId}/view-recipe`, {
+				signal: abortSignal,
+			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;
@@ -42,7 +48,8 @@ class RecipeService {
 
 	async updateTextDetailsOfRecipe(
 		recipeId,
-		{ title, introduction, cookingTime, ingredients, steps, isPublished }
+		{ title, introduction, cookingTime, ingredients, steps, isPublished },
+		abortSignal
 	) {
 		try {
 			const updatedData = {
@@ -55,23 +62,9 @@ class RecipeService {
 			};
 			return await axiosInstance.patch(
 				`/recipes/${recipeId}/update-recipe`,
-				updatedData
-			);
-		} catch (error) {
-			console.error("Reason :: ", error.reason);
-			throw error;
-		}
-	}
-
-	async updatePhotoOfRecipe(recipeId, newPhoto) {
-		try {
-			return await axiosInstance.patch(
-				`/recipes/${recipeId}/update-recipe-photo`,
-				newPhoto,
+				updatedData,
 				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
+					signal: abortSignal,
 				}
 			);
 		} catch (error) {
@@ -80,10 +73,17 @@ class RecipeService {
 		}
 	}
 
-	async deletePhotoOfRecipe(recipeId) {
+	async updatePhotoOfRecipe(recipeId, newPhoto, abortSignal) {
 		try {
 			return await axiosInstance.patch(
-				`/recipes/${recipeId}/delete-recipe-photo`
+				`/recipes/${recipeId}/update-recipe-photo`,
+				newPhoto,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+					signal: abortSignal,
+				}
 			);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
@@ -91,27 +91,48 @@ class RecipeService {
 		}
 	}
 
-	async deleteRecipe(recipeId) {
+	async deletePhotoOfRecipe(recipeId, abortSignal) {
 		try {
-			return await axiosInstance.delete(`/recipes/${recipeId}/delete-recipe`);
+			return await axiosInstance.patch(
+				`/recipes/${recipeId}/delete-recipe-photo`,
+				{},
+				{ signal: abortSignal }
+			);
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;
 		}
 	}
 
-	async saveRecipe(recipeId) {
+	async deleteRecipe(recipeId, abortSignal) {
 		try {
-			return await axiosInstance.post(`/recipes/${recipeId}/save-recipe`);
+			return await axiosInstance.delete(`/recipes/${recipeId}/delete-recipe`, {
+				signal: abortSignal,
+			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;
 		}
 	}
 
-	async unsaveRecipe(recipeId) {
+	async saveRecipe(recipeId, abortSignal) {
 		try {
-			return await axiosInstance.delete(`/recipes/${recipeId}/unsave-recipe`);
+			return await axiosInstance.post(
+				`/recipes/${recipeId}/save-recipe`,
+				{},
+				{ signal: abortSignal }
+			);
+		} catch (error) {
+			console.error("Reason :: ", error.reason);
+			throw error;
+		}
+	}
+
+	async unsaveRecipe(recipeId, abortSignal) {
+		try {
+			return await axiosInstance.delete(`/recipes/${recipeId}/unsave-recipe`, {
+				signal: abortSignal,
+			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;
@@ -134,27 +155,33 @@ class RecipeService {
 		}
 	}
 
-	async savedRecipesByCurrentUser() {
+	async savedRecipesByCurrentUser(abortSignal) {
 		try {
-			return await axiosInstance.get("/recipes/saved-recipes");
+			return await axiosInstance.get("/recipes/saved-recipes", {
+				signal: abortSignal,
+			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;
 		}
 	}
 
-	async createdRecipesByUser(userId) {
+	async createdRecipesByUser(userId, abortSignal) {
 		try {
-			return await axiosInstance.get(`recipes/created-recipes/${userId}`);
+			return await axiosInstance.get(`recipes/created-recipes/${userId}`, {
+				signal: abortSignal,
+			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;
 		}
 	}
 
-	async getRandomRecipes() {
+	async getRandomRecipes(abortSignal) {
 		try {
-			return await axiosInstance.get("/recipes/random-recipes");
+			return await axiosInstance.get("/recipes/random-recipes", {
+				signal: abortSignal,
+			});
 		} catch (error) {
 			console.error("Reason :: ", error.reason);
 			throw error;

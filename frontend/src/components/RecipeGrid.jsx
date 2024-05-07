@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { PaginationButtons, RecipeCard } from ".";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchItems } from "../app/recipesSlice";
+import { fetchItems, resetState } from "../app/recipesSlice";
 
 const RecipeGrid = () => {
 	const dispatch = useDispatch();
@@ -19,6 +19,7 @@ const RecipeGrid = () => {
 
 		return () => {
 			promise.abort();
+			dispatch(resetState());
 		};
 	}, [dispatch, itemsDisplayedPerPage]);
 
