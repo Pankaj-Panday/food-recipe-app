@@ -18,3 +18,7 @@
 		word-spacing: 0.1rem;
 	}
 }
+
+html {
+	scroll-padding: 100px;
+}

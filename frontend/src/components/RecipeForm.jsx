@@ -18,6 +18,7 @@ const RecipeForm = () => {
 		formState: { errors: frontendError, isSubmitting },
 		setFocus,
 	} = useForm({
+		mode: "onBlur",
 		defaultValues: {
 			title: "",
 			introduction: "",
@@ -93,7 +94,7 @@ const RecipeForm = () => {
 								pattern: {
 									value: /^[a-zA-Z0-9\s/-]+$/,
 									message:
-										"Only (a-z, A-Z, 0-9,-, /) characters are allowed in recipeTitle",
+										"Only (a-z, A-Z, 0-9,-, /) characters are allowed in recipe title",
 								},
 							})}
 						/>

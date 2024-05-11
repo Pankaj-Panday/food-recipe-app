@@ -55,7 +55,7 @@ const createReview = asyncHandler(async (req, res) => {
 	} catch (error) {
 		if (error.code === 11000) {
 			// mongodb sends this error when unique contraint is violated
-			throw new ApiError(409, "User has already reviewed this recipe");
+			throw new ApiError(409, `${req.user.name} already reviewed this recipe`);
 		}
 		throw new ApiError(error.code, error.message);
 	}

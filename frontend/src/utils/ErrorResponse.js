@@ -9,7 +9,7 @@ class ApiErrorResponse extends Error {
 		this.reason = error.response?.data.message || "Unknown";
 		this.data = null;
 		this.isReqAborted =
-			error.config.signal.aborted && error.message === "canceled";
+			error.config.signal?.aborted && error.message === "canceled";
 
 		// if no response recieved but request sent
 		if (!error.response && error.request) {

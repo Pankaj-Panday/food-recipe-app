@@ -3,6 +3,7 @@ import { Button, Rating, TimeAgo } from "./index.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
+	addReviews,
 	fetchReviews,
 	resetState,
 	setDisplayedReviews,
@@ -28,9 +29,9 @@ const Reviews = () => {
 		promise
 			.unwrap()
 			.then((data) => {
-				dispatch(setDisplayedReviews(data.reviews));
+				dispatch(addReviews(data.reviews));
 			})
-			.catch((err) => {}); // no need to do anything, its just catching the aborted promise error
+			.catch((err) => {}); // no need to do anything, its just catching the aborted promise error or maybe unwrap promise error when promise was not settled
 
 		return () => {
 			promise.abort();
@@ -43,7 +44,7 @@ const Reviews = () => {
 			const data = await dispatch(
 				fetchReviews({ recipeId: recipeId, pageNum: currentPage + 1 })
 			).unwrap();
-			dispatch(setDisplayedReviews(data.reviews));
+			dispatch(addReviews(data.reviews));
 		}
 	};
 
@@ -87,7 +88,7 @@ const Review = ({ review }) => {
 				<div className="w-8 h-8 overflow-hidden rounded-full">
 					<img
 						className="object-cover object-center w-full h-full"
-						src={review?.owner.avatar || "/userDefaultDp.jpg"}
+						src={review?.owner?.avatar || "/userDefaultDp.jpg"}
 					/>
 				</div>
 				<p className="font-medium capitalize relative after:absolute after:top-full after:left-0 after:w-full after:bg-brand-primary  after:h-[1px]">

@@ -65,13 +65,13 @@ const LoginForm = () => {
 				>
 					<div className="h-[240px] md:h-full md:flex-1 overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-bl-xl">
 						<img
-							className="h-full w-full object-cover"
+							className="object-cover w-full h-full"
 							src={foodImg}
 							alt="food image"
 						/>
 					</div>
-					<div className="md:flex-1 md:self-center mx-3 mb-4 md:mb-0">
-						<h2 className="text-2xl font-medium mb-3">Log In</h2>
+					<div className="mx-3 mb-4 md:flex-1 md:self-center md:mb-0">
+						<h2 className="mb-3 text-2xl font-medium">Log In</h2>
 						<p className="text-gray-600">
 							Log in to save and review your favorite recipes.
 						</p>
@@ -84,7 +84,7 @@ const LoginForm = () => {
 						)}
 
 						<form
-							className="mt-2 flex flex-col gap-3"
+							className="flex flex-col gap-3 mt-2"
 							onSubmit={handleSubmit(onLogin)}
 							noValidate
 						>
@@ -116,11 +116,11 @@ const LoginForm = () => {
 							/>
 							<Button
 								type="submit"
-								className="py-2 mt-3 w-4/5 h-10 mx-auto rounded-full flex justify-center items-center disabled:opacity-50 capitalize"
+								className="flex items-center justify-center w-4/5 h-10 py-2 mx-auto mt-3 capitalize rounded-full disabled:opacity-50"
 								disabled={isSubmitting}
 							>
 								{isSubmitting ? (
-									<AiOutlineLoading3Quarters className="animate-spin text-sm align-middle" />
+									<AiOutlineLoading3Quarters className="text-sm align-middle animate-spin" />
 								) : (
 									<span>Log in</span>
 								)}
@@ -128,7 +128,7 @@ const LoginForm = () => {
 						</form>
 					</div>
 					<button
-						className="grid place-content-center h-7 w-7 rounded-full text-black  bg-white text-xl absolute right-2 top-2"
+						className="absolute grid text-xl text-black bg-white rounded-full place-content-center h-7 w-7 right-2 top-2"
 						onClick={() => navigate(-1)}
 					>
 						<FaXmark size="0.9rem" />

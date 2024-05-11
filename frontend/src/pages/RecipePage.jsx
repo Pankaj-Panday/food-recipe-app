@@ -1,19 +1,30 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Container, Button, Rating, FormatDate, Reviews } from "../components";
+import {
+	Container,
+	Button,
+	Rating,
+	FormatDate,
+	Reviews,
+	ReviewForm,
+} from "../components";
 import { SlArrowRight } from "react-icons/sl";
 import { FaRegHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleRecipe } from "../app/recipesSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
+let renderCount = 0;
+
 const RecipePage = () => {
 	const { recipeId } = useParams();
 	const dispatch = useDispatch();
+	const userLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 	const recipe = useSelector((state) => state.recipes.selectedRecipe);
 	const loading = useSelector((state) => state.recipes.loading);
 	const error = useSelector((state) => state.recipes.error);
 
+	console.log(renderCount++);
 	useEffect(() => {
 		dispatch(fetchSingleRecipe(recipeId));
 	}, [dispatch, recipeId]);
@@ -145,11 +156,8 @@ const RecipePage = () => {
 
 				<section id="comments" className="my-7">
 					<h3 className="mb-3 text-3xl font-bold tracking-tighter">Reviews</h3>
-					{recipe.totalReviews > 0 ? (
-						<Reviews />
-					) : (
-						<p className="text-sm">No reviews yet</p>
-					)}
+					{userLoggedIn && <ReviewForm />}
+					<Reviews />
 				</section>
 			</Container>
 		);

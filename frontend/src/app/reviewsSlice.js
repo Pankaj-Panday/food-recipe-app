@@ -42,7 +42,13 @@ const reviewsSlice = createSlice({
 			state.error = action.payload;
 		},
 		setDisplayedReviews: (state, action) => {
-			state.displayedReviews = [...state.displayedReviews, ...action.payload];
+			state.displayedReviews = action.payload;
+		},
+		addSingleReview: (state, action) => {
+			state.displayedReviews.push(action.payload);
+		},
+		addReviews: (state, action) => {
+			state.displayedReviews.push(...action.payload);
 		},
 		setCurrentPage: (state, action) => {
 			state.currentPage = action.payload;
@@ -78,6 +84,8 @@ export const {
 	setLoading,
 	setError,
 	setDisplayedReviews,
+	addReviews,
+	addSingleReview,
 	setCurrentPage,
 	setTotalPages,
 } = reviewsSlice.actions;

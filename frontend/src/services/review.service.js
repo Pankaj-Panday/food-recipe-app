@@ -1,7 +1,7 @@
 import { axiosInstance } from "../utils/index.js";
 
 class ReviewService {
-	async create(recipeId, { rating, comment }, abortSignal) {
+	async createReview(recipeId, { rating, comment }, abortSignal) {
 		try {
 			return await axiosInstance.post(
 				`/reviews/create/${recipeId}`,
@@ -17,7 +17,7 @@ class ReviewService {
 		}
 	}
 
-	async view(reviewId, abortSignal) {
+	async viewReview(reviewId, abortSignal) {
 		try {
 			return await axiosInstance.get(`/reviews/${reviewId}/view`, {
 				signal: abortSignal,
@@ -28,7 +28,7 @@ class ReviewService {
 		}
 	}
 
-	async update(reviewId, { rating, comment }, abortSignal) {
+	async updateReview(reviewId, { rating, comment }, abortSignal) {
 		try {
 			return await axiosInstance.patch(
 				`/reviews/${reviewId}/update`,
@@ -46,7 +46,7 @@ class ReviewService {
 		}
 	}
 
-	async delete(reviewId, abortSignal) {
+	async deleteReview(reviewId, abortSignal) {
 		try {
 			return await axiosInstance.delete(`/reviews/${reviewId}/delete`, {
 				signal: abortSignal,

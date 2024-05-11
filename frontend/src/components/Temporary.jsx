@@ -1,11 +1,40 @@
 import React from "react";
+import Container from "./Container/Container";
+import { Link } from "react-router-dom";
 
 const Temporary = () => {
 	return (
-		<div>
-			<h1 className="my-8 text-5xl text-center">Frontend is in progress</h1>
-			<p className="text-center">
-				backend is complete&nbsp;
+		<Container>
+			<h1 className="my-8 text-5xl ">Frontend is in progress</h1>
+			<div>
+				<h3 className="text-xl ">Features implemented:</h3>
+				<ul className="mt-2 mb-8 text-sm list-decimal list-inside">
+					<li>Sign up</li>
+					<li>Login/Logout</li>
+					<li>
+						View{" "}
+						<Link to="/recipes" className="text-blue-600 underline">
+							all recipes
+						</Link>{" "}
+						with pagination:{" "}
+					</li>
+					<li>View Single recipe with paginated reviews</li>
+					<li>
+						<Link className="text-blue-600 underline" to="/recipes/add-recipe">
+							Create
+						</Link>{" "}
+						your own recipe
+					</li>
+				</ul>
+			</div>
+			<div>
+				<h3 className="text-xl ">Features in progress:</h3>
+				<ul className="mt-2 mb-8 text-sm">
+					<li>Adding reviews</li>
+				</ul>
+			</div>
+			<p className="mb-8">
+				Backend is complete&nbsp;
 				<a
 					href="https://github.com/Pankaj-Panday/food-recipe-app"
 					className="text-blue-600 underline"
@@ -15,7 +44,7 @@ const Temporary = () => {
 					Github link for backend
 				</a>
 			</p>
-		</div>
+		</Container>
 	);
 };
 

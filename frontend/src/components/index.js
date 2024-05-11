@@ -18,6 +18,8 @@ import Reviews from "./Reviews.jsx";
 import RecipeCard from "./RecipeCard.jsx";
 import RecipeGrid from "./RecipeGrid.jsx";
 import PaginationButtons from "./PaginationButtons.jsx";
+import ReviewForm from "./ReviewForm.jsx";
+import RatingInput from "./RatingInput.jsx";
 
 export {
 	Header,
@@ -40,4 +42,6 @@ export {
 	RecipeCard,
 	RecipeGrid,
 	PaginationButtons,
+	ReviewForm,
+	RatingInput,
 };
