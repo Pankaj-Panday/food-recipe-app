@@ -35,7 +35,7 @@ const createReview = asyncHandler(async (req, res) => {
 		}
 
 		if (recipe.author.toString() === userId.toString()) {
-			throw new ApiError(403, "You cannot create a review your own recipe");
+			throw new ApiError(403, "You cannot review your own recipe");
 		}
 
 		if (!recipe.isPublished) {

@@ -46,9 +46,9 @@ const MainLayout = () => {
 	return loading ? (
 		<AppLoading />
 	) : (
-		<div className="relative flex flex-col justify-between min-h-screen overflow-hidden">
+		<div className="relative">
 			<Header />
-			<main className="pt-20">
+			<main>
 				<Outlet />
 			</main>
 			<Footer />

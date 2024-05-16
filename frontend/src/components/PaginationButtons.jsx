@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from ".";
 import {
@@ -8,6 +8,12 @@ import {
 	setPrevPageData,
 	setCurDisplayedPage,
 } from "../app/recipesSlice";
+import {
+	MdKeyboardArrowRight,
+	MdKeyboardDoubleArrowRight,
+	MdKeyboardArrowLeft,
+	MdKeyboardDoubleArrowLeft,
+} from "react-icons/md";
 
 const PaginationButtons = () => {
 	const dispatch = useDispatch();
@@ -86,38 +92,42 @@ const PaginationButtons = () => {
 					onClick={() => {
 						gotoPageNum(1);
 					}}
-					className="px-3 py-2 text-sm rounded-md text-center min-w-16 disabled:bg-[#ffa180]"
+					className="px-3 py-2 rounded-md text-center disabled:bg-[#ffa180]"
 					disabled={prevDisable}
+					title="start"
 				>
-					Start
+					<MdKeyboardDoubleArrowLeft />
 				</Button>
 				<Button
 					onClick={gotoPrevPage}
-					className="px-3 py-2 text-sm rounded-md text-center min-w-16 disabled:bg-[#ffa180]"
+					className="px-3 py-2 rounded-md text-center disabled:bg-[#ffa180]"
 					disabled={prevDisable}
+					title="previous"
 				>
-					Prev
+					<MdKeyboardArrowLeft />
 				</Button>
 				<div>
-					<p className="text-sm text-center min-w-32">
+					<p className="text-sm text-center min-w-28">
 						Page {curDisplayedPage} of {totalPagesToDisplay}
 					</p>
 				</div>
 				<Button
 					onClick={gotoNextPage}
-					className="px-3 py-2 text-sm rounded-md text-center min-w-16 disabled:bg-[#ffa180]"
+					className="px-3 py-2 rounded-md text-center disabled:bg-[#ffa180]"
 					disabled={nextDisable}
+					title="next"
 				>
-					Next
+					<MdKeyboardArrowRight />
 				</Button>
 				<Button
 					onClick={() => {
 						gotoPageNum(totalPagesToDisplay);
 					}}
-					className="px-3 py-2 text-sm rounded-md text-center min-w-16 disabled:bg-[#ffa180]"
+					className="px-3 py-2 rounded-md text-center disabled:bg-[#ffa180]"
 					disabled={nextDisable}
+					title="end"
 				>
-					End
+					<MdKeyboardDoubleArrowRight />
 				</Button>
 			</div>
 		</section>

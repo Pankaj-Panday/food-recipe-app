@@ -11,6 +11,14 @@ export default {
 			fontFamily: {
 				sans: ['"Poppins"', ...defaultTheme.fontFamily.sans],
 			},
+			spacing: {
+				topbar: "var(--topbar-height)",
+				navbar: "var(--navbar-height)",
+				main_top: "var(--main-padding-top)",
+			},
+			backgroundImage: {
+				"home-page": "url('/homeBg.jpg')",
+			},
 		},
 	},
 	plugins: [],

@@ -4,7 +4,7 @@ import { Input, Button } from "./index.js";
 import foodImg from "../assets/imgs/loginForm.jpg";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import userService from "../services/user.service.js";
 import { userLogin } from "../app/authSlice.js";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -61,7 +61,7 @@ const LoginForm = () => {
 			<div id="overlay" className="overlay">
 				<div
 					id="formContainer"
-					className="md:h-[400px] mt-12 md:mt-0 sign-log-container"
+					className="md:h-[450px] my-10 md:mt-0 sign-log-container"
 				>
 					<div className="h-[240px] md:h-full md:flex-1 overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-bl-xl">
 						<img
@@ -125,6 +125,12 @@ const LoginForm = () => {
 									<span>Log in</span>
 								)}
 							</Button>
+							<p className="my-2 text-sm text-center text-gray-600">
+								Don't have an account ?{" "}
+								<Link to="/signup" className="text-brand-primary">
+									Signup
+								</Link>
+							</p>
 						</form>
 					</div>
 					<button

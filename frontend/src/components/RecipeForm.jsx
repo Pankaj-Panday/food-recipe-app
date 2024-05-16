@@ -18,7 +18,6 @@ const RecipeForm = () => {
 		formState: { errors: frontendError, isSubmitting },
 		setFocus,
 	} = useForm({
-		mode: "onBlur",
 		defaultValues: {
 			title: "",
 			introduction: "",
@@ -113,7 +112,7 @@ const RecipeForm = () => {
 							label="Photo"
 							type="file"
 							className="rounded-md"
-							accept="image/png, image/jpeg"
+							accept="image/*"
 							{...register("recipePhoto")}
 						/>
 						<ul className="flex flex-col gap-2">

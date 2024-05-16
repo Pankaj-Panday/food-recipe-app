@@ -25,13 +25,12 @@ const Temporary = () => {
 						</Link>{" "}
 						your own recipe
 					</li>
+					<li>Adding reviews</li>
 				</ul>
 			</div>
 			<div>
 				<h3 className="text-xl ">Features in progress:</h3>
-				<ul className="mt-2 mb-8 text-sm">
-					<li>Adding reviews</li>
-				</ul>
+				<ul className="mt-2 mb-8 text-sm"></ul>
 			</div>
 			<p className="mb-8">
 				Backend is complete&nbsp;

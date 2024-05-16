@@ -32,7 +32,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 const optionalAuth = async (req, res, next) => {
 	try {
 		const accessToken =
-			req.cookies.accessToken || req.header("Authorization").split(" ")[1];
+			req.cookies.accessToken || req.header("Authorization")?.split(" ")[1];
 		if (accessToken) {
 			const decodedTokenData = jwt.verify(
 				accessToken,

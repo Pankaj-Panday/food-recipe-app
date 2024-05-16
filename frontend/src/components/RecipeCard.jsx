@@ -34,8 +34,8 @@ const RecipeCard = ({ recipe }) => {
 	// };
 	return (
 		<div
-			className="relative w-full transition-all duration-150 border rounded-md shadow-lg cursor-pointer hover:shadow-2xl hover:scale-[1.01]"
-			onClick={() => navigate(`/recipes/view-recipe/${recipe._id}`)}
+			className="relative w-full transition-all duration-150 border rounded-md shadow-lg cursor-pointer hover:shadow-2xl hover:scale-[1.01] h-full"
+			onClick={() => navigate(`/view-recipe/${recipe._id}`)}
 		>
 			{" "}
 			<div className="overflow-hidden bg-[linear-gradient(352deg,rgba(2,0,36,1)0%,rgba(8,8,40,1)39%,rgba(131,131,131,1)100%)] rounded-t-md aspect-video flex justify-center items-center min-w-[278px]">

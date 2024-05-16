@@ -1,22 +1,35 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
-import { Input } from "../components/index.js";
+import { Button, Input } from "../components/index.js";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFocus } from "../app/searchSlice.js";
 
 const Searchbar = () => {
+	const ref = useRef(null);
+	// const dispatch = useDispatch();
+	const searchBarFocus = useSelector((state) => state.searchBar.focus);
+
+	useEffect(() => {
+		if (searchBarFocus) {
+			ref.current.focus();
+		}
+	}, [searchBarFocus]);
+
 	return (
-		<form action="" className="flex rounded w-80 relative">
+		<form action="" className="relative flex sm:w-96">
 			<Input
 				type="text"
 				placeholder="Find a recipe"
-				className="border-brand-primary rounded-l-lg w-full"
+				className="w-full py-2 border-brand-primary"
 				newLine={false}
+				ref={ref}
 			/>
-			<button
+			<Button
 				type="button"
-				className="grid place-items-center w-10 bg-brand-primary text-white text-xl rounded-r-lg"
+				className="grid w-10 py-1 text-xl text-white place-items-center bg-brand-primary"
 			>
 				<BiSearchAlt2 className="inline-block align-middle" />
-			</button>
+			</Button>
 		</form>
 	);
 };

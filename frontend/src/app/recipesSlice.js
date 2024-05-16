@@ -56,6 +56,18 @@ export const fetchItems = createAsyncThunk(
 	}
 );
 
+export const fetchFeaturedItems = createAsyncThunk(
+	"recipes/fetchFeaturedRecipes",
+	async (_, { signal, rejectWithValue }) => {
+		try {
+			const { data } = await recipeService.getRandomRecipes(signal);
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.reason);
+		}
+	}
+);
+
 const initialState = {
 	selectedRecipe: null,
 	curPageData: [],
@@ -139,6 +151,24 @@ const recipesSlice = createSlice({
 				state.fetchedData = [...action.payload.recipes];
 			})
 			.addCase(fetchItems.rejected, (state, action) => {
+				if (action.meta.aborted) {
+					state.loading = true;
+				} else {
+					state.loading = false;
+					state.error = action.payload;
+				}
+			});
+
+		builder
+			.addCase(fetchFeaturedItems.pending, (state, action) => {
+				state.loading = true;
+			})
+			.addCase(fetchFeaturedItems.fulfilled, (state, action) => {
+				state.curPageData = action.payload;
+				state.loading = false;
+				state.error = null;
+			})
+			.addCase(fetchFeaturedItems.rejected, (state, action) => {
 				if (action.meta.aborted) {
 					state.loading = true;
 				} else {

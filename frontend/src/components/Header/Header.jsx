@@ -1,66 +1,22 @@
-import React, { useState } from "react";
-import {
-	Container,
-	Logo,
-	Searchbar,
-	Button,
-	LogoutBtn,
-	LoginForm,
-	SignUpForm,
-} from "../index";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { MobileHeader, DesktopHeader } from "../index.js";
 
 const Header = () => {
-	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-	const navigate = useNavigate();
+	const [isMobile, setIsMobile] = useState(false);
 
-	return (
-		<>
-			<header className="text-center h-auto shadow-md fixed top-0 w-full z-[99] bg-white">
-				<Container>
-					<section className="flex h-20 justify-between items-center">
-						<Link to="/">
-							<Logo />
-						</Link>
-						<Searchbar />
-						{!isLoggedIn ? (
-							<div className="flex gap-2">
-								<Button
-									bgColor="bg-transparent"
-									textColor="text-brand-primary"
-									className="text-sm w-24 capitalize px-4 py-1.5 rounded-full border-2 border-brand-primary transition ease hover:bg-brand-primary hover:text-white"
-									onClick={() => navigate("/signup")}
-								>
-									Sign up
-								</Button>
-								<Button
-									bgColor="bg-brand-primary-light"
-									textColor="text-brand-primary"
-									className="text-sm w-24 capitalize px-4  py-1.5 border-2 rounded-full border-transparent transition ease hover:bg-brand-primary hover:text-white"
-									onClick={() => navigate("/login")}
-								>
-									Log in
-								</Button>
-							</div>
-						) : (
-							<div className="flex gap-2">
-								<Button
-									onClick={() => navigate("/recipes/add-recipe")}
-									className="px-2 rounded-lg"
-									bgColor="bg-brand-primary-light"
-									textColor="text-brand-primary"
-								>
-									Add Recipe
-								</Button>
-								<LogoutBtn />
-							</div>
-						)}
-					</section>
-				</Container>
-			</header>
-		</>
-	);
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth <= 640);
+		};
+		window.addEventListener("resize", handleResize);
+		handleResize();
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, [setIsMobile]);
+
+	return isMobile ? <MobileHeader /> : <DesktopHeader />;
 };
 
 export default Header;

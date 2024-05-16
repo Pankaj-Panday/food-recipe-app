@@ -20,6 +20,9 @@ import RecipeGrid from "./RecipeGrid.jsx";
 import PaginationButtons from "./PaginationButtons.jsx";
 import ReviewForm from "./ReviewForm.jsx";
 import RatingInput from "./RatingInput.jsx";
+import Menu from "./Header/Menu.jsx";
+import MobileHeader from "./Header/MobileHeader.jsx";
+import DesktopHeader from "./Header/DesktopHeader.jsx";
 
 export {
 	Header,
@@ -44,4 +47,7 @@ export {
 	PaginationButtons,
 	ReviewForm,
 	RatingInput,
+	Menu,
+	MobileHeader,
+	DesktopHeader,
 };

@@ -14,8 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleRecipe } from "../app/recipesSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-let renderCount = 0;
-
 const RecipePage = () => {
 	const { recipeId } = useParams();
 	const dispatch = useDispatch();
@@ -24,7 +22,6 @@ const RecipePage = () => {
 	const loading = useSelector((state) => state.recipes.loading);
 	const error = useSelector((state) => state.recipes.error);
 
-	console.log(renderCount++);
 	useEffect(() => {
 		dispatch(fetchSingleRecipe(recipeId));
 	}, [dispatch, recipeId]);
@@ -92,7 +89,7 @@ const RecipePage = () => {
 						<FaRegHeart className="align-middle" />
 					</Button>
 
-					<div className="mt-7 bg-[linear-gradient(352deg,rgba(2,0,36,1)0%,rgba(8,8,40,1)39%,rgba(131,131,131,1)100%)] w-full min-w-[350px] overflow-hidden sm:w-[90%] md:w-[70%] max-w-[720px] aspect-video flex justify-center items-center">
+					<div className="mt-7 bg-[linear-gradient(352deg,rgba(2,0,36,1)0%,rgba(8,8,40,1)39%,rgba(131,131,131,1)100%)] w-full overflow-hidden sm:w-[90%] md:w-[70%] max-w-[720px] aspect-video flex justify-center items-center">
 						{recipe.recipePhoto.url ? (
 							<img
 								className="object-cover object-center w-full h-full"

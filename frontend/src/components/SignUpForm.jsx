@@ -5,7 +5,7 @@ import foodImg from "../assets/imgs/signupForm.jpg";
 import { useForm } from "react-hook-form";
 import userService from "../services/user.service.js";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { userLogin } from "../app/authSlice.js";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
@@ -70,17 +70,17 @@ const SignUpForm = () => {
 			<div id="overlay" className="overlay">
 				<div
 					id="formContainer"
-					className="md:h-[580px] my-7 md:mt-0 sign-log-container"
+					className="md:h-[630px] my-7 md:mt-0 sign-log-container"
 				>
 					<div className="h-[240px] md:h-full md:flex-1 overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-bl-xl">
 						<img
-							className="h-full w-full object-cover"
+							className="object-cover w-full h-full"
 							src={foodImg}
 							alt="food image"
 						/>
 					</div>
-					<div className="md:flex-1 md:self-center mx-3 mb-4 md:mb-0">
-						<h2 className="text-2xl font-medium mb-3">Sign Up</h2>
+					<div className="mx-3 mb-4 md:flex-1 md:self-center md:mb-0">
+						<h2 className="mb-3 text-2xl font-medium">Sign Up</h2>
 						<p className="text-gray-600">
 							Sign up to save and review your favorite recipes.
 						</p>
@@ -94,7 +94,8 @@ const SignUpForm = () => {
 						)}
 						<form
 							onSubmit={handleSubmit(signup)}
-							className="mt-2 flex flex-col gap-3"
+							className="flex flex-col gap-3 mt-2"
+							noValidate
 						>
 							<Input
 								label="Name"
@@ -145,19 +146,25 @@ const SignUpForm = () => {
 							/>
 							<Button
 								type="submit"
-								className="py-2 mt-3 h-10 w-4/5 mx-auto rounded-full capitalize flex justify-center items-center disabled:opacity-50"
+								className="flex items-center justify-center w-4/5 h-10 py-2 mx-auto mt-3 capitalize rounded-full disabled:opacity-50"
 								disabled={isSubmitting}
 							>
 								{isSubmitting ? (
-									<AiOutlineLoading3Quarters className="animate-spin text-sm align-middle" />
+									<AiOutlineLoading3Quarters className="text-sm align-middle animate-spin" />
 								) : (
 									<span>Sign up</span>
 								)}
 							</Button>
+							<p className="my-2 text-sm text-center text-gray-600">
+								Already have an account ?{" "}
+								<Link to="/login" className="text-brand-primary">
+									Login
+								</Link>
+							</p>
 						</form>
 					</div>
 					<button
-						className="grid place-content-center h-7 w-7 rounded-full text-black  bg-white text-xl absolute right-2 top-2"
+						className="absolute grid text-xl text-black bg-white rounded-full place-content-center h-7 w-7 right-2 top-2"
 						onClick={() => navigate(-1)}
 					>
 						<FaXmark size="0.9rem" />
