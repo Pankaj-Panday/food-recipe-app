@@ -17,7 +17,7 @@ class ReviewService {
 		}
 	}
 
-	async viewReview(reviewId, abortSignal) {
+	async viewReviewById(reviewId, abortSignal) {
 		try {
 			return await axiosInstance.get(`/reviews/${reviewId}/view`, {
 				signal: abortSignal,
@@ -71,9 +71,9 @@ class ReviewService {
 		}
 	}
 
-	async reviewExistOnRecipeByCurrentUser(recipeId, abortSignal) {
+	async viewUserReviewOnRecipe(userId, recipeId, abortSignal) {
 		try {
-			return await axiosInstance.get(`/reviews/exist/${recipeId}`, {
+			return await axiosInstance.get(`/reviews/view/${userId}/${recipeId}`, {
 				signal: abortSignal,
 			});
 		} catch (error) {

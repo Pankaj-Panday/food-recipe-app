@@ -3,6 +3,9 @@ import reviewService from "../services/review.service";
 
 const initialState = {
 	fetchedReviews: [],
+	selectedReviewLoading: false,
+	selectedReviewError: null,
+	selectedReview: null,
 	displayedReviews: [],
 	currentPage: 1,
 	totalPages: 0,
@@ -28,6 +31,22 @@ export const fetchReviews = createAsyncThunk(
 	}
 );
 
+export const fetchUserReview = createAsyncThunk(
+	"reviews/fetchUserReview",
+	async ({ userId, recipeId }, { signal, rejectWithValue }) => {
+		try {
+			const { data } = await reviewService.viewUserReviewOnRecipe(
+				userId,
+				recipeId,
+				signal
+			);
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.reason);
+		}
+	}
+);
+
 const reviewsSlice = createSlice({
 	name: "reviews",
 	initialState,
@@ -41,14 +60,15 @@ const reviewsSlice = createSlice({
 		setError: (state, action) => {
 			state.error = action.payload;
 		},
-		setDisplayedReviews: (state, action) => {
-			state.displayedReviews = action.payload;
-		},
-		addSingleReview: (state, action) => {
-			state.displayedReviews.push(action.payload);
-		},
-		addReviews: (state, action) => {
+		showAllReviews: (state, action) => {
 			state.displayedReviews.push(...action.payload);
+		},
+		showFilteredReviews: (state, action) => {
+			const { allReviews, loggedInUser } = action.payload;
+			const filteredReviews = allReviews.filter((review) => {
+				return review.owner._id !== loggedInUser?._id;
+			});
+			state.displayedReviews.push(...filteredReviews);
 		},
 		setCurrentPage: (state, action) => {
 			state.currentPage = action.payload;
@@ -76,6 +96,24 @@ const reviewsSlice = createSlice({
 					state.error = action.payload;
 				}
 			});
+
+		builder
+			.addCase(fetchUserReview.pending, (state, action) => {
+				state.selectedReviewLoading = true;
+			})
+			.addCase(fetchUserReview.fulfilled, (state, action) => {
+				state.selectedReviewLoading = false;
+				state.selectedReviewError = null;
+				state.selectedReview = action.payload;
+			})
+			.addCase(fetchUserReview.rejected, (state, action) => {
+				state.selectedReviewLoading = false;
+				state.selectedReview = null;
+				if (!action.meta.aborted && !action.meta.condition) {
+					// just for being foolproof that error is from backend not frontend
+					state.selectedReviewError = action.payload;
+				}
+			});
 	},
 });
 
@@ -83,9 +121,8 @@ export const {
 	resetState,
 	setLoading,
 	setError,
-	setDisplayedReviews,
-	addReviews,
-	addSingleReview,
+	showAllReviews,
+	showFilteredReviews,
 	setCurrentPage,
 	setTotalPages,
 } = reviewsSlice.actions;

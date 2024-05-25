@@ -9,39 +9,41 @@ const MainLayout = () => {
 	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		userService
-			.currentUser()
-			.then(({ data }) => {
+	userService
+		.currentUser()
+		.then(({ data }) => {
+			if (data) {
 				dispatch(userLogin(data));
-			})
-			.catch((error) => {
-				if (error?.reason === "jwt expired" && error?.statusCode === 401) {
-					// Access token expired, try refreshing
-					userService
-						.refreshAccessTokenOfUser()
-						.then(() => {
-							userService
-								.currentUser()
-								.then(({ data }) => dispatch(userLogin(data)))
-								.catch((err) => {
-									// fetching user data after refresh
-									console.error(
-										"Failed to get current user after refreshing access token"
-									);
-									dispatch(userLogout());
-								});
-						})
-						.catch((err) => {
-							console.error("Failed to refresh access token");
-							dispatch(userLogout());
-						});
-				}
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	}, []);
+			} else {
+				dispatch(userLogout());
+			}
+		})
+		// .catch((error) => {
+		// 	if (error?.reason === "jwt expired" && error?.statusCode === 401) {
+		// 		// Access token expired, try refreshing
+		// 		userService
+		// 			.refreshAccessTokenOfUser()
+		// 			.then(() => {
+		// 				userService
+		// 					.currentUser()
+		// 					.then(({ data }) => dispatch(userLogin(data)))
+		// 					.catch((err) => {
+		// 						// fetching user data after refresh
+		// 						console.error(
+		// 							"Failed to get current user after refreshing access token"
+		// 						);
+		// 						dispatch(userLogout());
+		// 					});
+		// 			})
+		// 			.catch((err) => {
+		// 				console.error("Failed to refresh access token");
+		// 				dispatch(userLogout());
+		// 			});
+		// 	}
+		// })
+		.finally(() => {
+			setLoading(false);
+		});
 
 	return loading ? (
 		<AppLoading />

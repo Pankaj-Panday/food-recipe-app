@@ -7,6 +7,7 @@ export default {
 			colors: {
 				"brand-primary": "#f15a24",
 				"brand-primary-light": "#ffccb969",
+				"brand-primary-dark": "#d64f1f",
 			},
 			fontFamily: {
 				sans: ['"Poppins"', ...defaultTheme.fontFamily.sans],

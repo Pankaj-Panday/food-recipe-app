@@ -23,6 +23,9 @@ import RatingInput from "./RatingInput.jsx";
 import Menu from "./Header/Menu.jsx";
 import MobileHeader from "./Header/MobileHeader.jsx";
 import DesktopHeader from "./Header/DesktopHeader.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
+import RecipeEditForm from "./RecipeEditForm.jsx";
+import CustomImageUpload from "./CustomImageUpload.jsx";
 
 export {
 	Header,
@@ -50,4 +53,7 @@ export {
 	Menu,
 	MobileHeader,
 	DesktopHeader,
+	ProtectedRoute,
+	RecipeEditForm,
+	CustomImageUpload,
 };

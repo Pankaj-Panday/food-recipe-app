@@ -3,10 +3,8 @@ import { useFormContext } from "react-hook-form";
 import { IoStarSharp } from "react-icons/io5";
 
 const RatingInput = ({ label, required, newline = true, className, name }) => {
-	const {
-		register,
-		formState: { isSubmitSuccessful, isDirty },
-	} = useFormContext();
+	const { register, getValues, watch } = useFormContext();
+
 	let newlineClass = newline ? "block mt-2 w-full" : "";
 	let requiredClass = required
 		? "after:content-['*'] after:text-red-500 after:ml-0.5"
@@ -28,10 +26,8 @@ const RatingInput = ({ label, required, newline = true, className, name }) => {
 	};
 
 	useEffect(() => {
-		if (isSubmitSuccessful || !isDirty) {
-			setSelectedStars(0);
-		}
-	}, [isSubmitSuccessful, setSelectedStars, isDirty]);
+		setSelectedStars(getValues("rating"));
+	}, [setSelectedStars, getValues]);
 
 	return (
 		<div>
@@ -57,11 +53,12 @@ const RatingInput = ({ label, required, newline = true, className, name }) => {
 							id={`star${star}`}
 							type="radio"
 							className="sr-only"
-							value={selectedStars}
+							value={star}
 							{...register(name, {
 								required: "Rating is required",
 								min: 1,
 								max: 5,
+								valueAsNumber: true,
 							})}
 						/>
 					</label>

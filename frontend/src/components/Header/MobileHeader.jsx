@@ -14,6 +14,8 @@ const MobileHeader = () => {
 	const showMenu = useSelector((state) => {
 		return state.menu.show;
 	});
+	const loggedInUser = useSelector((state) => state.auth.user);
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
 	const handleOpenMenu = () => {
 		dispatch(openMenu());
@@ -60,7 +62,16 @@ const MobileHeader = () => {
 								navigate("/users/profile/current");
 							}}
 						>
-							<FaUserCircle size="1.5rem" />
+							{isLoggedIn ? (
+								<div className="w-[1.5rem] h-[1.5rem] overflow-hidden rounded-full">
+									<img
+										className="object-cover object-center w-full h-full"
+										src={loggedInUser?.avatar.url || "/userDefaultDp.jpg"}
+									/>
+								</div>
+							) : (
+								<FaUserCircle size="1.5rem" />
+							)}
 						</Button>
 					</div>
 				</section>

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Container, Logo, Searchbar, Button, Navbar } from "../index";
 import userService from "../../services/user.service.js";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { FaUserCircle } from "react-icons/fa";
 import { setAuthLoading, userLogout } from "../../app/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,6 +10,7 @@ const DesktopHeader = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const loggedInUser = useSelector((state) => state.auth.user);
 	const authLoading = useSelector((state) => state.auth.loading);
 
 	return (
@@ -27,14 +27,19 @@ const DesktopHeader = () => {
 							<Button
 								bgColor="bg-transparent"
 								textColor="text-brand-primary"
-								className="align-middle disabled:opacity-50"
+								className="align-middle disabled:opacity-50 "
 								title="profile"
 								disabled={authLoading}
 								onClick={() => {
 									navigate("/users/profile/current");
 								}}
 							>
-								<FaUserCircle size="2rem" />
+								<div className="w-8 h-8 overflow-hidden rounded-full">
+									<img
+										className="object-cover object-center w-full h-full"
+										src={loggedInUser?.avatar.url || "/userDefaultDp.jpg"}
+									/>
+								</div>
 							</Button>
 							<Button
 								className="px-3 py-2 text-sm font-medium capitalize transition-all duration-100 border-2 w-28 ease border-brand-primary min-w-20 hover:bg-brand-primary disabled:opacity-50 hover:text-white "
@@ -54,10 +59,15 @@ const DesktopHeader = () => {
 								disabled={authLoading}
 								onClick={() => {
 									dispatch(setAuthLoading(true));
-									userService.logoutUser().then(() => {
-										dispatch(setAuthLoading(false));
-										dispatch(userLogout());
-									});
+									userService
+										.logoutUser()
+										.then(() => {
+											dispatch(setAuthLoading(false));
+											dispatch(userLogout());
+										})
+										.catch((error) => {
+											console.log("Some problem logging out user", error);
+										});
 								}}
 							>
 								{authLoading ? (

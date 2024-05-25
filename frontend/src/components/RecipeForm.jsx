@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import recipeService from "../services/recipe.service.js";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { DevTool } from "@hookform/devtools";
 
 const RecipeForm = () => {
 	const navigate = useNavigate();
@@ -66,7 +67,7 @@ const RecipeForm = () => {
 				isPublished: publish,
 			});
 			setBackendError("");
-			navigate(`/recipes/view-recipe/${data._id}`);
+			navigate(`/view-recipe/${data._id}`);
 		} catch (error) {
 			setBackendError(
 				error.reason.charAt(0).toUpperCase() + error.reason.slice(1)
@@ -273,6 +274,7 @@ const RecipeForm = () => {
 						</Button>
 					</div>
 				</form>
+				<DevTool control={control} />
 			</div>
 		</article>
 	);

@@ -61,22 +61,37 @@ const createReview = asyncHandler(async (req, res) => {
 	}
 });
 
-const reviewExistOnRecipeByUser = asyncHandler(async (req, res) => {
+const getUserReviewOnRecipe = asyncHandler(async (req, res) => {
 	try {
-		const userId = req.user._id;
-		const recipeId = req.params.recipeId;
-		if (!recipeId) {
-			throw new ApiError(400, "Missing required parameter: recipeId");
+		const { userId, recipeId } = req.params;
+		if (!recipeId || !userId) {
+			throw new ApiError(400, "Missing required parameter: userId or recipeId");
 		}
-		const review = await Review.findOne({ owner: userId, recipe: recipeId });
-		const isFound = review ? true : false;
+		if (
+			!mongoose.isObjectIdOrHexString(userId) ||
+			!mongoose.isObjectIdOrHexString(recipeId)
+		) {
+			throw new ApiError(400, "Invalid userId or recipeId");
+		}
+		const review = await Review.findOne({
+			owner: userId,
+			recipe: recipeId,
+		}).populate({
+			path: "owner",
+			select: { avatar: "$avatar.url", name: 1 }, // don't know how but $avatar.url is working as it works in aggregation pipeline
+		});
+		if (!review) {
+			throw new ApiError(404, "Review not found");
+		}
 		return res
 			.status(200)
-			.json(
-				new ApiResponse(200, isFound, "Review existence checked successfully")
-			);
+			.json(new ApiResponse(200, review, "Review found successfully"));
 	} catch (error) {
-		throw new ApiError(error.code, error.message);
+		if (!(error instanceof ApiError)) {
+			throw new ApiError(error.code, error.message);
+		} else {
+			throw error;
+		}
 	}
 });
 
@@ -227,7 +242,7 @@ const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 
 export {
 	createReview,
-	reviewExistOnRecipeByUser,
+	getUserReviewOnRecipe,
 	deleteReview,
 	getReviewById,
 	updateReview,

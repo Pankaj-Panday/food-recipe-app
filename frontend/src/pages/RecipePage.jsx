@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
 	Container,
@@ -7,29 +7,93 @@ import {
 	FormatDate,
 	Reviews,
 	ReviewForm,
+	ProtectedRoute,
 } from "../components";
 import { SlArrowRight } from "react-icons/sl";
 import { FaRegHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { fetchSingleRecipe } from "../app/recipesSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { fetchUserReview } from "../app/reviewsSlice";
 
 const RecipePage = () => {
 	const { recipeId } = useParams();
 	const dispatch = useDispatch();
-	const userLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const navigate = useNavigate();
+
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const loggedInUser = useSelector((state) => state.auth.user);
 	const recipe = useSelector((state) => state.recipes.selectedRecipe);
 	const loading = useSelector((state) => state.recipes.loading);
 	const error = useSelector((state) => state.recipes.error);
+	const loggedInUserReview = useSelector(
+		(state) => state.reviews.selectedReview
+	);
+	const loggedInUserReviewLoading = useSelector(
+		(state) => state.reviews.selectedReviewLoading
+	);
+	const loggedInUserReviewError = useSelector(
+		(state) => state.reviews.selectedReviewError
+	);
+
+	const [reviewUpdate, setReviewUpdate] = useState(false);
 
 	useEffect(() => {
 		dispatch(fetchSingleRecipe(recipeId));
-	}, [dispatch, recipeId]);
+		if (isLoggedIn) {
+			dispatch(
+				fetchUserReview({ userId: loggedInUser?._id, recipeId: recipeId })
+			);
+		}
+	}, [dispatch, fetchUserReview, loggedInUser, isLoggedIn, recipeId]);
 
-	let content = null;
+	let recipeContent, reviewFormContent;
+	const userIsRecipeOwner = recipe?.author._id === loggedInUser?._id;
+
+	if (isLoggedIn && !userIsRecipeOwner) {
+		if (loggedInUserReviewLoading) {
+			reviewFormContent = (
+				<article className="max-w-lg px-5 py-8 my-8 bg-gray-50">
+					<p className="text-gray-500">Loading...</p>
+				</article>
+			);
+		} else if (loggedInUserReviewError === "Review not found") {
+			reviewFormContent = <ReviewForm />;
+		} else if (loggedInUserReview && !reviewUpdate) {
+			reviewFormContent = (
+				<article className="max-w-lg px-5 py-8 my-8 bg-gray-50">
+					<p className="text-gray-500">You already reviewed this recipe!</p>
+					<Button
+						className="px-3 py-2 mt-3 min-w-fit"
+						onClick={() => {
+							setReviewUpdate(true);
+						}}
+					>
+						Update My Review
+					</Button>
+				</article>
+			);
+			// show him the loggedInUserReview with "update review button",
+			// if he clicks on update, show <ReviewForm /> with already filled
+			// review details and give him options to "update" & "delete" review
+			// don't show the clear option
+		} else if (loggedInUserReview && reviewUpdate) {
+			reviewFormContent = (
+				<ReviewForm
+					review={loggedInUserReview}
+					onClose={() => {
+						setReviewUpdate(false);
+					}}
+				/>
+			);
+		}
+	} else {
+		reviewFormContent = null;
+	}
 
 	if (loading) {
-		content = (
+		recipeContent = (
 			<div className="flex flex-col items-center text-center">
 				<p className="text-gray-400">Loading recipe...</p>
 				<div className="mt-5">
@@ -42,13 +106,13 @@ const RecipePage = () => {
 			</div>
 		);
 	} else if (error) {
-		content = (
+		recipeContent = (
 			<div className="flex flex-col items-center py-10 text-center">
 				<p className="text-2xl text-gray-400">{error}</p>
 			</div>
 		);
 	} else if (recipe) {
-		content = (
+		recipeContent = (
 			<Container>
 				<section className="flex items-center gap-2 mb-10 font-semibold uppercase ">
 					<Link
@@ -83,11 +147,26 @@ const RecipePage = () => {
 							{recipe.totalReviews} reviews
 						</a>
 					</div>
-					{recipe.introduction && <p className="my-4">{recipe.introduction}</p>}
-					<Button className="flex mb-7 items-center justify-center gap-1.5 py-2 px-3 rounded-sm hover:bg-[#d64f1f] active:bg-[#d64f1f] min-w-[100px] text-center">
-						<span>Save</span>
-						<FaRegHeart className="align-middle" />
-					</Button>
+					{recipe?.introduction && (
+						<p className="my-4">{recipe.introduction}</p>
+					)}
+					{isLoggedIn && (
+						<div className="flex gap-3 mb-7">
+							<Button className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-sm hover:bg-[#d64f1f] active:bg-[#d64f1f] min-w-[100px] text-center">
+								<span>Save</span>
+								<FaRegHeart className="align-middle" />
+							</Button>
+							{/* Edit button - will be shown to the owner of the recipe only */}
+							{userIsRecipeOwner && (
+								<Button
+									className="py-2 px-3 rounded-sm hover:bg-brand-primary-dark active:bg-brand-primary-dark min-w-[100px] text-center"
+									onClick={() => navigate(`/edit-recipe/${recipeId}`)}
+								>
+									Edit
+								</Button>
+							)}
+						</div>
+					)}
 
 					<div className="mt-7 bg-[linear-gradient(352deg,rgba(2,0,36,1)0%,rgba(8,8,40,1)39%,rgba(131,131,131,1)100%)] w-full overflow-hidden sm:w-[90%] md:w-[70%] max-w-[720px] aspect-video flex justify-center items-center">
 						{recipe.recipePhoto.url ? (
@@ -153,7 +232,7 @@ const RecipePage = () => {
 
 				<section id="comments" className="my-7">
 					<h3 className="mb-3 text-3xl font-bold tracking-tighter">Reviews</h3>
-					{userLoggedIn && <ReviewForm />}
+					{reviewFormContent}
 					<Reviews />
 				</section>
 			</Container>
@@ -161,7 +240,9 @@ const RecipePage = () => {
 	}
 
 	return (
-		<article className="h-full max-w-6xl py-10 mx-auto">{content}</article>
+		<article className="h-full max-w-6xl py-10 mx-auto">
+			{recipeContent}
+		</article>
 	);
 };
 

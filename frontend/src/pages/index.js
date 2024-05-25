@@ -4,6 +4,7 @@ import SignUpPage from "./SignUpPage.jsx";
 import AddRecipePage from "./AddRecipePage.jsx";
 import RecipePage from "./RecipePage.jsx";
 import AllRecipes from "./AllRecipes.jsx";
+import EditRecipePage from "./EditRecipePage.jsx";
 
 export {
 	HomePage,
@@ -12,4 +13,5 @@ export {
 	AddRecipePage,
 	RecipePage,
 	AllRecipes,
+	EditRecipePage,
 };

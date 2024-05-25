@@ -1,5 +1,5 @@
 import React from "react";
-import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from "react-icons/io";
+import { IoStarSharp, IoStarHalfSharp, IoStarOutline } from "react-icons/io5";
 
 const Rating = ({ rating, color = "#febf05", size = "1.25rem" }) => {
 	const fullStars = Math.floor(rating);
@@ -10,11 +10,11 @@ const Rating = ({ rating, color = "#febf05", size = "1.25rem" }) => {
 				return (
 					<span key={index}>
 						{index < fullStars ? (
-							<IoIosStar size={size} color={color} />
+							<IoStarSharp size={size} color={color} />
 						) : halfStar ? (
-							<IoIosStarHalf size={size} color={color} />
+							<IoStarHalfSharp size={size} color={color} />
 						) : (
-							<IoIosStarOutline key={index} size={size} color={color} />
+							<IoStarOutline key={index} size={size} color={color} />
 						)}
 					</span>
 				);

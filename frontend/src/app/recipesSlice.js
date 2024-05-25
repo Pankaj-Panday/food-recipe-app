@@ -14,6 +14,14 @@ export const fetchSingleRecipe = createAsyncThunk(
 		} catch (error) {
 			return rejectWithValue(error.reason);
 		}
+	},
+	{
+		condition: (recipeId, { getState }) => {
+			const state = getState();
+			if (state.recipes.selectedRecipe?._id === recipeId) {
+				return false;
+			}
+		},
 	}
 );
 

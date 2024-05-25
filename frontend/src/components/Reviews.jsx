@@ -1,20 +1,31 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { Button, Rating, TimeAgo } from "./index.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-	addReviews,
 	fetchReviews,
+	fetchUserReview,
 	resetState,
-	setDisplayedReviews,
+	showAllReviews,
+	showFilteredReviews,
 } from "../app/reviewsSlice.js";
 
 const Reviews = () => {
 	const dispatch = useDispatch();
 
 	const recipeId = useSelector((state) => state.recipes.selectedRecipe._id);
-
 	const loading = useSelector((state) => state.reviews.loading);
+	const loggedInUserReviewLoading = useSelector(
+		(state) => state.reviews.selectedReviewLoading
+	);
+	const loggedInUserReviewError = useSelector(
+		(state) => state.reviews.selectedReviewError
+	);
+	const loggedInUserReview = useSelector(
+		(state) => state.reviews.selectedReview
+	);
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const loggedInUser = useSelector((state) => state.auth.user);
 	const error = useSelector((state) => state.reviews.error);
 	const currentPage = useSelector((state) => state.reviews.currentPage);
 	const totalPages = useSelector((state) => state.reviews.totalPages);
@@ -25,41 +36,81 @@ const Reviews = () => {
 	const hasMoreReviews = currentPage < totalPages;
 
 	useEffect(() => {
-		const promise = dispatch(fetchReviews({ recipeId: recipeId, pageNum: 1 }));
-		promise
+		let promise1, promise2;
+		if (isLoggedIn) {
+			promise1 = dispatch(
+				fetchUserReview({ userId: loggedInUser._id, recipeId: recipeId })
+			);
+		}
+		promise2 = dispatch(fetchReviews({ recipeId: recipeId, pageNum: 1 }));
+		promise2
 			.unwrap()
 			.then((data) => {
-				dispatch(addReviews(data.reviews));
+				isLoggedIn
+					? dispatch(
+							showFilteredReviews({
+								allReviews: data.reviews,
+								loggedInUser: loggedInUser,
+							})
+					  )
+					: dispatch(showAllReviews(data.reviews));
 			})
 			.catch((err) => {}); // no need to do anything, its just catching the aborted promise error or maybe unwrap promise error when promise was not settled
 
 		return () => {
-			promise.abort();
+			if (isLoggedIn) {
+				promise1.abort();
+			}
+			promise2.abort();
 			dispatch(resetState());
 		};
-	}, [dispatch, recipeId]);
+	}, [
+		dispatch,
+		fetchUserReview,
+		fetchReviews,
+		resetState,
+		recipeId,
+		isLoggedIn,
+		loggedInUser,
+	]);
 
 	const handleLoadReviews = async () => {
 		if (hasMoreReviews) {
 			const data = await dispatch(
 				fetchReviews({ recipeId: recipeId, pageNum: currentPage + 1 })
 			).unwrap();
-			dispatch(addReviews(data.reviews));
+			if (isLoggedIn) {
+				dispatch(
+					showFilteredReviews({
+						allReviews: data.reviews,
+						loggedInUser: loggedInUser,
+					})
+				);
+			} else dispatch(showAllReviews(data.reviews));
 		}
 	};
 
 	let content = null;
 
-	if (loading) {
-		content = <p className="text-sm text-gray-400">Loading reviews...</p>;
-	} else if (error) {
+	if (
+		(loading || loggedInUserReviewLoading) &&
+		displayedReviews?.length === 0
+	) {
+		content = <p className="mt-3 text-sm text-gray-400">Loading reviews...</p>;
+	} else if (
+		error ||
+		(loggedInUserReviewError && loggedInUserReviewError !== "Review not found")
+	) {
 		content = (
-			<p className="text-sm text-gray-400">Error loading reviews: {error}</p>
+			<p className="mt-3 text-sm text-gray-400">
+				Error loading reviews: {error}
+			</p>
 		);
 	} else {
 		content = (
 			<>
 				<ul className="flex flex-col gap-y-5">
+					{isLoggedIn && <Review review={loggedInUserReview} />}
 					{displayedReviews.map((review) => (
 						<Review key={review?._id} review={review} />
 					))}
@@ -82,6 +133,7 @@ const Reviews = () => {
 };
 
 const Review = ({ review }) => {
+	if (!review) return null;
 	return (
 		<li className="max-w-2xl py-5 text-sm border-gray-300 border-y">
 			<header className="flex items-center gap-2 mb-3">
@@ -97,12 +149,11 @@ const Review = ({ review }) => {
 			</header>
 			<div className="flex gap-5 mb-2">
 				<Rating size="1rem" rating={review?.rating} />
-				<TimeAgo
-					className="text-xs italic text-gray-400"
-					timestamp={review?.updatedAt}
-				/>
+				<p className="text-xs italic text-gray-400">
+					updated <TimeAgo timestamp={review?.updatedAt} />
+				</p>
 			</div>
-			<p className="text-sm">{review?.comment}</p>
+			<p className="text-sm break-words">{review?.comment}</p>
 		</li>
 	);
 };
