@@ -3,7 +3,9 @@ import { useForm } from "react-hook-form";
 import { MdDelete } from "react-icons/md";
 import { FaUpload } from "react-icons/fa";
 import { DevTool } from "@hookform/devtools";
-import { Button, CustomImageUpload, Input } from ".";
+import { Button, CustomImageUpload, Input } from "..";
+import recipeService from "../../services/recipe.service";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const RecipeEditForm = ({ recipe }) => {
 	// console.log(recipe);
@@ -14,12 +16,17 @@ const RecipeEditForm = ({ recipe }) => {
 	const {
 		register: photoRegister,
 		handleSubmit: handlePhotoSubmit,
-		formState: { errors: photoErrors },
+		formState: {
+			errors: photoFormFrontEndErrors,
+			isSubmitting: photoFormSubmitting,
+		},
 		control: photoControl,
 	} = photoForm;
 
-	const onPhotoFormSubmit = (data) => {
-		console.log(data);
+	const onPhotoFormSubmit = async (data) => {
+		const photo = data.recipePhoto[0];
+		const res = await recipeService.updatePhotoOfRecipe(recipe._id, photo);
+		console.log(res);
 	};
 
 	return (
@@ -57,7 +64,10 @@ const RecipeEditForm = ({ recipe }) => {
 					{showFileInput && (
 						<>
 							<form onSubmit={handlePhotoSubmit(onPhotoFormSubmit)}>
-								<fieldset>
+								<fieldset
+									disabled={photoFormSubmitting}
+									className="disabled:opacity-50"
+								>
 									<CustomImageUpload
 										register={photoRegister}
 										label={
@@ -67,15 +77,26 @@ const RecipeEditForm = ({ recipe }) => {
 										}
 										labelClass="inline-flex items-center gap-2 px-3 py-2 align-middle border rounded-md border-brand-primary text-brand-primary select-none"
 									/>
-									<div className="flex gap-2">
+									<small className="text-red-700 bg-red-200 py-1.5 px-3 mt-3 inline-block">
+										<span className="font-semibold">Error: </span>
+										There was some error
+									</small>
+									<div className="flex gap-2 mt-3">
 										<Button
-											className="px-3 py-1.5 rounded-md min-w-20 hover:bg-brand-primary-dark active:bg-brand-primary-dark mt-3"
+											className="px-3 py-1.5 rounded-md min-w-20 hover:bg-brand-primary-dark active:bg-brand-primary-dark flex justify-center items-center gap-2"
 											type="submit"
 										>
-											Save
+											{photoFormSubmitting ? (
+												<>
+													<span>Saving</span>
+													<AiOutlineLoading3Quarters className="align-middle animate-spin" />{" "}
+												</>
+											) : (
+												<span>Save</span>
+											)}
 										</Button>
 										<Button
-											className="px-3 py-1.5 rounded-md min-w-20 hover:bg-brand-primary-dark active:bg-brand-primary-dark mt-3"
+											className="px-3 py-1.5 rounded-md min-w-20 hover:bg-brand-primary-dark active:bg-brand-primary-dark"
 											onClick={() => setShowFileInput(false)}
 										>
 											Cancel

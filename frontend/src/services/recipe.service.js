@@ -77,7 +77,7 @@ class RecipeService {
 		try {
 			return await axiosInstance.patch(
 				`/recipes/${recipeId}/update-recipe-photo`,
-				newPhoto,
+				{ recipePhoto: newPhoto },
 				{
 					headers: {
 						"Content-Type": "multipart/form-data",
