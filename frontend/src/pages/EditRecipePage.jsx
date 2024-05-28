@@ -26,7 +26,7 @@ const EditRecipePage = () => {
 			</section>
 		);
 	} else if (recipe && loggedInUser?._id === recipe?.author._id) {
-		return <RecipeEditForm recipe={recipe} />;
+		return <RecipeEditForm />;
 	} else {
 		return <Navigate to={`/view-recipe/${recipeId}`} />;
 	}

@@ -105,6 +105,9 @@ const recipesSlice = createSlice({
 		setError: (state, action) => {
 			state.error = action.payload;
 		},
+		setSelectedRecipe: (state, action) => {
+			state.selectedRecipe = action.payload;
+		},
 		setTotalItemsAvailable: (state, action) => {
 			state.totalItemsAvailable = action.payload;
 		},
@@ -200,6 +203,7 @@ export const {
 	setTotalPagesAvailable,
 	setTotalPagesToDisplay,
 	setCurDisplayedPage,
+	setSelectedRecipe,
 } = recipesSlice.actions;
 
 export default recipesSlice.reducer;

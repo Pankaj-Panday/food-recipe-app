@@ -26,6 +26,8 @@ import DesktopHeader from "./Header/DesktopHeader.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import RecipeEditForm from "./RecipeEditForm/RecipeEditForm.jsx";
 import CustomImageUpload from "./CustomImageUpload.jsx";
+import PhotoForm from "./RecipeEditForm/PhotoForm.jsx";
+import DetailsForm from "./RecipeEditForm/DetailsForm.jsx";
 
 export {
 	Header,
@@ -56,4 +58,6 @@ export {
 	ProtectedRoute,
 	RecipeEditForm,
 	CustomImageUpload,
+	PhotoForm,
+	DetailsForm,
 };

@@ -178,7 +178,7 @@ const updateRecipePhoto = asyncHandler(async (req, res) => {
 	}
 	const newPhotoLocalPath = req?.file?.path;
 	if (!newPhotoLocalPath) {
-		throw new ApiError(400, "missing recipe photo local path");
+		throw new ApiError(400, "Missing recipe photo");
 	}
 	const recipe = await Recipe.findById(recipeId);
 	if (!recipe) {

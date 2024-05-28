@@ -44,7 +44,7 @@ const CustomImageUpload = ({
 				})}
 			/>
 			{selectedFile && imgPreview && (
-				<div className={`my-3 h-36 aspect-video ${previewClass}`}>
+				<div className={`my-3 sm:h-48 h-32 aspect-video ${previewClass}`}>
 					<img src={preview} className="object-cover w-full h-full " />
 				</div>
 			)}
