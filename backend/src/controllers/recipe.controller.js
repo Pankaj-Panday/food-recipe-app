@@ -37,6 +37,7 @@ const createRecipe = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 	const { title, introduction, cookingTime, ingredients, steps, isPublished } =
 		req.body;
+
 	const recipePhotoLocalPath = req.file?.path;
 	if (anyEmptyValue(title, cookingTime)) {
 		removeLocalFile(recipePhotoLocalPath);
@@ -138,6 +139,7 @@ const updateRecipeTextDetails = asyncHandler(async (req, res) => {
 	const { title, introduction, cookingTime, ingredients, steps, isPublished } =
 		req.body;
 	const recipeId = req.params?.recipeId;
+
 	if (!recipeId) {
 		throw new ApiError(400, "Missing required URL parameter: recipeId");
 	}

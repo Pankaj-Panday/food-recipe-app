@@ -7,8 +7,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { DevTool } from "@hookform/devtools";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { fetchSingleRecipe, setSelectedRecipe } from "../../app/recipesSlice";
+import { setSelectedRecipe } from "../../app/recipesSlice";
 
 const PhotoForm = () => {
 	const {
@@ -24,10 +23,8 @@ const PhotoForm = () => {
 
 	const error = frontendErrors?.recipePhoto?.message || backendError;
 
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const recipe = useSelector((state) => state.recipes.selectedRecipe);
-	const loggedInUser = useSelector((state) => state.recipes.user);
 
 	const onSubmit = async (data) => {
 		const photo = data.recipePhoto[0];
@@ -44,7 +41,7 @@ const PhotoForm = () => {
 		}
 	};
 
-	const handleDeleteRecipe = async (recipeId) => {
+	const handleDeletePhoto = async (recipeId) => {
 		try {
 			setPhotoDeleting(true);
 			const res = await recipeService.deletePhotoOfRecipe(recipeId);
@@ -90,7 +87,7 @@ const PhotoForm = () => {
 						bgColor="bg-[#f22c3d]"
 						className="grid w-8 rounded-md place-content-center disabled:opacity-50 disabled:pointer-events-none"
 						title="Delete photo"
-						onClick={() => handleDeleteRecipe(recipe?._id)}
+						onClick={() => handleDeletePhoto(recipe?._id)}
 						disabled={photoDeleting}
 					>
 						<MdDelete size="1rem" />

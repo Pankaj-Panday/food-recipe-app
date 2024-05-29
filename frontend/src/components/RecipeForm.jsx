@@ -9,7 +9,7 @@ import { DevTool } from "@hookform/devtools";
 
 const RecipeForm = () => {
 	const navigate = useNavigate();
-	const [backendError, setBackendError] = useState("");
+	const [backendError, setBackendError] = useState(null);
 	const [publish, setPublish] = useState(true);
 
 	const {
@@ -17,7 +17,6 @@ const RecipeForm = () => {
 		handleSubmit,
 		control,
 		formState: { errors: frontendError, isSubmitting },
-		setFocus,
 	} = useForm({
 		defaultValues: {
 			title: "",

@@ -1,21 +1,25 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Button, Input, Textarea } from "../";
 import { MdDelete } from "react-icons/md";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { setSelectedRecipe } from "../../app/recipesSlice";
 import { DevTool } from "@hookform/devtools";
+import recipeService from "../../services/recipe.service";
 
 const DetailsForm = () => {
 	const recipe = useSelector((state) => state.recipes.selectedRecipe);
+	const dispatch = useDispatch();
 
-	const [backendError, setBackendError] = useState("some backend error");
+	const [backendError, setBackendError] = useState("");
 	const [publish, setPublish] = useState(true);
 
 	const {
 		register,
 		handleSubmit,
 		control,
-		formState: { errors: frontendError, isValid },
+		formState: { errors: frontendError, isSubmitting },
 	} = useForm({
 		defaultValues: {
 			title: recipe.title,
@@ -44,20 +48,39 @@ const DetailsForm = () => {
 		control,
 	});
 
-	const onSubmit = async (data) => {
-		console.log(data);
+	const onSubmit = async (formData) => {
+		const data = {
+			title: formData.title,
+			introduction: formData.introduction || "",
+			cookingTime: String(formData.cookingTime),
+			ingredients: formData.ingredients.map((item) => item.ingredient),
+			steps: formData.steps.map((item) => item.step),
+			isPublished: publish,
+		};
+		try {
+			const res = await recipeService.updateTextDetailsOfRecipe(
+				recipe._id,
+				data
+			);
+			if (res?.success) {
+				dispatch(setSelectedRecipe(null));
+				// the above line takes us to the view-recipe url since
+				// in EditRecipePage.jsx there is condition that if there is
+				// no recipe, we navigate to view-recipe page
+			}
+		} catch (error) {
+			setBackendError(error.reason);
+		}
 	};
 
-	// console.log(recipe);
-	// console.log(ingredientFields);
-	// console.log(stepFields);
-	// console.log(frontendError);
-
 	return (
-		<section>
+		<section className="mt-4">
 			<h3 className="mb-3 text-lg font-medium">Edit other details</h3>
 			<form onSubmit={handleSubmit(onSubmit)} noValidate>
-				<fieldset className="flex flex-col gap-4 disabled:opacity-65">
+				<fieldset
+					className="flex flex-col gap-4 disabled:opacity-65"
+					disabled={isSubmitting}
+				>
 					<Input
 						required
 						label="Recipe Title"
@@ -167,6 +190,7 @@ const DetailsForm = () => {
 						label="Cooking Time"
 						required
 						type="number"
+						className="rounded-md"
 						placeholder="e.g. 25 (for 25 minutes)"
 						{...register("cookingTime", {
 							required: "Cooking time is required",
@@ -181,7 +205,6 @@ const DetailsForm = () => {
 									"Enter valid cooking time in minutes (e.g. 25)",
 							},
 						})}
-						className="rounded-md"
 					/>
 					{frontendError?.cookingTime && (
 						<small className="font-semibold text-red-500">
@@ -199,16 +222,28 @@ const DetailsForm = () => {
 					<Button
 						type="submit"
 						bgColor="bg-[#4CAF50]"
-						className="px-3 py-2 rounded-md min-w-fit disabled:opacity-50"
+						className="flex items-center justify-center px-3 py-2 rounded-md min-w-[80px] disabled:opacity-50"
+						onClick={() => setPublish(true)}
+						disabled={isSubmitting}
 					>
-						Save
+						{isSubmitting && publish ? (
+							<AiOutlineLoading3Quarters className="align-middle animate-spin" />
+						) : (
+							<span>Save</span>
+						)}
 					</Button>
 					<Button
 						type="submit"
 						bgColor="bg-[#2196F3]"
-						className="px-3 py-2 rounded-md min-w-fit disabled:opacity-50"
+						className="px-3 py-2 rounded-md min-w-[120px] disabled:opacity-50 flex justify-center items-center"
+						onClick={() => setPublish(false)}
+						disabled={isSubmitting}
 					>
-						Save Draft
+						{isSubmitting && !publish ? (
+							<AiOutlineLoading3Quarters className="align-middle animate-spin" />
+						) : (
+							<span>Save Draft</span>
+						)}
 					</Button>
 				</div>
 			</form>
