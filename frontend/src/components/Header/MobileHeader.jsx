@@ -14,7 +14,7 @@ const MobileHeader = () => {
 	const showMenu = useSelector((state) => {
 		return state.menu.show;
 	});
-	const loggedInUser = useSelector((state) => state.auth.user);
+	const user = useSelector((state) => state.auth.user);
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
 	const handleOpenMenu = () => {
@@ -59,14 +59,14 @@ const MobileHeader = () => {
 							className="align-middle"
 							title="profile"
 							onClick={() => {
-								navigate("/users/profile/current");
+								navigate(`/users/profile/${user._id}`);
 							}}
 						>
 							{isLoggedIn ? (
 								<div className="w-[1.5rem] h-[1.5rem] overflow-hidden rounded-full">
 									<img
 										className="object-cover object-center w-full h-full"
-										src={loggedInUser?.avatar.url || "/userDefaultDp.jpg"}
+										src={user?.avatar.url || "/userDefaultDp.jpg"}
 									/>
 								</div>
 							) : (

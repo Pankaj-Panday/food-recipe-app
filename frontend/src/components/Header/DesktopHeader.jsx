@@ -10,7 +10,7 @@ const DesktopHeader = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-	const loggedInUser = useSelector((state) => state.auth.user);
+	const user = useSelector((state) => state.auth.user);
 	const authLoading = useSelector((state) => state.auth.loading);
 
 	return (
@@ -31,13 +31,13 @@ const DesktopHeader = () => {
 								title="profile"
 								disabled={authLoading}
 								onClick={() => {
-									navigate("/users/profile/current");
+									navigate(`/users/profile/${user._id}`);
 								}}
 							>
 								<div className="w-8 h-8 overflow-hidden rounded-full">
 									<img
 										className="object-cover object-center w-full h-full"
-										src={loggedInUser?.avatar.url || "/userDefaultDp.jpg"}
+										src={user?.avatar.url || "/userDefaultDp.jpg"}
 									/>
 								</div>
 							</Button>

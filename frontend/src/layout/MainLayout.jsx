@@ -4,6 +4,7 @@ import { Header, Footer } from "../components";
 import { Outlet } from "react-router-dom";
 import userService from "../services/user.service.js";
 import { userLogin, userLogout } from "../app/authSlice.js";
+import { setUserDetails } from "../app/userSlice.js";
 
 const MainLayout = () => {
 	const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const MainLayout = () => {
 		.then(({ data }) => {
 			if (data) {
 				dispatch(userLogin(data));
+				dispatch(setUserDetails(data));
 			} else {
 				dispatch(userLogout());
 			}

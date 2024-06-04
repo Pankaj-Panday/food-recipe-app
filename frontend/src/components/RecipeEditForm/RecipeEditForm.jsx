@@ -45,7 +45,9 @@ const RecipeEditForm = () => {
 					bgColor="bg-transparent"
 					textColor="text-brand-primary"
 					className="block mt-3 hover:text-brand-primary-dark"
-					onClick={() => navigate(-1)}
+					onClick={() => {
+						recipe?._id ? navigate(`/view-recipe/${recipe._id}`) : navigate(-1);
+					}}
 				>
 					<span>&larr;</span> Go Back
 				</Button>

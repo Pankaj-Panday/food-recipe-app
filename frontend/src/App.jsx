@@ -14,6 +14,7 @@ import {
 	RecipePage,
 	AllRecipes,
 	EditRecipePage,
+	UserProfilePage,
 } from "./pages/index.js";
 import { ProtectedRoute } from "./components";
 import ErrorLayout from "./layout/ErrorLayout.jsx";
@@ -43,6 +44,14 @@ const router = createBrowserRouter(
 				}
 			/>
 			<Route path="view-recipe/:recipeId" element={<RecipePage />} />
+			<Route
+				path="users/profile/:userId"
+				element={
+					<ProtectedRoute>
+						<UserProfilePage />
+					</ProtectedRoute>
+				}
+			/>
 		</Route>
 	)
 );

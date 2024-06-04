@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { fetchSingleRecipe } from "../app/recipesSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { fetchUserReview } from "../app/reviewsSlice";
+import { CiWarning } from "react-icons/ci";
+import recipeService from "../services/recipe.service";
 
 const RecipePage = () => {
 	const { recipeId } = useParams();
@@ -38,6 +40,7 @@ const RecipePage = () => {
 	);
 
 	const [reviewUpdate, setReviewUpdate] = useState(false);
+	const [showDeletePopup, setShowDeletePopup] = useState(false);
 
 	useEffect(() => {
 		dispatch(fetchSingleRecipe(recipeId));
@@ -130,6 +133,18 @@ const RecipePage = () => {
 					<h2 className="text-4xl font-bold tracking-tighter">
 						{recipe.title}
 					</h2>
+					{userIsRecipeOwner &&
+						(recipe.isPublished ? (
+							<small className="inline-block mt-2 italic text-green-500">
+								<span className="font-semibold">Published</span>, recipe is
+								visible to all.
+							</small>
+						) : (
+							<small className="inline-block mt-2 italic text-red-500">
+								<span className="font-semibold">Not published</span>, recipe is
+								visible to you only.
+							</small>
+						))}
 					<div className="flex items-center my-4 text-sm">
 						{recipe.avgRating && (
 							<span className="flex items-center pr-2 mr-2 border-r-2 border-r-gray-200">
@@ -151,24 +166,46 @@ const RecipePage = () => {
 						<p className="my-4">{recipe.introduction}</p>
 					)}
 					{isLoggedIn && (
-						<div className="flex gap-3 mb-7">
-							<Button className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-sm hover:bg-[#d64f1f] active:bg-[#d64f1f] min-w-[100px] text-center">
-								<span>Save</span>
-								<FaRegHeart className="align-middle" />
-							</Button>
-							{/* Edit button - will be shown to the owner of the recipe only */}
-							{userIsRecipeOwner && (
-								<Button
-									className="py-2 px-3 rounded-sm hover:bg-brand-primary-dark active:bg-brand-primary-dark min-w-[100px] text-center"
-									onClick={() => navigate(`/edit-recipe/${recipeId}`)}
-								>
-									Edit
+						<>
+							<div className="flex flex-wrap gap-3">
+								<Button className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-sm hover:bg-[#d64f1f] active:bg-[#d64f1f] min-w-[100px] text-center">
+									<span>Save</span>
+									<FaRegHeart className="align-middle" />
 								</Button>
+								{/* Edit button - will be shown to the owner of the recipe only */}
+								{userIsRecipeOwner && (
+									<Button
+										className="py-2 px-3 rounded-sm hover:bg-brand-primary-dark active:bg-brand-primary-dark min-w-[100px] text-center"
+										onClick={() => navigate(`/edit-recipe/${recipeId}`)}
+									>
+										Edit
+									</Button>
+								)}
+							</div>
+							{userIsRecipeOwner && (
+								<>
+									<Button
+										bgColor="bg-transparent"
+										textColor="text-brand-primary"
+										className="mt-3 text-sm hover:text-brand-primary-dark"
+										onClick={() => setShowDeletePopup(true)}
+									>
+										Delete recipe
+									</Button>
+									{showDeletePopup && (
+										<DeletePopup
+											onClose={() => {
+												setShowDeletePopup(false);
+											}}
+											recipeId={recipe._id}
+										/>
+									)}
+								</>
 							)}
-						</div>
+						</>
 					)}
 
-					<div className="mt-7 bg-[linear-gradient(352deg,rgba(2,0,36,1)0%,rgba(8,8,40,1)39%,rgba(131,131,131,1)100%)] w-full overflow-hidden sm:w-[90%] md:w-[70%] max-w-[720px] aspect-video flex justify-center items-center">
+					<div className="mt-4 bg-[linear-gradient(352deg,rgba(2,0,36,1)0%,rgba(8,8,40,1)39%,rgba(131,131,131,1)100%)] w-full overflow-hidden sm:w-[90%] md:w-[70%] max-w-[720px] aspect-video flex justify-center items-center">
 						{recipe.recipePhoto.url ? (
 							<img
 								className="object-cover object-center w-full h-full"
@@ -217,7 +254,7 @@ const RecipePage = () => {
 						<p className="mb-4 text-sm italic text-gray-600">
 							Submitted by{" "}
 							<span className="relative after:absolute after:top-full after:left-0 after:w-full after:bg-brand-primary  after:h-[1px]">
-								<Link to={`/users/${recipe.author._id}`}>
+								<Link to={`/users/profile/${recipe.author._id}`}>
 									{recipe.author.name}
 								</Link>
 							</span>
@@ -242,6 +279,78 @@ const RecipePage = () => {
 	return (
 		<article className="h-full max-w-6xl py-10 mx-auto">
 			{recipeContent}
+		</article>
+	);
+};
+
+const DeletePopup = ({ onClose, recipeId }) => {
+	const navigate = useNavigate();
+	const [error, setError] = useState(null);
+	const [isDeleting, setIsDeleting] = useState(false);
+
+	useEffect(() => {
+		document.querySelector("body").style.overflow = "hidden";
+		return () => {
+			document.querySelector("body").style.overflow = "unset";
+		};
+	}, []);
+
+	const handleClick = async () => {
+		try {
+			setIsDeleting(true);
+			const res = await recipeService.deleteRecipe(recipeId);
+			if (res?.success) {
+				setError(null); // no need since we are navigating to other page
+				navigate("/recipes");
+			}
+		} catch (error) {
+			setError(error.reason);
+		} finally {
+			setIsDeleting(false);
+		}
+	};
+
+	return (
+		<article className="items-center overlay">
+			<section className="flex flex-col items-center gap-3 p-5 bg-white rounded-md sm:gap-4 drop-shadow-xl min-w-[270px] text-center justify-center">
+				{isDeleting ? (
+					<>
+						<AiOutlineLoading3Quarters className="text-3xl text-gray-200 align-middle animate-spin" />
+						<p>Deleting...</p>
+					</>
+				) : (
+					<>
+						<div className="text-5xl text-yellow-500 md:text-9xl">
+							<CiWarning />
+						</div>
+						<h2 className="text-xl font-bold sm:text-3xl">
+							Proceed with deletion?
+						</h2>
+						<small className="font-medium">(This is irreversible)</small>
+						{error && (
+							<small className="font-bold text-red-400 text-wrap">
+								{error} <span>. Would you like to try again?</span>
+							</small>
+						)}
+						<div className="flex gap-3">
+							<Button
+								bgColor="bg-[#f22c3d]"
+								className="px-3 py-1.5 rounded-md hover:bg-[#fc0016] active:bg-[#fc0016] min-w-[60px]"
+								onClick={handleClick}
+							>
+								Yes
+							</Button>
+							<Button
+								bgColor="bg-gray-700"
+								className="px-3 py-1.5 rounded-md hover:bg-[#172f55] active:bg-[#172f55] min-w-[60px]"
+								onClick={onClose}
+							>
+								No
+							</Button>
+						</div>
+					</>
+				)}
+			</section>
 		</article>
 	);
 };

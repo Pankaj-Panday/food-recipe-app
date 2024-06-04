@@ -21,13 +21,13 @@ const PhotoForm = () => {
 	const [photoDeleting, setPhotoDeleting] = useState(false);
 	const [backendError, setBackendError] = useState(null);
 
-	const error = frontendErrors?.recipePhoto?.message || backendError;
+	const error = frontendErrors?.photo?.message || backendError;
 
 	const dispatch = useDispatch();
 	const recipe = useSelector((state) => state.recipes.selectedRecipe);
 
 	const onSubmit = async (data) => {
-		const photo = data.recipePhoto[0];
+		const photo = data.photo[0];
 		try {
 			const res = await recipeService.updatePhotoOfRecipe(recipe._id, photo);
 			if (res?.success) {
@@ -122,7 +122,7 @@ const PhotoForm = () => {
 									className="px-3 py-1.5 rounded-md min-w-fit disabled:opacity-50 flex justify-center items-center gap-2 disabled:pointer-events-none"
 									type="submit"
 									onClick={handleSubmit(onSubmit)}
-									disabled={!isValid}
+									// disabled={!isValid}
 								>
 									{isSubmitting ? (
 										<>

@@ -144,7 +144,9 @@ const Review = ({ review }) => {
 					/>
 				</div>
 				<p className="font-medium capitalize relative after:absolute after:top-full after:left-0 after:w-full after:bg-brand-primary  after:h-[1px]">
-					<Link to={`/users/${review?.owner._id}`}>{review?.owner.name}</Link>
+					<Link to={`/users/profile/${review?.owner._id}`}>
+						{review?.owner.name}
+					</Link>
 				</p>
 			</header>
 			<div className="flex gap-5 mb-2">

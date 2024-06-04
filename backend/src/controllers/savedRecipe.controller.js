@@ -97,6 +97,7 @@ const getSavedRecipesOfUser = asyncHandler(async (req, res) => {
 		},
 		{
 			$project: {
+				_id: "$recipe._id",
 				title: "$recipe.title",
 				cookingTime: "$recipe.cookingTime",
 				recipePhoto: "$recipe.recipePhoto",

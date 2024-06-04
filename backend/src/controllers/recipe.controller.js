@@ -114,7 +114,7 @@ const viewRecipe = asyncHandler(async (req, res) => {
 	// check recipe is published
 	if (!recipeData?.isPublished) {
 		// check if user is logged in
-		const userId = req?.user._id;
+		const userId = req.user?._id;
 		if (!userId) {
 			throw new ApiError(
 				403,
@@ -122,7 +122,7 @@ const viewRecipe = asyncHandler(async (req, res) => {
 			);
 		}
 		// check if user is logged in and owner of recipe
-		if (userId.toString() !== recipe.author._id.toString()) {
+		if (userId.toString() !== recipeData.author._id.toString()) {
 			throw new ApiError(
 				403,
 				"The author of recipe has unpublished the recipe. You will be able to access it once owner makes it public"
@@ -347,11 +347,13 @@ const getCreatedRecipesOfUser = asyncHandler(async (req, res) => {
 	}
 	const loggedInUser = req.user?._id;
 	let recipes = [];
-	if (loggedInUser && loggedInUser.toString === userId.toString()) {
+	if (loggedInUser && loggedInUser.toString() === userId.toString()) {
+		// show all recipes created by user
 		recipes = await Recipe.find({ author: userId }).select(
 			"title author cookingTime recipePhoto avgRating totalReviews"
 		);
 	} else {
+		// only show published recipes
 		recipes = await Recipe.find({ author: userId, isPublished: true }).select(
 			"title author cookingTime recipePhoto avgRating totalReviews"
 		);

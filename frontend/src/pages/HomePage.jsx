@@ -3,7 +3,6 @@ import { Button, Container, RecipeGrid } from "../components";
 import { useNavigate } from "react-router-dom";
 import { fetchFeaturedItems, resetState } from "../app/recipesSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Temporary from "../components/Temporary";
 
 const HomePage = () => {
 	const navigate = useNavigate();
@@ -63,7 +62,7 @@ const HomePage = () => {
 
 	return (
 		<>
-			<section className="py-10 bg-fixed bg-center bg-no-repeat bg-cover lg:py-20 bg-home-page">
+			<section className="py-10 bg-center bg-no-repeat bg-cover lg:py-20 bg-home-page">
 				<Container>
 					<div className="p-5 border-2 rounded-lg shadow-md max-md:mr-auto md:max-w-2xl sm:max-w-xl border-white/20 bg-white/10 backdrop-blur-xl min-w-80">
 						<h2 className="mb-6 text-4xl font-bold text-white sm:text-5xl drop-shadow-md md:text-7xl ">

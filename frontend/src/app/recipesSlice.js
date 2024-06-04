@@ -76,6 +76,40 @@ export const fetchFeaturedItems = createAsyncThunk(
 	}
 );
 
+export const fetchCreatedRecipesOfUser = createAsyncThunk(
+	"recipes/fetchCreatedRecipes",
+	async (userId, { rejectWithValue, signal }) => {
+		try {
+			const { data } = await recipeService.createdRecipesByUser(userId, signal);
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.reason);
+		}
+	}
+);
+
+export const fetchSavedRecipes = createAsyncThunk(
+	"recipes/fetchSavedRecipes",
+	async (_, { rejectWithValue, signal }) => {
+		try {
+			// maybe apply some logic to stop fetching data if user isn't logged in
+			const { data } = await recipeService.savedRecipesByCurrentUser(signal);
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.reason);
+		}
+	},
+	{
+		condition: (_, { getState }) => {
+			const state = getState();
+			const isUpdated = state.recipes.savedRecipes.updated;
+			if (isUpdated) {
+				return false;
+			}
+		},
+	}
+);
+
 const initialState = {
 	selectedRecipe: null,
 	curPageData: [],
@@ -90,6 +124,17 @@ const initialState = {
 	itemsDisplayedPerPage: 12,
 	totalPagesToDisplay: 0,
 	curDisplayedPage: 1,
+	createdRecipes: {
+		data: [],
+		loading: false,
+		error: null,
+	},
+	savedRecipes: {
+		data: [],
+		loading: false,
+		error: null,
+		updated: false,
+	},
 };
 
 const recipesSlice = createSlice({
@@ -134,6 +179,9 @@ const recipesSlice = createSlice({
 		},
 		setCurDisplayedPage: (state, action) => {
 			state.curDisplayedPage = action.payload;
+		},
+		savedNewRecipe: (state, action) => {
+			state.savedRecipes.updated = false;
 		},
 	},
 	extraReducers: (builder) => {
@@ -186,6 +234,41 @@ const recipesSlice = createSlice({
 					state.loading = false;
 					state.error = action.payload;
 				}
+			});
+
+		builder
+			.addCase(fetchCreatedRecipesOfUser.pending, (state, action) => {
+				state.createdRecipes.loading = true;
+				state.createdRecipes.error = null;
+			})
+			.addCase(fetchCreatedRecipesOfUser.fulfilled, (state, action) => {
+				state.createdRecipes.data = action.payload;
+				state.createdRecipes.loading = false;
+				state.createdRecipes.error = null;
+			})
+			.addCase(fetchCreatedRecipesOfUser.rejected, (state, action) => {
+				if (action.meta.aborted) {
+					state.createdRecipes.loading = true;
+				} else {
+					state.createdRecipes.error = action.payload;
+					state.createdRecipes.loading = false;
+				}
+			});
+
+		builder
+			.addCase(fetchSavedRecipes.pending, (state, action) => {
+				state.savedRecipes.loading = true;
+				state.savedRecipes.error = null;
+			})
+			.addCase(fetchSavedRecipes.fulfilled, (state, action) => {
+				state.savedRecipes.data = action.payload;
+				state.savedRecipes.loading = false;
+				state.savedRecipes.updated = true;
+				state.savedRecipes.error = null;
+			})
+			.addCase(fetchSavedRecipes.rejected, (state, action) => {
+				state.savedRecipes.error = action.payload;
+				state.savedRecipes.loading = false;
 			});
 	},
 });

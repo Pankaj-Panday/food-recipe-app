@@ -6,7 +6,8 @@ const CustomImageUpload = ({
 	info = true,
 	previewClass,
 	label = "Upload file",
-	register, // for working with react hook form
+	register = () => {}, // for working with react hook form
+	onChange = () => {},
 }) => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [preview, setPreview] = useState(null);
@@ -38,9 +39,12 @@ const CustomImageUpload = ({
 				accept="image/*"
 				// onChange={onSelectedFile}
 				className="px-2 py-1.5 w-full border-2 rounded-md hidden"
-				{...register("recipePhoto", {
+				{...register("photo", {
 					required: "Photo is required",
-					onChange: onSelectedFile,
+					onChange: (e) => {
+						onSelectedFile(e);
+						onChange(e);
+					},
 				})}
 			/>
 			{selectedFile && imgPreview && (
