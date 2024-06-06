@@ -3,6 +3,7 @@ import aggregatePaginate from "mongoose-aggregate-paginate-v2";
 import { UserSavedRecipe } from "./savedRecipe.model.js";
 import ApiError from "../utils/ApiError.js";
 import { Review } from "./review.model.js";
+import { removeFromCloudinary } from "../utils/remoteFileManage.js";
 
 const recipeSchema = new mongoose.Schema(
 	{
@@ -125,8 +126,16 @@ recipeSchema.pre("deleteMany", async function () {
 	// 2. remove saved recipe refrences to all the above recipes ids
 	// Note: the value of "this" here is actually a query object
 	const queryFilter = this.getFilter();
-	const recipeIds = await Recipe.find(queryFilter).select({ _id: 1 }).lean();
-	recipeIds.forEach(async (recipeId) => {
+	const recipes = await Recipe.find(queryFilter)
+		.select({ _id: 1, recipePhoto: 1 })
+		.lean();
+
+	recipes.forEach(async (recipe) => {
+		const recipeId = recipe._id;
+		const recipePhotoPublicId = recipe.recipePhoto.publicId;
+		if (recipePhotoPublicId) {
+			removeFromCloudinary(recipePhotoPublicId);
+		}
 		await UserSavedRecipe.deleteMany({ recipe: recipeId });
 		await Review.deleteMany({ recipe: recipeId });
 	});
@@ -135,3 +144,14 @@ recipeSchema.pre("deleteMany", async function () {
 recipeSchema.plugin(aggregatePaginate);
 
 export const Recipe = mongoose.model("Recipe", recipeSchema);
+
+// [
+//   {
+//     _id: new ObjectId('6661a87911a67f88897ebc52'),
+//     recipePhoto: { url: null, publicId: null }
+//   },
+//   {
+//     _id: new ObjectId('6661a8e311a67f88897ebc55'),
+//     recipePhoto: { url: null, publicId: null }
+//   }
+// ]

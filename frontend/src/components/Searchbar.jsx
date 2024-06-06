@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { Button, Input } from "../components/index.js";
-import { useDispatch, useSelector } from "react-redux";
-import { removeFocus } from "../app/searchSlice.js";
+import { useSelector } from "react-redux";
 
 const Searchbar = () => {
 	const ref = useRef(null);
