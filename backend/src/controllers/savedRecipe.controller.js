@@ -3,6 +3,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { UserSavedRecipe } from "../models/savedRecipe.model.js";
 import { Recipe } from "../models/recipe.model.js";
+import ApiError from "../utils/ApiError.js";
 
 const saveRecipe = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
@@ -115,4 +116,42 @@ const getSavedRecipesOfUser = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, recipes, "saved recipes fetched successfully"));
 });
 
-export { saveRecipe, unsaveRecipe, getSavedRecipesOfUser };
+const checkRecipeIsSaved = asyncHandler(async (req, res) => {
+	try {
+		const { recipeId } = req.params;
+		const userId = req?.user._id;
+
+		if (!recipeId || !userId) {
+			throw new ApiError(400, "Missing required parameter: recipeId or userId");
+		}
+
+		if (
+			!mongoose.isObjectIdOrHexString(recipeId) ||
+			!mongoose.isObjectIdOrHexString(userId)
+		) {
+			throw new ApiError(400, "Invalid recipeId or userId");
+		}
+
+		const savedRecipe = await UserSavedRecipe.findOne({
+			recipe: recipeId,
+			user: userId,
+		});
+
+		if (savedRecipe) {
+			return res
+				.status(200)
+				.json(new ApiResponse(500, { isSaved: true }, "check successful"));
+		} else {
+			return res
+				.status(200)
+				.json(new ApiResponse(500, { isSaved: false }, "check successful"));
+		}
+	} catch (error) {
+		throw new ApiError(
+			500,
+			"Some problem while checking if recipe is saved or not"
+		);
+	}
+});
+
+export { saveRecipe, unsaveRecipe, getSavedRecipesOfUser, checkRecipeIsSaved };

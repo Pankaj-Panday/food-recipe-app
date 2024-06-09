@@ -13,6 +13,8 @@ const userSavedRecipeSchema = new mongoose.Schema({
 	},
 });
 
+userSavedRecipeSchema.index({ recipe: 1, user: 1 });
+
 export const UserSavedRecipe = mongoose.model(
 	"UserSavedRecipe",
 	userSavedRecipeSchema

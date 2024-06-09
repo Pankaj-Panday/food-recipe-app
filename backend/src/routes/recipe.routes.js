@@ -15,6 +15,7 @@ import {
 	saveRecipe,
 	unsaveRecipe,
 	getSavedRecipesOfUser,
+	checkRecipeIsSaved,
 } from "../controllers/savedRecipe.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -49,5 +50,7 @@ router.route("/saved-recipes").get(verifyToken, getSavedRecipesOfUser);
 router
 	.route("/created-recipes/:userId")
 	.get(optionalAuth, getCreatedRecipesOfUser);
+
+router.route("/:recipeId/check-saved").get(verifyToken, checkRecipeIsSaved);
 
 export default router;
