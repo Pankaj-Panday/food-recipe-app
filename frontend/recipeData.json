@@ -1,0 +1,750 @@
+[
+  {
+    "title": "Butter Chicken",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/1/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Tikka Masala",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/3/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Honey Garlic Glaze",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/11/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Dosa",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/13/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Idli",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/14/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Vada",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/21/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Chicken Fried Rice",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/33/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Chicken Curry",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/51/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Saag Paneer",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/16/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Palak Paneer",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/7/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Navratan Korma",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/6/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Chole Bhature",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/17/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Malai Kofta",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/5/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Aloo Gobi",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/4/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Dal Makhani",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/12/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Rajma Masala",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/24/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Biryani",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/25/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Keema Naan",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/26/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Rogan Josh",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/27/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Sambal",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/28/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Samosa",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/29/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Pakoras",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/30/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Raita",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/31/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Lassi",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/32/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Jalebi",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/33/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Gulab Jamun",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/34/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Chicken Pot Pie",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/35/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Lemon Asparagus and Chicken Pasta",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/36/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Crispy Buffalo Chicken Wings",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/37/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Chicken Caesar Salad",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/38/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Pav Bhaji",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/39/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Pani Puri",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/40/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Masala Dosa",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/42/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Kadhi Pakora",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/43/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Paneer Tikka",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/44/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Chicken 65",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/45/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Bhindi Masala",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/46/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Fish Curry",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/47/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Mutton Biryani",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/12/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Ras Malai",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/13/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Sev Puri",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/14/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Kheer",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/15/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Pesarattu",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/16/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  },
+  {
+    "title": "Korma",
+    "introduction": "This is introduction",
+    "cookingTime": 35,
+    "recipePhoto": {
+      "url": "https://picsum.photos/id/17/700/400",
+      "publicId": null
+    },
+    "ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"],
+    "steps": ["step 1", "step 2", "step 3"],
+    "isPublished": true,
+    "avgRating": 3,
+    "totalReviews": 7,
+    "author": {
+      "$oid": "6661aef4522e8b543794f92f"
+    }
+  }
+]

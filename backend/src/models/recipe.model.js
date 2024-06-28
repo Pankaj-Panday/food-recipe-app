@@ -130,6 +130,18 @@ recipeSchema.pre("deleteMany", async function () {
 		.select({ _id: 1, recipePhoto: 1 })
 		.lean();
 
+	// recipes returned will look something like this
+	// [
+	//   {
+	//     _id: new ObjectId('6661a87911a67f88897ebc52'),
+	//     recipePhoto: { url: null, publicId: null }
+	//   },
+	//   {
+	//     _id: new ObjectId('6661a8e311a67f88897ebc55'),
+	//     recipePhoto: { url: null, publicId: null }
+	//   }
+	// ]
+
 	recipes.forEach(async (recipe) => {
 		const recipeId = recipe._id;
 		const recipePhotoPublicId = recipe.recipePhoto.publicId;
@@ -144,14 +156,3 @@ recipeSchema.pre("deleteMany", async function () {
 recipeSchema.plugin(aggregatePaginate);
 
 export const Recipe = mongoose.model("Recipe", recipeSchema);
-
-// [
-//   {
-//     _id: new ObjectId('6661a87911a67f88897ebc52'),
-//     recipePhoto: { url: null, publicId: null }
-//   },
-//   {
-//     _id: new ObjectId('6661a8e311a67f88897ebc55'),
-//     recipePhoto: { url: null, publicId: null }
-//   }
-// ]

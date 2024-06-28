@@ -10,6 +10,8 @@ import {
 	getAllRecipes,
 	getFourRandomRecipes,
 	getCreatedRecipesOfUser,
+	searchRecipeSummaryByName,
+	viewFullRecipeByName,
 } from "../controllers/recipe.controller.js";
 import {
 	saveRecipe,
@@ -52,5 +54,7 @@ router
 	.get(optionalAuth, getCreatedRecipesOfUser);
 
 router.route("/:recipeId/check-saved").get(verifyToken, checkRecipeIsSaved);
+router.route("/search").get(searchRecipeSummaryByName);
+router.route("/view-recipe-by-name/:recipeName").get(viewFullRecipeByName);
 
 export default router;

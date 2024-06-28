@@ -6,14 +6,16 @@ import RecipePage from "./RecipePage.jsx";
 import AllRecipes from "./AllRecipes.jsx";
 import EditRecipePage from "./EditRecipePage.jsx";
 import UserProfilePage from "./UserProfilePage.jsx";
+import SearchedRecipesPage from "./SearchedRecipesPage.jsx";
 
 export {
-	HomePage,
-	LoginPage,
-	SignUpPage,
-	AddRecipePage,
-	RecipePage,
-	AllRecipes,
-	EditRecipePage,
-	UserProfilePage,
+  HomePage,
+  LoginPage,
+  SignUpPage,
+  AddRecipePage,
+  RecipePage,
+  AllRecipes,
+  EditRecipePage,
+  UserProfilePage,
+  SearchedRecipesPage,
 };

@@ -3,7 +3,11 @@ import Footer from "./Footer.jsx";
 import Container from "./Container/Container.jsx";
 import Logo from "./Logo.jsx";
 import Navbar from "./Navbar.jsx";
-import Searchbar from "./Searchbar.jsx";
+import Searchbar from "./Search/Searchbar.jsx";
+import SearchResults from "./Search/SearchResults.jsx";
+import NoResults from "./Search/NoResults.jsx";
+import SearchError from "./Search/SearchError.jsx";
+import SearchLoading from "./Search/SearchLoading.jsx";
 import Button from "./Button.jsx";
 import LogoutBtn from "./Header/LogoutBtn.jsx";
 import Input from "./Input.jsx";
@@ -37,6 +41,10 @@ export {
   Logo,
   Navbar,
   Searchbar,
+  SearchResults,
+  NoResults,
+  SearchError,
+  SearchLoading,
   Button,
   LogoutBtn,
   Input,

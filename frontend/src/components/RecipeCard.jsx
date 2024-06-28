@@ -12,7 +12,7 @@ const RecipeCard = ({ recipe }) => {
     >
       {" "}
       <div className="flex aspect-video min-w-[278px] items-center justify-center overflow-hidden rounded-t-md bg-[linear-gradient(352deg,rgba(2,0,36,1)0%,rgba(8,8,40,1)39%,rgba(131,131,131,1)100%)]">
-        {recipe?.recipePhoto.url ? (
+        {recipe?.recipePhoto?.url ? (
           <img
             className="h-full w-full object-cover"
             src={recipe?.recipePhoto.url}

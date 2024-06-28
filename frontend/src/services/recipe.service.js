@@ -46,6 +46,20 @@ class RecipeService {
     }
   }
 
+  async viewRecipesByName(recipeName, abortSignal) {
+    try {
+      return await axiosInstance.get(
+        `/recipes/view-recipe-by-name/${recipeName}`,
+        {
+          signal: abortSignal,
+        },
+      );
+    } catch (error) {
+      console.error("Reason :: ", error.reason);
+      throw error;
+    }
+  }
+
   async updateTextDetailsOfRecipe(
     recipeId,
     { title, introduction, cookingTime, ingredients, steps, isPublished },
@@ -195,6 +209,20 @@ class RecipeService {
       });
     } catch (error) {
       console.error("Reason :: ", error.reason);
+      throw error;
+    }
+  }
+
+  async searchRecipe(title, abortSignal) {
+    try {
+      return await axiosInstance.get(`/recipes/search`, {
+        params: {
+          query: title,
+        },
+        signal: abortSignal,
+      });
+    } catch (error) {
+      console.log("Reason :: ", error.reason);
       throw error;
     }
   }

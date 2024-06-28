@@ -365,6 +365,95 @@ const getCreatedRecipesOfUser = asyncHandler(async (req, res) => {
 		);
 });
 
+const searchRecipeSummaryByName = asyncHandler(async (req, res) => {
+	try {
+		const searchTerm = req.query?.query;
+		const limit = req.query.limit || 5;
+		let searchQuery = {};
+		let recipes, docsCount;
+
+		if (!!searchTerm) {
+			searchQuery.title = { $regex: searchTerm.trim(), $options: "i" };
+			searchQuery.isPublished = true;
+			// below code assumes the searchterm can either be in the title of the recipe or the ingredients
+			// let titleQuery = { title: { $regex: searchTerm.trim(), $options: "i" } };
+			// let ingredientsQuery = {
+			// 	ingredients: { $regex: searchTerm.trim(), $options: "i" },
+			// };
+			// searchQuery = {
+			// 	$or: [titleQuery, ingredientsQuery],
+			// };
+		}
+
+		[recipes, docsCount] = await Promise.all([
+			Recipe.find(searchQuery).select("title avgRating").limit(limit),
+			Recipe.countDocuments(searchQuery),
+		]);
+
+		return res.status(200).json(
+			new ApiResponse(
+				200,
+				{
+					recipes: recipes,
+					totalRecipes: docsCount,
+					currentRecipes: recipes.length,
+					limit: limit,
+				},
+				"recipe searched successfully"
+			)
+		);
+	} catch (error) {
+		throw new ApiError(500, error.message);
+	}
+});
+
+const viewFullRecipeByName = asyncHandler(async (req, res) => {
+	const recipeName = req?.params?.recipeName?.trim();
+	if (!recipeName) throw new ApiError(400, "Recipe name is required");
+	const pipeline = [
+		{
+			$match: {
+				title: { $regex: `^${recipeName}`, $options: "i" },
+				isPublished: true,
+			},
+		},
+		{
+			$lookup: {
+				from: "users",
+				localField: "author",
+				foreignField: "_id",
+				pipeline: [
+					{
+						$project: { name: 1 },
+					},
+				],
+				as: "author",
+			},
+		},
+		{
+			$set: { author: { $arrayElemAt: ["$author", 0] } },
+		},
+		{
+			$project: {
+				title: 1,
+				cookingTime: 1,
+				recipePhoto: 1,
+				author: 1,
+				avgRating: 1,
+				totalReviews: 1,
+			},
+		},
+	];
+	const recipes = await Recipe.aggregate(pipeline);
+	if (recipes?.length === 0) {
+		throw new ApiError(404, "No recipe match found for the given value");
+	}
+	return res.json(
+		200,
+		new ApiResponse(200, recipes, "recipe found successfully")
+	);
+});
+
 export {
 	createRecipe,
 	viewRecipe,
@@ -375,4 +464,6 @@ export {
 	getAllRecipes,
 	getFourRandomRecipes,
 	getCreatedRecipesOfUser,
+	searchRecipeSummaryByName,
+	viewFullRecipeByName,
 };
