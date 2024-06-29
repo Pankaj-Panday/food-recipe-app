@@ -62,11 +62,17 @@ const Menu = () => {
               disabled={authLoading}
               onClick={() => {
                 dispatch(setAuthLoading(true));
-                userService.logoutUser().then(() => {
-                  dispatch(setAuthLoading(false));
-                  dispatch(userLogout());
-                  handleCloseMenu();
-                });
+                userService
+                  .logoutUser()
+                  .then(() => {
+                    dispatch(setAuthLoading(false));
+                    dispatch(userLogout());
+                    handleCloseMenu();
+                  })
+                  .catch((error) => {
+                    console.log("Some problem logging out user", error);
+                    dispatch(setAuthLoading(false));
+                  });
               }}
             >
               {authLoading ? (
