@@ -18,6 +18,8 @@ connectDB()
 		console.log("Mongo db connection failed!! ", error);
 	});
 
+export default app;
+
 // Another approach to connect to database
 /*
 (async function () {
