@@ -7,14 +7,15 @@ import searchReducer from "./searchSlice.js";
 import userReducer from "./userSlice.js";
 
 const store = configureStore({
-	reducer: {
-		auth: authReducer,
-		user: userReducer,
-		recipes: recipesReducer,
-		reviews: reviewsReducer,
-		menu: menuReducer,
-		searchBar: searchReducer,
-	},
+  reducer: {
+    auth: authReducer,
+    user: userReducer,
+    recipes: recipesReducer,
+    reviews: reviewsReducer,
+    menu: menuReducer,
+    searchBar: searchReducer,
+  },
+  devTools: import.meta.env.VITE_ENV === "development",
 });
 
 export default store;
