@@ -16,9 +16,15 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" })); //just to see it
 app.use(cookieParser());
 
 // import routes
-import userRouter from "./routes/user.routes.js";
-import recipeRouter from "./routes/recipe.routes.js";
-import reviewRouter from "./routes/review.routes.js";
+import userRouter from "../routes/user.routes.js";
+import recipeRouter from "../routes/recipe.routes.js";
+import reviewRouter from "../routes/review.routes.js";
+
+app.get("/", (req, res) => {
+	res.status(200).json({
+		message: "api home",
+	});
+});
 
 // declare routes
 app.use("/api/v1/users", userRouter);
