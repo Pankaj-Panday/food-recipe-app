@@ -10,6 +10,8 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 			req.header("Authorization")?.replace("Bearer ", "");
 		/* in express docs, req.header() is written as req.get() */
 
+		console.log("Token recieved: ", token);
+
 		if (!token) {
 			throw new ApiError(401, "Unauthorized request");
 		}
