@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -59,6 +59,9 @@ const router = createBrowserRouter(
 );
 
 const App = () => {
+  useEffect(() => {
+    console.log("effect running");
+  }, []);
   return <RouterProvider router={router} />;
 };
 
