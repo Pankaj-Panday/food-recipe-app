@@ -5,7 +5,7 @@ import recipeService from "../../services/recipe.service";
 import { CustomImageUpload, Button } from "../";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
-import { DevTool } from "@hookform/devtools";
+// import { DevTool } from "@hookform/devtools";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedRecipe } from "../../app/recipesSlice";
 
@@ -144,7 +144,7 @@ const PhotoForm = () => {
               </div>
             </fieldset>
           </form>
-          <DevTool control={control} />
+          {/* <DevTool control={control} /> */}
         </>
       )}
     </section>

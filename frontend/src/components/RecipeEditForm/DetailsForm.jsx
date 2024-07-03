@@ -5,7 +5,7 @@ import { Button, Input, Textarea } from "../";
 import { MdDelete } from "react-icons/md";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { setSelectedRecipe } from "../../app/recipesSlice";
-import { DevTool } from "@hookform/devtools";
+// import { DevTool } from "@hookform/devtools";
 import recipeService from "../../services/recipe.service";
 
 const DetailsForm = () => {

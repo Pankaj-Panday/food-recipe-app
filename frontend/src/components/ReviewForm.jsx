@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button, RatingInput, Textarea } from ".";
-import { DevTool } from "@hookform/devtools";
 import { useDispatch, useSelector } from "react-redux";
 import reviewService from "../services/review.service";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 import { fetchUserReview } from "../app/reviewsSlice";
 import { useNavigate } from "react-router-dom";
+// import { DevTool } from "@hookform/devtools";
 
 const ReviewForm = ({ review, onClose }) => {
   const dispatch = useDispatch();
@@ -189,7 +189,7 @@ const ReviewForm = ({ review, onClose }) => {
           </Button>
         </>
       )}
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </article>
   );
 };
