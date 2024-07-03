@@ -59,9 +59,6 @@ const router = createBrowserRouter(
 );
 
 const App = () => {
-  useEffect(() => {
-    console.log("effect running");
-  }, []);
   return <RouterProvider router={router} />;
 };
 
