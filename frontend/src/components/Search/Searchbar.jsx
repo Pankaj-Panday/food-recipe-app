@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import {
   Button,
-  Input,
   SearchResults,
   NoResults,
   SearchError,
@@ -30,12 +29,6 @@ const Searchbar = () => {
     error: errorSuggestion,
     data: suggestedRecipesData,
   } = useSelector((state) => state.searchBar.suggestedRecipes);
-
-  const {
-    loading: loadingSearchedRecipes,
-    error: errorSearchedRecipes,
-    data: searchedRecipesData,
-  } = useSelector((state) => state.searchBar.searchedRecipes);
 
   const [recipeToSearch, setRecipeToSearch] = useState({
     _id: "",
@@ -135,8 +128,8 @@ const Searchbar = () => {
   }, [searchBarFocus]);
 
   return (
-    <div className="relative">
-      <form onSubmit={handleClick} className="relative flex sm:w-96">
+    <div className="relative w-full min-w-20 max-w-96">
+      <form onSubmit={handleClick} className="relative flex">
         <input
           type="text"
           placeholder="Find a recipe"
