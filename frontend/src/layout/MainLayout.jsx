@@ -54,7 +54,7 @@ const MainLayout = () => {
   ) : (
     <>
       <ScrollRestoration />
-      <div className="relative">
+      <div className="relative grid min-h-[100dvh] grid-rows-[auto_1fr_auto]">
         <Header />
         <main>
           <Outlet />

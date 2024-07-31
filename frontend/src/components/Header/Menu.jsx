@@ -24,6 +24,7 @@ const Menu = () => {
 
   const handleCloseMenu = () => {
     dispatch(closeMenu());
+    dispatch(removeFocus());
     document.querySelector("body").style.overflow = "unset";
   };
 
