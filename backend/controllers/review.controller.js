@@ -173,12 +173,18 @@ const deleteReview = asyncHandler(async (req, res) => {
 const getAllReviewsOfRecipe = asyncHandler(async (req, res) => {
 	const recipeId = req.params.recipeId;
 	const page = parseInt(req.query?.page || 1);
+	const loggedInUser = req?.user;
+
 	if (!recipeId) {
 		throw new ApiError(400, "Missing required parameter: recipeId");
 	}
-
 	const recipe = await Recipe.findById(recipeId);
-	if (!recipe?.isPublished) {
+	if (!recipe) throw new ApiError(404, "Recipe not round");
+
+	if (
+		!recipe.isPublished &&
+		(!loggedInUser || loggedInUser._id.toString() !== recipe.author.toString())
+	) {
 		throw new ApiError(403, "You cannot access reviews of a private recipe");
 	}
 
